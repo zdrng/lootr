@@ -1,0 +1,13 @@
+version = 1
+
+[[type]]
+name = "acme_api_key"
+pattern = '^acme_[A-Za-z0-9]{32}$'
+
+[[rule]]
+id = "acme-key-anywhere"
+type = "acme_api_key"
+when = "true"
+severity = "high"
+message = "ACME API key in {location} ({length} bytes, {charset}, {entropy} bits)"
+remediation = "Rotate the key and remove {name}"

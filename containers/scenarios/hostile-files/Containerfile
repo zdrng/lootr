@@ -1,0 +1,50 @@
+# hostile-files: a working tree full of things meant to make a scanner hang,
+# crash or follow a link out of the tree. lootr must finish, report sensibly
+# and never follow a link or read a special file. All of this is built as an
+# unprivileged user.
+#
+#   - symlink loop (loop_a.json <-> loop_b.json): not followed;
+#   - symlink out of the tree (shadow.yaml -> /etc/shadow, dev.json ->
+#     /dev/null): not followed (reported as a symlink);
+#   - a FIFO (pipe.json): read as metadata only (not a regular file);
+#   - a file larger than max-file-size (big.json): skipped (too large);
+#   - a very deep directory tree (deeper than max-depth): pruned, not a hang;
+#   - a YAML alias bomb (.yarnrc.yml): a parse error from the bounded YAML
+#     loader, not a hang or an out-of-memory;
+#   - binary garbage with token-like strings (garbage.json): content scanning
+#     skips binary files, so the strings are not misread;
+#   - a real embedded secret (app.py): still found, proving the scan finished.
+#
+# A real device node would need CAP_MKNOD (root); the symlink to /dev/null
+# covers refusing to follow a link to a device. A file vanishing mid-scan is
+# a timing condition and is covered by unit tests, not here.
+FROM lootr-base
+RUN useradd --create-home --uid 1000 --shell /bin/sh user
+USER user
+WORKDIR /home/user/project
+RUN set -eu; c=LOOTRCANARY; \
+    ln -s loop_b.json loop_a.json; \
+    ln -s loop_a.json loop_b.json; \
+    ln -s /etc/shadow shadow.yaml; \
+    ln -s /dev/null dev.json; \
+    mkfifo pipe.json; \
+    truncate -s 2M big.json; \
+    mkdir -p d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d; \
+    printf 'TOKEN=%s\n' "$(gen-github-token ghp_ ${c}deepUnreach01234567)" \
+      > d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/deep.env; \
+    printf 'a: &a ["x","x","x","x","x","x","x","x","x"]\n' > .yarnrc.yml; \
+    printf 'b: &b [*a,*a,*a,*a,*a,*a,*a,*a,*a]\n' >> .yarnrc.yml; \
+    printf 'c: &c [*b,*b,*b,*b,*b,*b,*b,*b,*b]\n' >> .yarnrc.yml; \
+    printf 'd: &d [*c,*c,*c,*c,*c,*c,*c,*c,*c]\n' >> .yarnrc.yml; \
+    printf 'e: &e [*d,*d,*d,*d,*d,*d,*d,*d,*d]\n' >> .yarnrc.yml; \
+    printf 'f: &f [*e,*e,*e,*e,*e,*e,*e,*e,*e]\n' >> .yarnrc.yml; \
+    printf 'g: &g [*f,*f,*f,*f,*f,*f,*f,*f,*f]\n' >> .yarnrc.yml; \
+    printf 'h: &h [*g,*g,*g,*g,*g,*g,*g,*g,*g]\n' >> .yarnrc.yml; \
+    printf 'i: &i [*h,*h,*h,*h,*h,*h,*h,*h,*h]\n' >> .yarnrc.yml; \
+    printf 'j: [*i,*i,*i,*i,*i,*i,*i,*i,*i]\n' >> .yarnrc.yml; \
+    printf 'GARBAGE\000\001\002ghp_%s\000AKIA%s\000\003' "${c}notarealtoken" "${c}1234" > garbage.json; \
+    printf 'def f():\n    token = "%s"\n' "$(gen-github-token ghp_ ${c}hostEmbedded0123456)" > app.py
+# Start as root so the entrypoint can setpriv to `user` (sets HOME); the scan
+# runs unprivileged, in the project working directory.
+USER root
+ENV LOOTR_SCENARIO_USER=user

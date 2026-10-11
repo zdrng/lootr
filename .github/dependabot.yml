@@ -1,0 +1,13 @@
+# Dependabot keeps lootr's dependencies and the pinned actions up to date.
+# Every new dependency still needs a reason in the PR (PLAN.md, "Supply chain").
+version: 2
+updates:
+  - package-ecosystem: cargo
+    directory: /
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

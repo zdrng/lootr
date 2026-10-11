@@ -1,0 +1,66 @@
+# lootr in GitLab CI: include in .gitlab-ci.yml (or copy the job).
+#
+# The job downloads a lootr release from GitHub, verifies its Sigstore build
+# provenance with cosign, and scans what a job on this runner can reach (the
+# job's variables including CI_JOB_TOKEN, the checkout, the home directory,
+# sockets). The Markdown report goes to the job log and, like the SARIF and
+# JSON reports, is kept as an artifact.
+#
+# TODO before use:
+#   - LOOTR_VERSION / LOOTR_REPOSITORY: the release and the repository that
+#     publishes it;
+#   - COSIGN_VERSION / COSIGN_SHA256: a cosign release and the SHA-256 of its
+#     cosign-linux-amd64 binary (from the release's checksums file, checked
+#     once by you);
+#   - the image: pin it by digest (debian:trixie-slim@sha256:...).
+
+variables:
+  LOOTR_VERSION: "X.Y.Z"           # TODO
+  LOOTR_REPOSITORY: "OWNER/lootr"  # TODO
+  COSIGN_VERSION: "X.Y.Z"          # TODO
+  COSIGN_SHA256: "TODO"            # TODO: sha256 of cosign-linux-amd64
+
+lootr:
+  stage: test
+  image: debian:trixie-slim # TODO: pin by digest
+  variables:
+    GIT_DEPTH: "1"
+  before_script:
+    - apt-get update && apt-get install -y --no-install-recommends ca-certificates curl
+    - |
+      set -eu
+      tools="$(mktemp -d)"
+      curl --proto '=https' --tlsv1.2 -fsSL -o "$tools/cosign" \
+        "https://github.com/sigstore/cosign/releases/download/v$COSIGN_VERSION/cosign-linux-amd64"
+      echo "$COSIGN_SHA256  $tools/cosign" | sha256sum -c -
+      chmod +x "$tools/cosign"
+      name="lootr-$LOOTR_VERSION-x86_64-unknown-linux-musl"
+      base="https://github.com/$LOOTR_REPOSITORY/releases/download/v$LOOTR_VERSION"
+      for f in "$name.tar.gz" "$name.tar.gz.sigstore.json"; do
+        curl --proto '=https' --tlsv1.2 -fsSL -o "$tools/$f" "$base/$f"
+      done
+      "$tools/cosign" verify-blob-attestation \
+        --bundle "$tools/$name.tar.gz.sigstore.json" --new-bundle-format \
+        --type slsaprovenance1 \
+        --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+        --certificate-identity "https://github.com/$LOOTR_REPOSITORY/.github/workflows/release.yml@refs/tags/v$LOOTR_VERSION" \
+        "$tools/$name.tar.gz"
+      tar -xzf "$tools/$name.tar.gz" -C "$tools"
+      install -m 0755 "$tools/$name/lootr" /usr/local/bin/lootr
+      rm -rf "$tools"
+  script:
+    - |
+      set +e
+      lootr --config lootr.toml --redact-paths --format sarif --output lootr.sarif
+      code=$?
+      lootr --config lootr.toml --redact-paths --quiet --format markdown --output lootr.md
+      lootr --config lootr.toml --redact-paths --quiet --format json --output lootr.json
+      cat lootr.md
+      exit "$code"
+  artifacts:
+    when: always
+    expose_as: lootr report
+    paths:
+      - lootr.md
+      - lootr.sarif
+      - lootr.json

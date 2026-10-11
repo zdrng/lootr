@@ -1,0 +1,50 @@
+# Applied to every test environment before its own lootr.toml (by
+# tests/fixtures.rs). The probes look at the real machine (groups, sockets),
+# which differs between developer machines and CI; they are tested on fakes
+# (unit tests) and in the container scenarios. `docker-socket` re-enables
+# the socket probe with a path inside its fake home.
+version = 1
+
+[[source]]
+id = "process"
+enabled = false
+
+[[source]]
+id = "container-sockets"
+enabled = false
+
+# M6 probes that read the real machine (/proc, system directories). They are
+# tested on fakes (unit tests) and in the container scenarios. The writable
+# shell-rc / git-hooks / shared-caches sources stay enabled, limited to the
+# fake home and the temp working directory: `shared-caches` drops the
+# default's absolute `/opt/hostedtoolcache` (present and possibly writable
+# on CI hosts), and `path-dirs` (the real `$PATH`, `/usr/local/bin`, ...) is
+# off.
+[[source]]
+id = "shared-caches"
+paths = [
+    "~/.cargo/registry",
+    "~/.cargo/git",
+    "~/.npm",
+    "~/.cache/pip",
+    "~/.cache/go-build",
+    "~/.cache/yarn",
+    "~/.gradle/caches",
+    "~/.m2/repository",
+]
+
+[[source]]
+id = "proc-environ"
+enabled = false
+
+[[source]]
+id = "path-dirs"
+enabled = false
+
+[[source]]
+id = "suid"
+enabled = false
+
+[[source]]
+id = "kube-service-account"
+enabled = false

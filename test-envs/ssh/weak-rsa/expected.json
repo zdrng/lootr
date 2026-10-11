@@ -1,0 +1,319 @@
+{
+  "exit_code": 1,
+  "report": {
+    "schema_version": 1,
+    "tool": {
+      "name": "lootr"
+    },
+    "run": {
+      "fail_on": "high",
+      "config_layers": [
+        "<built-in>",
+        "/Users/zdrng/Projects/lootr/test-envs/common.toml"
+      ],
+      "cwd": "<root>/home",
+      "home": "<root>/home"
+    },
+    "custom_types": [],
+    "summary": {
+      "candidates": 8,
+      "facts": 5,
+      "findings": 5,
+      "waived": 0,
+      "failing": 2,
+      "by_severity": {
+        "critical": 0,
+        "high": 2,
+        "medium": 2,
+        "low": 1,
+        "info": 0
+      },
+      "rule_errors": 0,
+      "expired_waivers": 0,
+      "skipped": 0,
+      "failing_skipped": 0,
+      "by_rule": {
+        "ssh-key-legacy-encryption": 1,
+        "ssh-key-unencrypted": 2,
+        "ssh-key-weak": 2
+      }
+    },
+    "findings": [
+      {
+        "rule": "ssh-key-unencrypted",
+        "severity": "high",
+        "message": "SSH private key ~/.ssh/dummy_id_rsa_3072 (rsa) is not protected by a passphrase",
+        "remediation": "Set a passphrase (ssh-keygen -p -f ~/.ssh/dummy_id_rsa_3072) or move the key to ssh-agent / a hardware token",
+        "tags": {
+          "category": "key-protection"
+        },
+        "waived": null,
+        "fact": {
+          "type": "ssh_private_key",
+          "location": {
+            "kind": "file",
+            "path": "~/.ssh/dummy_id_rsa_3072"
+          },
+          "source": "ssh",
+          "attrs": {
+            "world_readable": false,
+            "bits": 3072,
+            "cipher": "none",
+            "encrypted": false,
+            "format": "openssh",
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kdf": "none",
+            "key_type": "rsa",
+            "mode": 384,
+            "owner_is_self": true,
+            "size": 2622
+          }
+        }
+      },
+      {
+        "rule": "ssh-key-unencrypted",
+        "severity": "high",
+        "message": "SSH private key ~/.ssh/dummy_pem_rsa (rsa) is not protected by a passphrase",
+        "remediation": "Set a passphrase (ssh-keygen -p -f ~/.ssh/dummy_pem_rsa) or move the key to ssh-agent / a hardware token",
+        "tags": {
+          "category": "key-protection"
+        },
+        "waived": null,
+        "fact": {
+          "type": "ssh_private_key",
+          "location": {
+            "kind": "file",
+            "path": "~/.ssh/dummy_pem_rsa"
+          },
+          "source": "ssh",
+          "attrs": {
+            "world_readable": false,
+            "bits": 2048,
+            "cipher": "none",
+            "encrypted": false,
+            "format": "pem",
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kdf": "none",
+            "key_type": "rsa",
+            "mode": 384,
+            "owner_is_self": true,
+            "size": 1675
+          }
+        }
+      },
+      {
+        "rule": "ssh-key-weak",
+        "severity": "medium",
+        "message": "SSH private key ~/.ssh/dummy_id_rsa_1024 is a weak rsa key (1024 bits)",
+        "remediation": "Create an ed25519 key (ssh-keygen -t ed25519), deploy it and retire ~/.ssh/dummy_id_rsa_1024",
+        "tags": {
+          "category": "key-strength"
+        },
+        "waived": null,
+        "fact": {
+          "type": "ssh_private_key",
+          "location": {
+            "kind": "file",
+            "path": "~/.ssh/dummy_id_rsa_1024"
+          },
+          "source": "ssh",
+          "attrs": {
+            "world_readable": false,
+            "bits": 1024,
+            "cipher": "aes256-ctr",
+            "encrypted": true,
+            "format": "openssh",
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kdf": "bcrypt",
+            "kdf_rounds": 24,
+            "key_type": "rsa",
+            "mode": 384,
+            "owner_is_self": true,
+            "size": 1117
+          }
+        }
+      },
+      {
+        "rule": "ssh-key-weak",
+        "severity": "medium",
+        "message": "SSH private key ~/.ssh/dummy_pem_rsa is a weak rsa key (2048 bits)",
+        "remediation": "Create an ed25519 key (ssh-keygen -t ed25519), deploy it and retire ~/.ssh/dummy_pem_rsa",
+        "tags": {
+          "category": "key-strength"
+        },
+        "waived": null,
+        "fact": {
+          "type": "ssh_private_key",
+          "location": {
+            "kind": "file",
+            "path": "~/.ssh/dummy_pem_rsa"
+          },
+          "source": "ssh",
+          "attrs": {
+            "world_readable": false,
+            "bits": 2048,
+            "cipher": "none",
+            "encrypted": false,
+            "format": "pem",
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kdf": "none",
+            "key_type": "rsa",
+            "mode": 384,
+            "owner_is_self": true,
+            "size": 1675
+          }
+        }
+      },
+      {
+        "rule": "ssh-key-legacy-encryption",
+        "severity": "low",
+        "message": "SSH private key ~/.ssh/dummy_legacy_pem is encrypted with the legacy md5 key derivation (cheap to brute force)",
+        "remediation": "Re-encrypt it in the OpenSSH format with bcrypt: ssh-keygen -p -f ~/.ssh/dummy_legacy_pem",
+        "tags": {
+          "category": "key-strength"
+        },
+        "waived": null,
+        "fact": {
+          "type": "ssh_private_key",
+          "location": {
+            "kind": "file",
+            "path": "~/.ssh/dummy_legacy_pem"
+          },
+          "source": "ssh",
+          "attrs": {
+            "world_readable": false,
+            "cipher": "aes-128-cbc",
+            "encrypted": true,
+            "format": "pem",
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kdf": "md5",
+            "key_type": "rsa",
+            "mode": 384,
+            "owner_is_self": true,
+            "size": 1766
+          }
+        }
+      }
+    ],
+    "rule_errors": [],
+    "expired_waivers": [],
+    "skipped": [],
+    "facts": [
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "HOME"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [],
+          "name": "HOME",
+          "length": 45
+        }
+      },
+      {
+        "type": "ssh_private_key",
+        "location": {
+          "kind": "file",
+          "path": "~/.ssh/dummy_id_rsa_1024"
+        },
+        "source": "ssh",
+        "attrs": {
+          "world_readable": false,
+          "bits": 1024,
+          "cipher": "aes256-ctr",
+          "encrypted": true,
+          "format": "openssh",
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kdf": "bcrypt",
+          "kdf_rounds": 24,
+          "key_type": "rsa",
+          "mode": 384,
+          "owner_is_self": true,
+          "size": 1117
+        }
+      },
+      {
+        "type": "ssh_private_key",
+        "location": {
+          "kind": "file",
+          "path": "~/.ssh/dummy_id_rsa_3072"
+        },
+        "source": "ssh",
+        "attrs": {
+          "world_readable": false,
+          "bits": 3072,
+          "cipher": "none",
+          "encrypted": false,
+          "format": "openssh",
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kdf": "none",
+          "key_type": "rsa",
+          "mode": 384,
+          "owner_is_self": true,
+          "size": 2622
+        }
+      },
+      {
+        "type": "ssh_private_key",
+        "location": {
+          "kind": "file",
+          "path": "~/.ssh/dummy_legacy_pem"
+        },
+        "source": "ssh",
+        "attrs": {
+          "world_readable": false,
+          "cipher": "aes-128-cbc",
+          "encrypted": true,
+          "format": "pem",
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kdf": "md5",
+          "key_type": "rsa",
+          "mode": 384,
+          "owner_is_self": true,
+          "size": 1766
+        }
+      },
+      {
+        "type": "ssh_private_key",
+        "location": {
+          "kind": "file",
+          "path": "~/.ssh/dummy_pem_rsa"
+        },
+        "source": "ssh",
+        "attrs": {
+          "world_readable": false,
+          "bits": 2048,
+          "cipher": "none",
+          "encrypted": false,
+          "format": "pem",
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kdf": "none",
+          "key_type": "rsa",
+          "mode": 384,
+          "owner_is_self": true,
+          "size": 1675
+        }
+      }
+    ]
+  }
+}

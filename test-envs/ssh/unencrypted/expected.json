@@ -1,0 +1,206 @@
+{
+  "exit_code": 1,
+  "report": {
+    "schema_version": 1,
+    "tool": {
+      "name": "lootr"
+    },
+    "run": {
+      "fail_on": "high",
+      "config_layers": [
+        "<built-in>",
+        "/Users/zdrng/Projects/lootr/test-envs/common.toml"
+      ],
+      "cwd": "<root>/home",
+      "home": "<root>/home"
+    },
+    "custom_types": [],
+    "summary": {
+      "candidates": 8,
+      "facts": 3,
+      "findings": 3,
+      "waived": 0,
+      "failing": 3,
+      "by_severity": {
+        "critical": 0,
+        "high": 3,
+        "medium": 0,
+        "low": 0,
+        "info": 0
+      },
+      "rule_errors": 0,
+      "expired_waivers": 0,
+      "skipped": 0,
+      "failing_skipped": 0,
+      "by_rule": {
+        "ssh-key-unencrypted": 2,
+        "ssh-key-world-readable": 1
+      }
+    },
+    "findings": [
+      {
+        "rule": "ssh-key-unencrypted",
+        "severity": "high",
+        "message": "SSH private key ~/.ssh/dummy_id_ecdsa (ecdsa) is not protected by a passphrase",
+        "remediation": "Set a passphrase (ssh-keygen -p -f ~/.ssh/dummy_id_ecdsa) or move the key to ssh-agent / a hardware token",
+        "tags": {
+          "category": "key-protection"
+        },
+        "waived": null,
+        "fact": {
+          "type": "ssh_private_key",
+          "location": {
+            "kind": "file",
+            "path": "~/.ssh/dummy_id_ecdsa"
+          },
+          "source": "ssh",
+          "attrs": {
+            "world_readable": true,
+            "bits": 384,
+            "cipher": "none",
+            "encrypted": false,
+            "format": "openssh",
+            "gitignored": false,
+            "group_readable": true,
+            "in_git_repo": false,
+            "kdf": "none",
+            "key_type": "ecdsa",
+            "mode": 420,
+            "owner_is_self": true,
+            "size": 634
+          }
+        }
+      },
+      {
+        "rule": "ssh-key-unencrypted",
+        "severity": "high",
+        "message": "SSH private key ~/.ssh/dummy_id_ed25519 (ed25519) is not protected by a passphrase",
+        "remediation": "Set a passphrase (ssh-keygen -p -f ~/.ssh/dummy_id_ed25519) or move the key to ssh-agent / a hardware token",
+        "tags": {
+          "category": "key-protection"
+        },
+        "waived": null,
+        "fact": {
+          "type": "ssh_private_key",
+          "location": {
+            "kind": "file",
+            "path": "~/.ssh/dummy_id_ed25519"
+          },
+          "source": "ssh",
+          "attrs": {
+            "world_readable": false,
+            "bits": 256,
+            "cipher": "none",
+            "encrypted": false,
+            "format": "openssh",
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kdf": "none",
+            "key_type": "ed25519",
+            "mode": 384,
+            "owner_is_self": true,
+            "size": 419
+          }
+        }
+      },
+      {
+        "rule": "ssh-key-world-readable",
+        "severity": "high",
+        "message": "SSH private key ~/.ssh/dummy_id_ecdsa is readable by every user (mode 0644)",
+        "remediation": "chmod 600 ~/.ssh/dummy_id_ecdsa, then rotate the key: others may have copied it",
+        "tags": {
+          "category": "file-permissions"
+        },
+        "waived": null,
+        "fact": {
+          "type": "ssh_private_key",
+          "location": {
+            "kind": "file",
+            "path": "~/.ssh/dummy_id_ecdsa"
+          },
+          "source": "ssh",
+          "attrs": {
+            "world_readable": true,
+            "bits": 384,
+            "cipher": "none",
+            "encrypted": false,
+            "format": "openssh",
+            "gitignored": false,
+            "group_readable": true,
+            "in_git_repo": false,
+            "kdf": "none",
+            "key_type": "ecdsa",
+            "mode": 420,
+            "owner_is_self": true,
+            "size": 634
+          }
+        }
+      }
+    ],
+    "rule_errors": [],
+    "expired_waivers": [],
+    "skipped": [],
+    "facts": [
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "HOME"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [],
+          "name": "HOME",
+          "length": 45
+        }
+      },
+      {
+        "type": "ssh_private_key",
+        "location": {
+          "kind": "file",
+          "path": "~/.ssh/dummy_id_ecdsa"
+        },
+        "source": "ssh",
+        "attrs": {
+          "world_readable": true,
+          "bits": 384,
+          "cipher": "none",
+          "encrypted": false,
+          "format": "openssh",
+          "gitignored": false,
+          "group_readable": true,
+          "in_git_repo": false,
+          "kdf": "none",
+          "key_type": "ecdsa",
+          "mode": 420,
+          "owner_is_self": true,
+          "size": 634
+        }
+      },
+      {
+        "type": "ssh_private_key",
+        "location": {
+          "kind": "file",
+          "path": "~/.ssh/dummy_id_ed25519"
+        },
+        "source": "ssh",
+        "attrs": {
+          "world_readable": false,
+          "bits": 256,
+          "cipher": "none",
+          "encrypted": false,
+          "format": "openssh",
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kdf": "none",
+          "key_type": "ed25519",
+          "mode": 384,
+          "owner_is_self": true,
+          "size": 419
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,190 @@
+{
+  "exit_code": 1,
+  "report": {
+    "schema_version": 1,
+    "tool": {
+      "name": "lootr"
+    },
+    "run": {
+      "fail_on": "high",
+      "config_layers": [
+        "<built-in>",
+        "/Users/zdrng/Projects/lootr/test-envs/common.toml"
+      ],
+      "cwd": "<root>/workdir",
+      "home": "<root>/home"
+    },
+    "custom_types": [],
+    "summary": {
+      "candidates": 7,
+      "facts": 4,
+      "findings": 2,
+      "waived": 0,
+      "failing": 1,
+      "by_severity": {
+        "critical": 0,
+        "high": 1,
+        "medium": 0,
+        "low": 1,
+        "info": 0
+      },
+      "rule_errors": 0,
+      "expired_waivers": 0,
+      "skipped": 0,
+      "failing_skipped": 0,
+      "by_rule": {
+        "pem-private-key-in-git-repo": 1,
+        "pem-private-key-unencrypted": 1
+      }
+    },
+    "findings": [
+      {
+        "rule": "pem-private-key-in-git-repo",
+        "severity": "high",
+        "message": "Private key <root>/workdir/deploy/dummy_tls.key is inside a git work tree and not ignored: it may be committed",
+        "remediation": "Move the key out of the repository (or ignore it), check the history (git log -- <root>/workdir/deploy/dummy_tls.key) and rotate it if it was ever committed",
+        "tags": {
+          "category": "version-control"
+        },
+        "waived": null,
+        "fact": {
+          "type": "pem",
+          "location": {
+            "kind": "file",
+            "path": "<root>/workdir/deploy/dummy_tls.key"
+          },
+          "source": "pem",
+          "attrs": {
+            "world_readable": false,
+            "certificates": 0,
+            "encrypted": false,
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": true,
+            "key_type": "rsa",
+            "kind": "private_key",
+            "mode": 384,
+            "owner_is_self": true,
+            "private_keys": 1,
+            "size": 1675
+          }
+        }
+      },
+      {
+        "rule": "pem-private-key-unencrypted",
+        "severity": "low",
+        "message": "Private key <root>/workdir/deploy/dummy_tls.key (rsa) is not protected by a passphrase",
+        "remediation": "Keep it in a key store or hardware token where possible, and readable only by its owner",
+        "tags": {
+          "category": "key-protection"
+        },
+        "waived": null,
+        "fact": {
+          "type": "pem",
+          "location": {
+            "kind": "file",
+            "path": "<root>/workdir/deploy/dummy_tls.key"
+          },
+          "source": "pem",
+          "attrs": {
+            "world_readable": false,
+            "certificates": 0,
+            "encrypted": false,
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": true,
+            "key_type": "rsa",
+            "kind": "private_key",
+            "mode": 384,
+            "owner_is_self": true,
+            "private_keys": 1,
+            "size": 1675
+          }
+        }
+      }
+    ],
+    "rule_errors": [],
+    "expired_waivers": [],
+    "skipped": [],
+    "facts": [
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "HOME"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [],
+          "name": "HOME",
+          "length": 45
+        }
+      },
+      {
+        "type": "pem",
+        "location": {
+          "kind": "file",
+          "path": "<root>/workdir/certs/ca.pem"
+        },
+        "source": "pem",
+        "attrs": {
+          "world_readable": false,
+          "certificates": 1,
+          "encrypted": false,
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": true,
+          "kind": "certificate",
+          "mode": 384,
+          "owner_is_self": true,
+          "private_keys": 0,
+          "size": 810
+        }
+      },
+      {
+        "type": "pem",
+        "location": {
+          "kind": "file",
+          "path": "<root>/workdir/deploy/dummy_tls.key"
+        },
+        "source": "pem",
+        "attrs": {
+          "world_readable": false,
+          "certificates": 0,
+          "encrypted": false,
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": true,
+          "key_type": "rsa",
+          "kind": "private_key",
+          "mode": 384,
+          "owner_is_self": true,
+          "private_keys": 1,
+          "size": 1675
+        }
+      },
+      {
+        "type": "pem",
+        "location": {
+          "kind": "file",
+          "path": "<root>/workdir/local/dummy_dev.key"
+        },
+        "source": "pem",
+        "attrs": {
+          "world_readable": false,
+          "certificates": 0,
+          "encrypted": true,
+          "gitignored": true,
+          "group_readable": false,
+          "in_git_repo": true,
+          "key_type": "unknown",
+          "kind": "private_key",
+          "mode": 384,
+          "owner_is_self": true,
+          "private_keys": 1,
+          "size": 1858
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+# lootr-base: lootr built from this checkout inside a Rust image, copied into
+# a slim Debian runtime image. No host toolchain needed. Scenario images
+# start `FROM lootr-base`.
+#
+# Build context: the repository root (see containers/run.sh).
+
+FROM docker.io/library/rust:1-slim-trixie AS build
+WORKDIR /src
+COPY Cargo.toml Cargo.lock ./
+COPY src ./src
+RUN cargo build --release --locked
+
+FROM docker.io/library/debian:trixie-slim
+# jq normalizes reports in run.sh; scenarios install what they need
+# themselves (openssh-client, openssl, ...).
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends jq \
+    && rm -rf /var/lib/apt/lists/*
+COPY --from=build /src/target/release/lootr /usr/local/bin/lootr
+COPY containers/base/entrypoint.sh /usr/local/bin/lootr-scenario
+# Dummy GitHub tokens with valid checksums for scenarios (no committed tokens).
+COPY containers/base/gen-github-token /usr/local/bin/gen-github-token
+ENTRYPOINT ["/usr/local/bin/lootr-scenario"]
+CMD ["--format", "json", "--emit-facts"]

@@ -1,0 +1,35 @@
+# Code rules from PLAN.md ("Security model" / "Code rules"). `clippy -D warnings`
+# runs in CI; the lint levels are set in Cargo.toml [lints.clippy].
+allow-unwrap-in-tests = true
+allow-expect-in-tests = true
+allow-print-in-tests = true
+allow-dbg-in-tests = false
+
+disallowed-types = [
+    { path = "std::process::Command", reason = "lootr never starts subprocesses" },
+    { path = "std::net::TcpStream", reason = "lootr has no network code" },
+    { path = "std::net::TcpListener", reason = "lootr has no network code" },
+    { path = "std::net::UdpSocket", reason = "lootr has no network code" },
+    { path = "std::os::unix::net::UnixStream", reason = "sockets are judged by metadata, never connected to" },
+    { path = "std::os::unix::net::UnixDatagram", reason = "sockets are judged by metadata, never connected to" },
+    { path = "std::os::unix::net::UnixListener", reason = "lootr never listens" },
+]
+
+disallowed-methods = [
+    { path = "std::process::Command::new", reason = "lootr never starts subprocesses" },
+    { path = "std::net::TcpStream::connect", reason = "lootr has no network code" },
+    { path = "std::net::TcpStream::connect_timeout", reason = "lootr has no network code" },
+    { path = "std::net::UdpSocket::bind", reason = "lootr has no network code" },
+    { path = "std::os::unix::net::UnixStream::connect", reason = "sockets are judged by metadata, never connected to" },
+    { path = "std::env::set_var", reason = "lootr does not change its environment" },
+    { path = "std::env::remove_var", reason = "lootr does not change its environment" },
+    { path = "std::env::var", reason = "read the environment through EnvRepository" },
+    { path = "std::env::var_os", reason = "read the environment through EnvRepository" },
+    { path = "std::env::vars", reason = "read the environment through EnvRepository" },
+    { path = "std::env::vars_os", reason = "read the environment through EnvRepository" },
+    { path = "std::fs::read", reason = "open files through os::open (O_NOFOLLOW, fstat, size limit)" },
+    { path = "std::fs::read_to_string", reason = "open files through os::open (O_NOFOLLOW, fstat, size limit)" },
+    { path = "std::fs::File::open", reason = "open files through os::open (O_NOFOLLOW, fstat, size limit)" },
+    { path = "std::fs::write", reason = "lootr writes only the report, through os::open::create_report" },
+    { path = "std::fs::File::create", reason = "lootr writes only the report, through os::open::create_report" },
+]

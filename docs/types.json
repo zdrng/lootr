@@ -1,0 +1,1120 @@
+{
+  "types": [
+    {
+      "name": "env_var",
+      "kind": "entry",
+      "doc": "an environment variable",
+      "attrs": [
+        {
+          "name": "name",
+          "kind": "name",
+          "doc": "variable or key name",
+          "optional": false
+        },
+        {
+          "name": "length",
+          "kind": "int",
+          "doc": "value length in bytes",
+          "optional": false
+        },
+        {
+          "name": "entropy",
+          "kind": "int",
+          "doc": "estimated entropy of the value in bits (length × Shannon entropy per byte)",
+          "optional": false
+        },
+        {
+          "name": "classified_as",
+          "kind": "list",
+          "doc": "names of the value types that matched",
+          "optional": false
+        }
+      ],
+      "file_attrs": false
+    },
+    {
+      "name": "dotenv_entry",
+      "kind": "entry",
+      "doc": "an entry of a .env file",
+      "attrs": [
+        {
+          "name": "name",
+          "kind": "name",
+          "doc": "variable or key name",
+          "optional": false
+        },
+        {
+          "name": "length",
+          "kind": "int",
+          "doc": "value length in bytes",
+          "optional": false
+        },
+        {
+          "name": "entropy",
+          "kind": "int",
+          "doc": "estimated entropy of the value in bits (length × Shannon entropy per byte)",
+          "optional": false
+        },
+        {
+          "name": "classified_as",
+          "kind": "list",
+          "doc": "names of the value types that matched",
+          "optional": false
+        }
+      ],
+      "file_attrs": true
+    },
+    {
+      "name": "config_entry",
+      "kind": "entry",
+      "doc": "an entry of a config file read with the ini, json, yaml or toml extractor",
+      "attrs": [
+        {
+          "name": "name",
+          "kind": "name",
+          "doc": "variable or key name",
+          "optional": false
+        },
+        {
+          "name": "length",
+          "kind": "int",
+          "doc": "value length in bytes",
+          "optional": false
+        },
+        {
+          "name": "entropy",
+          "kind": "int",
+          "doc": "estimated entropy of the value in bits (length × Shannon entropy per byte)",
+          "optional": false
+        },
+        {
+          "name": "classified_as",
+          "kind": "list",
+          "doc": "names of the value types that matched",
+          "optional": false
+        }
+      ],
+      "file_attrs": true
+    },
+    {
+      "name": "ssh_private_key",
+      "kind": "document",
+      "doc": "a private key file (OpenSSH, PEM or PKCS#8); only the non-secret parts are read",
+      "attrs": [
+        {
+          "name": "format",
+          "kind": "sym",
+          "doc": "openssh | pem | pkcs8",
+          "optional": false
+        },
+        {
+          "name": "encrypted",
+          "kind": "bool",
+          "doc": "the private key is protected by a passphrase",
+          "optional": false
+        },
+        {
+          "name": "cipher",
+          "kind": "sym",
+          "doc": "none, an OpenSSH cipher (aes256-ctr, chacha20-poly1305@openssh.com, ...), a PEM/PKCS#8 cipher (aes-128-cbc, aes-256-cbc, des-ede3-cbc, ...) or other",
+          "optional": false
+        },
+        {
+          "name": "kdf",
+          "kind": "sym",
+          "doc": "key derivation: none | bcrypt | md5 (legacy PEM) | pbkdf2 | scrypt | pbes1 | other",
+          "optional": false
+        },
+        {
+          "name": "kdf_rounds",
+          "kind": "int",
+          "doc": "bcrypt rounds (OpenSSH) or PBKDF2 iterations (PKCS#8)",
+          "optional": true
+        },
+        {
+          "name": "key_type",
+          "kind": "sym",
+          "doc": "rsa | dsa | ecdsa | ed25519 | ed448 | ecdsa-sk | ed25519-sk | unknown",
+          "optional": false
+        },
+        {
+          "name": "bits",
+          "kind": "int",
+          "doc": "key size in bits; absent when only the secret part would tell (encrypted PEM/PKCS#8, PEM EC keys)",
+          "optional": true
+        }
+      ],
+      "file_attrs": true
+    },
+    {
+      "name": "pem",
+      "kind": "document",
+      "doc": "a PEM file (keys, certificates): kinds of blocks and whether private keys are encrypted",
+      "attrs": [
+        {
+          "name": "kind",
+          "kind": "sym",
+          "doc": "the most sensitive block: private_key | certificate | certificate_request | public_key | other",
+          "optional": false
+        },
+        {
+          "name": "encrypted",
+          "kind": "bool",
+          "doc": "the file has private keys and all of them are passphrase protected",
+          "optional": false
+        },
+        {
+          "name": "private_keys",
+          "kind": "int",
+          "doc": "private key blocks",
+          "optional": false
+        },
+        {
+          "name": "certificates",
+          "kind": "int",
+          "doc": "certificate blocks",
+          "optional": false
+        },
+        {
+          "name": "key_type",
+          "kind": "sym",
+          "doc": "type of the first private key: rsa | dsa | ecdsa | ed25519 | ed448 | unknown",
+          "optional": true
+        }
+      ],
+      "file_attrs": true
+    },
+    {
+      "name": "aws_credentials",
+      "kind": "document",
+      "doc": "AWS shared credentials or config file (profiles, key kinds, SSO, credential_process)",
+      "attrs": [
+        {
+          "name": "profiles",
+          "kind": "list",
+          "doc": "profile names (text; `[profile x]` in config is `x`)",
+          "optional": false
+        },
+        {
+          "name": "long_lived_keys",
+          "kind": "int",
+          "doc": "profiles with a long-lived access key id (AKIA)",
+          "optional": false
+        },
+        {
+          "name": "session_keys",
+          "kind": "int",
+          "doc": "profiles with temporary session credentials (ASIA)",
+          "optional": false
+        },
+        {
+          "name": "secret_keys",
+          "kind": "int",
+          "doc": "profiles with an aws_secret_access_key",
+          "optional": false
+        },
+        {
+          "name": "sso_profiles",
+          "kind": "int",
+          "doc": "profiles that use IAM Identity Center (sso_session / sso_start_url)",
+          "optional": false
+        },
+        {
+          "name": "role_profiles",
+          "kind": "int",
+          "doc": "profiles that assume a role (role_arn)",
+          "optional": false
+        },
+        {
+          "name": "credential_process",
+          "kind": "int",
+          "doc": "profiles with a credential_process (an external program; never run)",
+          "optional": false
+        }
+      ],
+      "file_attrs": true
+    },
+    {
+      "name": "gcp_credentials",
+      "kind": "document",
+      "doc": "a Google Cloud credential file (service account key, user or federated credentials)",
+      "attrs": [
+        {
+          "name": "kind",
+          "kind": "sym",
+          "doc": "service_account | authorized_user | external_account | external_account_authorized_user | impersonated_service_account",
+          "optional": false
+        },
+        {
+          "name": "account",
+          "kind": "text",
+          "doc": "the service account's e-mail address (client_email)",
+          "optional": true
+        },
+        {
+          "name": "project",
+          "kind": "text",
+          "doc": "project_id (service accounts) or quota_project_id",
+          "optional": true
+        }
+      ],
+      "file_attrs": true
+    },
+    {
+      "name": "azure_profile",
+      "kind": "document",
+      "doc": "an Azure CLI file in ~/.azure (profile, MSAL token cache, legacy token cache, service principals)",
+      "attrs": [
+        {
+          "name": "kind",
+          "kind": "sym",
+          "doc": "profile | msal_token_cache | legacy_token_cache | service_principals",
+          "optional": false
+        },
+        {
+          "name": "has_cached_tokens",
+          "kind": "bool",
+          "doc": "the file holds access or refresh tokens",
+          "optional": false
+        },
+        {
+          "name": "access_tokens",
+          "kind": "int",
+          "doc": "cached access tokens",
+          "optional": false
+        },
+        {
+          "name": "refresh_tokens",
+          "kind": "int",
+          "doc": "cached refresh tokens",
+          "optional": false
+        },
+        {
+          "name": "service_principal_secrets",
+          "kind": "int",
+          "doc": "stored service principal secrets",
+          "optional": false
+        },
+        {
+          "name": "subscriptions",
+          "kind": "int",
+          "doc": "subscriptions in azureProfile.json",
+          "optional": false
+        }
+      ],
+      "file_attrs": true
+    },
+    {
+      "name": "kubeconfig",
+      "kind": "document",
+      "doc": "a Kubernetes client configuration (kubeconfig): contexts, clusters, kinds of user credentials",
+      "attrs": [
+        {
+          "name": "contexts",
+          "kind": "list",
+          "doc": "context names (text)",
+          "optional": false
+        },
+        {
+          "name": "current_context",
+          "kind": "text",
+          "doc": "the current-context, if set",
+          "optional": true
+        },
+        {
+          "name": "clusters",
+          "kind": "list",
+          "doc": "cluster names (text)",
+          "optional": false
+        },
+        {
+          "name": "users",
+          "kind": "int",
+          "doc": "user entries",
+          "optional": false
+        },
+        {
+          "name": "static_tokens",
+          "kind": "int",
+          "doc": "users with a bearer token in the file",
+          "optional": false
+        },
+        {
+          "name": "token_files",
+          "kind": "int",
+          "doc": "users that read a token from a file (tokenFile)",
+          "optional": false
+        },
+        {
+          "name": "basic_auth",
+          "kind": "int",
+          "doc": "users with a password in the file",
+          "optional": false
+        },
+        {
+          "name": "client_certs",
+          "kind": "int",
+          "doc": "users with a client certificate",
+          "optional": false
+        },
+        {
+          "name": "embedded_client_keys",
+          "kind": "int",
+          "doc": "users with a client private key in the file (client-key-data)",
+          "optional": false
+        },
+        {
+          "name": "exec_auth",
+          "kind": "int",
+          "doc": "users authenticated by an exec plugin",
+          "optional": false
+        },
+        {
+          "name": "exec_commands",
+          "kind": "list",
+          "doc": "exec plugin commands (basename, text)",
+          "optional": false
+        },
+        {
+          "name": "auth_providers",
+          "kind": "int",
+          "doc": "users with a legacy auth-provider (tokens stored in the file)",
+          "optional": false
+        },
+        {
+          "name": "insecure_skip_tls",
+          "kind": "bool",
+          "doc": "a cluster disables TLS verification (insecure-skip-tls-verify)",
+          "optional": false
+        }
+      ],
+      "file_attrs": true
+    },
+    {
+      "name": "docker_config",
+      "kind": "document",
+      "doc": "the Docker/Podman client config: inline registry credentials vs credential helpers",
+      "attrs": [
+        {
+          "name": "inline_auths",
+          "kind": "int",
+          "doc": "registries with credentials stored in the file (auth, identitytoken, password)",
+          "optional": false
+        },
+        {
+          "name": "hosts",
+          "kind": "list",
+          "doc": "hosts the stored credentials are for (text, sorted)",
+          "optional": false
+        },
+        {
+          "name": "creds_store",
+          "kind": "text",
+          "doc": "the credential helper for all registries (credsStore), e.g. desktop, osxkeychain, pass",
+          "optional": true
+        },
+        {
+          "name": "cred_helpers",
+          "kind": "int",
+          "doc": "registries with their own credential helper (credHelpers)",
+          "optional": false
+        }
+      ],
+      "file_attrs": true
+    },
+    {
+      "name": "npmrc",
+      "kind": "document",
+      "doc": "an npm configuration file (.npmrc): stored registry tokens and passwords",
+      "attrs": [
+        {
+          "name": "inline_tokens",
+          "kind": "int",
+          "doc": "credentials (tokens, passwords) stored in the file itself",
+          "optional": false
+        },
+        {
+          "name": "hosts",
+          "kind": "list",
+          "doc": "hosts the stored credentials are for (text, sorted)",
+          "optional": false
+        },
+        {
+          "name": "env_refs",
+          "kind": "int",
+          "doc": "credentials taken from environment variables (`${VAR}`)",
+          "optional": false
+        }
+      ],
+      "file_attrs": true
+    },
+    {
+      "name": "pypirc",
+      "kind": "document",
+      "doc": "a .pypirc file: stored package index passwords and API tokens",
+      "attrs": [
+        {
+          "name": "inline_tokens",
+          "kind": "int",
+          "doc": "credentials (tokens, passwords) stored in the file itself",
+          "optional": false
+        },
+        {
+          "name": "hosts",
+          "kind": "list",
+          "doc": "hosts the stored credentials are for (text, sorted)",
+          "optional": false
+        }
+      ],
+      "file_attrs": true
+    },
+    {
+      "name": "netrc",
+      "kind": "document",
+      "doc": "a .netrc file: stored passwords per machine",
+      "attrs": [
+        {
+          "name": "inline_tokens",
+          "kind": "int",
+          "doc": "credentials (tokens, passwords) stored in the file itself",
+          "optional": false
+        },
+        {
+          "name": "hosts",
+          "kind": "list",
+          "doc": "hosts the stored credentials are for (text, sorted)",
+          "optional": false
+        },
+        {
+          "name": "default_entry",
+          "kind": "bool",
+          "doc": "a `default` entry: its credentials go to every host without an entry",
+          "optional": false
+        }
+      ],
+      "file_attrs": true
+    },
+    {
+      "name": "git_credentials",
+      "kind": "document",
+      "doc": "git's plain-text credential store (git-credentials): one URL with password per line",
+      "attrs": [
+        {
+          "name": "inline_tokens",
+          "kind": "int",
+          "doc": "credentials (tokens, passwords) stored in the file itself",
+          "optional": false
+        },
+        {
+          "name": "hosts",
+          "kind": "list",
+          "doc": "hosts the stored credentials are for (text, sorted)",
+          "optional": false
+        }
+      ],
+      "file_attrs": true
+    },
+    {
+      "name": "gh_hosts",
+      "kind": "document",
+      "doc": "the GitHub CLI's hosts.yml: OAuth tokens stored outside the keyring",
+      "attrs": [
+        {
+          "name": "inline_tokens",
+          "kind": "int",
+          "doc": "credentials (tokens, passwords) stored in the file itself",
+          "optional": false
+        },
+        {
+          "name": "hosts",
+          "kind": "list",
+          "doc": "hosts the stored credentials are for (text, sorted)",
+          "optional": false
+        }
+      ],
+      "file_attrs": true
+    },
+    {
+      "name": "github_workflow",
+      "kind": "document",
+      "doc": "a GitHub Actions workflow: one fact per job with triggers and effective token permissions",
+      "attrs": [
+        {
+          "name": "job",
+          "kind": "text",
+          "doc": "the job id",
+          "optional": false
+        },
+        {
+          "name": "triggers",
+          "kind": "list",
+          "doc": "events that start the workflow (names: push, pull_request, pull_request_target, workflow_run, issue_comment, ...)",
+          "optional": false
+        },
+        {
+          "name": "permissions",
+          "kind": "map",
+          "doc": "effective GITHUB_TOKEN permission per scope: read | write | none (every scope; empty when permissions_source is repository)",
+          "optional": false
+        },
+        {
+          "name": "write_scopes",
+          "kind": "list",
+          "doc": "scopes with write access (names; empty when permissions_source is repository)",
+          "optional": false
+        },
+        {
+          "name": "default_permissions",
+          "kind": "sym",
+          "doc": "what unlisted scopes get: read-all | write-all | none (explicit map) | repository (no permissions key: the repository/organization default)",
+          "optional": false
+        },
+        {
+          "name": "permissions_source",
+          "kind": "sym",
+          "doc": "where the effective permissions are set: job | workflow | repository",
+          "optional": false
+        }
+      ],
+      "file_attrs": true
+    },
+    {
+      "name": "github_token",
+      "kind": "value",
+      "doc": "a GitHub token (personal, fine-grained, OAuth, App, refresh), recognized by prefix and checksum",
+      "attrs": [
+        {
+          "name": "kind",
+          "kind": "sym",
+          "doc": "classic | fine_grained | oauth | app | refresh",
+          "optional": false
+        },
+        {
+          "name": "prefix",
+          "kind": "sym",
+          "doc": "ghp_ | github_pat_ | gho_ | ghu_ | ghs_ | ghr_",
+          "optional": false
+        },
+        {
+          "name": "checksum_valid",
+          "kind": "bool",
+          "doc": "the built-in CRC32 checksum matches (gh?_ tokens of standard length only)",
+          "optional": true
+        }
+      ],
+      "file_attrs": true
+    },
+    {
+      "name": "gitlab_token",
+      "kind": "value",
+      "doc": "a GitLab token (access, deploy, runner, CI job, trigger, ...), recognized by its prefix",
+      "attrs": [
+        {
+          "name": "kind",
+          "kind": "sym",
+          "doc": "access_token | oauth_app_secret | deploy | runner | runner_registration | ci_job | trigger | feed | incoming_mail | agent | scim | feature_flags_client",
+          "optional": false
+        },
+        {
+          "name": "prefix",
+          "kind": "sym",
+          "doc": "the token prefix, e.g. glpat-",
+          "optional": false
+        }
+      ],
+      "file_attrs": true
+    },
+    {
+      "name": "aws_access_key_id",
+      "kind": "value",
+      "doc": "an AWS access key id (AKIA long-lived, ASIA session)",
+      "attrs": [
+        {
+          "name": "kind",
+          "kind": "sym",
+          "doc": "long_lived (AKIA, IAM user key) | session (ASIA, temporary STS credentials)",
+          "optional": false
+        }
+      ],
+      "file_attrs": true
+    },
+    {
+      "name": "api_key",
+      "kind": "value",
+      "doc": "a well-known API key or token (Slack, Stripe, OpenAI, Anthropic, npm, PyPI, Docker Hub, Google, SendGrid, Hugging Face, DigitalOcean, Shopify, Vault, Terraform Cloud, RubyGems), recognized by prefix, charset and length",
+      "attrs": [
+        {
+          "name": "service",
+          "kind": "sym",
+          "doc": "slack | stripe | openai | anthropic | npm | pypi | docker_hub | google | sendgrid | huggingface | digitalocean | shopify | hashicorp_vault | terraform_cloud | rubygems",
+          "optional": false
+        },
+        {
+          "name": "kind",
+          "kind": "sym",
+          "doc": "slack: bot | user | app | rotating | refresh | webhook; stripe: secret | restricted | webhook_secret; openai: project | service_account | admin | user; anthropic: api_key | admin_key | oauth_access | oauth_refresh; npm, huggingface: access_token; pypi: api_token | test_api_token; docker_hub: personal_access_token; google: api_key | oauth_client_secret; sendgrid, rubygems: api_key; digitalocean: personal_access_token | oauth_token | refresh_token; shopify: access_token | custom_app_token | private_app_token | shared_secret; hashicorp_vault: service_token | batch_token | recovery_token; terraform_cloud: api_token",
+          "optional": false
+        },
+        {
+          "name": "live",
+          "kind": "bool",
+          "doc": "live mode (true) or test mode (false) key (Stripe only)",
+          "optional": true
+        }
+      ],
+      "file_attrs": true
+    },
+    {
+      "name": "jwt",
+      "kind": "value",
+      "doc": "a JSON Web Token; header and registered claims only, the signature is never decoded",
+      "attrs": [
+        {
+          "name": "alg",
+          "kind": "sym",
+          "doc": "signature algorithm: HS256, RS256, ES256, EdDSA, none, ... or other",
+          "optional": false
+        },
+        {
+          "name": "issuer",
+          "kind": "text",
+          "doc": "the `iss` claim",
+          "optional": true
+        },
+        {
+          "name": "audience",
+          "kind": "list",
+          "doc": "the `aud` claim (list of text)",
+          "optional": true
+        },
+        {
+          "name": "scopes",
+          "kind": "list",
+          "doc": "the `scope` (space separated) or `scp` claim (list of text)",
+          "optional": true
+        },
+        {
+          "name": "expires_in_hours",
+          "kind": "int",
+          "doc": "hours from the scan until `exp`; negative if expired; absent without `exp`",
+          "optional": true
+        },
+        {
+          "name": "lifetime_hours",
+          "kind": "int",
+          "doc": "hours from `iat` (or `nbf`) to `exp`; absent if either is missing",
+          "optional": true
+        },
+        {
+          "name": "expired",
+          "kind": "bool",
+          "doc": "`exp` is at or before the scan time (false without `exp`)",
+          "optional": false
+        }
+      ],
+      "file_attrs": true
+    },
+    {
+      "name": "process",
+      "kind": "probe",
+      "doc": "the process lootr runs as (one fact per run)",
+      "attrs": [
+        {
+          "name": "uid",
+          "kind": "int",
+          "doc": "real user id",
+          "optional": false
+        },
+        {
+          "name": "is_root",
+          "kind": "bool",
+          "doc": "running as root (real or effective uid 0)",
+          "optional": false
+        },
+        {
+          "name": "groups",
+          "kind": "list",
+          "doc": "names of the process's groups (numeric id if unnamed), e.g. docker, sudo, wheel",
+          "optional": false
+        },
+        {
+          "name": "in_container",
+          "kind": "bool",
+          "doc": "a container marker exists (/.dockerenv, /run/.containerenv, Kubernetes service account)",
+          "optional": false
+        }
+      ],
+      "file_attrs": false
+    },
+    {
+      "name": "unix_socket",
+      "kind": "probe",
+      "doc": "a container runtime socket at a path of the probe source",
+      "attrs": [
+        {
+          "name": "kind",
+          "kind": "sym",
+          "doc": "docker | containerd | podman | buildkit | other (from the file name)",
+          "optional": false
+        },
+        {
+          "name": "accessible",
+          "kind": "bool",
+          "doc": "the process may connect (write permission for its user or groups, or root)",
+          "optional": false
+        },
+        {
+          "name": "rootful",
+          "kind": "bool",
+          "doc": "owned by root: the daemon behind it most likely runs as root",
+          "optional": false
+        },
+        {
+          "name": "owner_is_self",
+          "kind": "bool",
+          "doc": "owned by the scanning user (e.g. rootless Podman/Docker)",
+          "optional": false
+        },
+        {
+          "name": "mode",
+          "kind": "int",
+          "doc": "permission bits, e.g. 0o660 = 432",
+          "optional": false
+        },
+        {
+          "name": "group",
+          "kind": "name",
+          "doc": "group of the socket (numeric id if unnamed)",
+          "optional": false
+        }
+      ],
+      "file_attrs": false
+    },
+    {
+      "name": "proc_environ",
+      "kind": "probe",
+      "doc": "foreign process environments readable through /proc (one fact per run)",
+      "attrs": [
+        {
+          "name": "foreign_processes",
+          "kind": "int",
+          "doc": "processes other than lootr itself visible in /proc",
+          "optional": false
+        },
+        {
+          "name": "readable_environ",
+          "kind": "int",
+          "doc": "foreign processes whose environment lootr could read",
+          "optional": false
+        },
+        {
+          "name": "names",
+          "kind": "list",
+          "doc": "process names (comm) of the readable foreign processes, sorted",
+          "optional": false
+        }
+      ],
+      "file_attrs": false
+    },
+    {
+      "name": "writable_path_dir",
+      "kind": "probe",
+      "doc": "a directory at a probe path and who may write in it (PATH dirs, shared caches)",
+      "attrs": [
+        {
+          "name": "dir",
+          "kind": "path",
+          "doc": "the directory",
+          "optional": false
+        },
+        {
+          "name": "writable",
+          "kind": "bool",
+          "doc": "the scanning user may write in it (mode, owner and groups; root always may)",
+          "optional": false
+        },
+        {
+          "name": "world_writable",
+          "kind": "bool",
+          "doc": "any user may write in it",
+          "optional": false
+        },
+        {
+          "name": "group_writable",
+          "kind": "bool",
+          "doc": "its group may write in it",
+          "optional": false
+        },
+        {
+          "name": "owner_is_self",
+          "kind": "bool",
+          "doc": "owned by the scanning user",
+          "optional": false
+        },
+        {
+          "name": "mode",
+          "kind": "int",
+          "doc": "permission bits, e.g. 0o755 = 493",
+          "optional": false
+        },
+        {
+          "name": "symlink",
+          "kind": "bool",
+          "doc": "the path is a symlink; the other attributes describe the directory it points to",
+          "optional": false
+        }
+      ],
+      "file_attrs": false
+    },
+    {
+      "name": "writable_file",
+      "kind": "probe",
+      "doc": "a file at a probe path and who may write it or its directory (shell rc, git hooks)",
+      "attrs": [
+        {
+          "name": "writable",
+          "kind": "bool",
+          "doc": "the scanning user may write the file",
+          "optional": false
+        },
+        {
+          "name": "world_writable",
+          "kind": "bool",
+          "doc": "any user may write the file",
+          "optional": false
+        },
+        {
+          "name": "group_writable",
+          "kind": "bool",
+          "doc": "its group may write the file",
+          "optional": false
+        },
+        {
+          "name": "parent_writable",
+          "kind": "bool",
+          "doc": "the scanning user may write its directory (so replace the file)",
+          "optional": false
+        },
+        {
+          "name": "parent_world_writable",
+          "kind": "bool",
+          "doc": "any user may write its directory",
+          "optional": false
+        },
+        {
+          "name": "parent_group_writable",
+          "kind": "bool",
+          "doc": "its directory's group may write it",
+          "optional": false
+        },
+        {
+          "name": "owner_is_self",
+          "kind": "bool",
+          "doc": "the file is owned by the scanning user",
+          "optional": false
+        },
+        {
+          "name": "mode",
+          "kind": "int",
+          "doc": "permission bits, e.g. 0o644 = 420",
+          "optional": false
+        },
+        {
+          "name": "symlink",
+          "kind": "bool",
+          "doc": "the path is a symlink; `writable`, the write bits, owner and mode describe the file it points to (none for a dangling link), the parent attributes the link's directory",
+          "optional": false
+        }
+      ],
+      "file_attrs": false
+    },
+    {
+      "name": "suid_binary",
+      "kind": "probe",
+      "doc": "a setuid/setgid binary or a binary with file capabilities at a probe path",
+      "attrs": [
+        {
+          "name": "setuid",
+          "kind": "bool",
+          "doc": "the setuid bit is set",
+          "optional": false
+        },
+        {
+          "name": "setgid",
+          "kind": "bool",
+          "doc": "the setgid bit is set",
+          "optional": false
+        },
+        {
+          "name": "owner_is_root",
+          "kind": "bool",
+          "doc": "owned by root (setuid root runs as root)",
+          "optional": false
+        },
+        {
+          "name": "owner_is_self",
+          "kind": "bool",
+          "doc": "owned by the scanning user",
+          "optional": false
+        },
+        {
+          "name": "writable",
+          "kind": "bool",
+          "doc": "the scanning user may write it (so replace it)",
+          "optional": false
+        },
+        {
+          "name": "world_writable",
+          "kind": "bool",
+          "doc": "any user may write it",
+          "optional": false
+        },
+        {
+          "name": "mode",
+          "kind": "int",
+          "doc": "permission bits incl. setuid/setgid",
+          "optional": false
+        },
+        {
+          "name": "capabilities",
+          "kind": "list",
+          "doc": "Linux file capabilities in the permitted set (e.g. cap_net_raw), empty if none/unsupported",
+          "optional": false
+        }
+      ],
+      "file_attrs": false
+    },
+    {
+      "name": "kube_service_account",
+      "kind": "probe",
+      "doc": "an in-cluster Kubernetes service account token mount",
+      "attrs": [
+        {
+          "name": "namespace",
+          "kind": "text",
+          "doc": "the pod's namespace (from the sibling `namespace` file)",
+          "optional": true
+        },
+        {
+          "name": "has_ca",
+          "kind": "bool",
+          "doc": "a sibling `ca.crt` is present (the cluster CA)",
+          "optional": false
+        }
+      ],
+      "file_attrs": false
+    },
+    {
+      "name": "waiver",
+      "kind": "config",
+      "doc": "a waiver from the config (one fact per waiver, made after the other rules ran)",
+      "attrs": [
+        {
+          "name": "waived_rule",
+          "kind": "name",
+          "doc": "id of the waived rule",
+          "optional": false
+        },
+        {
+          "name": "reason",
+          "kind": "text",
+          "doc": "the waiver's reason",
+          "optional": false
+        },
+        {
+          "name": "expires",
+          "kind": "text",
+          "doc": "expiry date (YYYY-MM-DD)",
+          "optional": true
+        },
+        {
+          "name": "expired",
+          "kind": "bool",
+          "doc": "the expiry date has passed: the waiver is ignored",
+          "optional": false
+        },
+        {
+          "name": "expires_in_days",
+          "kind": "int",
+          "doc": "days from the scan date to the expiry date (negative once expired)",
+          "optional": true
+        },
+        {
+          "name": "matched",
+          "kind": "int",
+          "doc": "findings this waiver waived in this run (0 for expired waivers)",
+          "optional": false
+        },
+        {
+          "name": "waived_path",
+          "kind": "text",
+          "doc": "the waiver's path glob as written",
+          "optional": true
+        },
+        {
+          "name": "waived_name",
+          "kind": "text",
+          "doc": "the waiver's env var name or key path",
+          "optional": true
+        }
+      ],
+      "file_attrs": false
+    }
+  ],
+  "file_attrs": [
+    {
+      "name": "mode",
+      "kind": "int",
+      "doc": "permission bits, e.g. 0o600 = 384",
+      "optional": false
+    },
+    {
+      "name": "world_readable",
+      "kind": "bool",
+      "doc": "others may read the file",
+      "optional": false
+    },
+    {
+      "name": "group_readable",
+      "kind": "bool",
+      "doc": "the group may read the file",
+      "optional": false
+    },
+    {
+      "name": "owner_is_self",
+      "kind": "bool",
+      "doc": "owned by the scanning user",
+      "optional": false
+    },
+    {
+      "name": "age_days",
+      "kind": "int",
+      "doc": "days since the last modification",
+      "optional": false
+    },
+    {
+      "name": "size",
+      "kind": "int",
+      "doc": "file size in bytes",
+      "optional": false
+    },
+    {
+      "name": "in_git_repo",
+      "kind": "bool",
+      "doc": "the file is inside a git work tree (a parent directory has `.git`)",
+      "optional": false
+    },
+    {
+      "name": "gitignored",
+      "kind": "bool",
+      "doc": "the repository's .gitignore files or .git/info/exclude ignore the file (false outside a repository; global excludes are not considered)",
+      "optional": false
+    }
+  ],
+  "builtin_variables": [
+    "type",
+    "source",
+    "location",
+    "attrs"
+  ]
+}

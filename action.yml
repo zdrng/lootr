@@ -1,0 +1,258 @@
+# lootr GitHub Action (composite): downloads a lootr release, verifies its
+# Sigstore build provenance, scans what the job can reach (environment,
+# checkout, home directory, sockets), writes a Markdown job summary and
+# uploads SARIF to GitHub code scanning.
+#
+# Use it pinned by commit SHA, with the version of that release:
+#
+#   permissions:
+#     contents: read
+#     security-events: write        # SARIF upload
+#   steps:
+#     - uses: actions/checkout@<sha> # with persist-credentials: false
+#     - uses: OWNER/lootr@<commit sha of tag vX.Y.Z> # vX.Y.Z
+#       with:
+#         version: X.Y.Z
+#
+# The action uses no third-party actions. It needs bash, curl, tar, gzip, jq
+# and gh (or cosign) on the runner; GitHub-hosted runners have them. lootr
+# itself runs offline; only this action's download, verification and upload
+# steps use the network, and the token is never visible to lootr.
+#
+# Release artifacts it expects (see "Release artifacts" in PLAN.md):
+#   https://github.com/<repository>/releases/download/v<version>/
+#     lootr-<version>-<target>.tar.gz               (contains lootr-<version>-<target>/lootr)
+#     lootr-<version>-<target>.tar.gz.sigstore.json (SLSA provenance, Sigstore bundle)
+#   <target>: x86_64-unknown-linux-musl, aarch64-unknown-linux-musl,
+#             universal-apple-darwin
+
+name: lootr
+description: Show which secrets and credentials a CI job can reach and check them against a CEL policy
+author: lootr contributors
+branding:
+  icon: shield
+  color: gray-dark
+
+inputs:
+  version:
+    description: lootr release to use, e.g. 0.2.0 (required; there is no "latest")
+    required: true
+  repository:
+    description: Repository that publishes the releases (default the repository of this action)
+    required: false
+    default: ""
+  config:
+    description: Config layers (--config), one path per line, applied in order after the built-in default. Files inside the checkout (and their waivers) are controlled by the pull request author; load enforced policy from outside the checkout and lock it
+    required: false
+    default: ""
+  fail-on:
+    description: Fail the job if an unwaived finding has at least this severity (info, low, medium, high, critical)
+    required: false
+    default: high
+  args:
+    description: Extra lootr arguments, one per line (e.g. --no-default)
+    required: false
+    default: ""
+  redact-paths:
+    description: Hide paths outside the working directory in every report (job summaries and code scanning are visible to everyone who can read the repository)
+    required: false
+    default: "true"
+  sarif:
+    description: Write a SARIF report and upload it to GitHub code scanning (needs security-events write permission)
+    required: false
+    default: "true"
+  sarif-category:
+    description: Code scanning category (runs[].automationDetails.id), so several lootr jobs keep their own alerts
+    required: false
+    default: lootr
+  job-summary:
+    description: Append the Markdown report to the job summary
+    required: false
+    default: "true"
+  token:
+    description: Token for the attestation check and the SARIF upload; never passed to lootr
+    required: false
+    default: ${{ github.token }}
+  working-directory:
+    description: Directory lootr runs in (relative paths in the config and in SARIF are relative to it)
+    required: false
+    default: "."
+
+outputs:
+  exit-code:
+    description: lootr's exit code (0 passed, 1 findings at or above fail-on, 2 error)
+    value: ${{ steps.scan.outputs.exit-code }}
+  sarif-file:
+    description: Path of the SARIF report (if sarif is true)
+    value: ${{ steps.scan.outputs.sarif-file }}
+  markdown-file:
+    description: Path of the Markdown report (if job-summary is true)
+    value: ${{ steps.scan.outputs.markdown-file }}
+
+runs:
+  using: composite
+  steps:
+    - name: Download and verify lootr
+      id: install
+      shell: bash
+      # Inputs reach scripts only through the environment (no `${{ }}` in
+      # the script text: no script injection).
+      env:
+        LOOTR_VERSION: ${{ inputs.version }}
+        LOOTR_REPOSITORY: ${{ inputs.repository || github.action_repository }}
+        LOOTR_RUNNER: ${{ runner.os }}/${{ runner.arch }}
+        GH_TOKEN: ${{ inputs.token }}
+      run: |
+        set -euo pipefail
+        if ! [[ "$LOOTR_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$ ]]; then
+          echo "::error::lootr: version must be a release version like 0.2.0, not '$LOOTR_VERSION'"
+          exit 2
+        fi
+        if ! [[ "$LOOTR_REPOSITORY" =~ ^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$ ]]; then
+          echo "::error::lootr: set the repository input (owner/name) of the lootr releases"
+          exit 2
+        fi
+        case "$LOOTR_RUNNER" in
+          Linux/X64) target=x86_64-unknown-linux-musl ;;
+          Linux/ARM64) target=aarch64-unknown-linux-musl ;;
+          macOS/X64 | macOS/ARM64) target=universal-apple-darwin ;;
+          *)
+            echo "::error::lootr: no release build for $LOOTR_RUNNER"
+            exit 2
+            ;;
+        esac
+        name="lootr-$LOOTR_VERSION-$target"
+        archive="$name.tar.gz"
+        dir="$RUNNER_TEMP/lootr-$LOOTR_VERSION"
+        rm -rf "$dir"
+        mkdir -p "$dir"
+        base="https://github.com/$LOOTR_REPOSITORY/releases/download/v$LOOTR_VERSION"
+        for file in "$archive" "$archive.sigstore.json"; do
+          curl --proto '=https' --tlsv1.2 -fsSL --retry 3 -o "$dir/$file" "$base/$file"
+        done
+        # The bundle is the SLSA build provenance of the archive, signed
+        # keylessly (Sigstore) by the release workflow of the tag on a
+        # GitHub-hosted runner. Nothing is extracted before it verified.
+        workflow="$LOOTR_REPOSITORY/.github/workflows/release.yml"
+        if command -v gh >/dev/null 2>&1; then
+          gh attestation verify "$dir/$archive" \
+            --bundle "$dir/$archive.sigstore.json" \
+            --repo "$LOOTR_REPOSITORY" \
+            --signer-workflow "$workflow" \
+            --source-ref "refs/tags/v$LOOTR_VERSION" \
+            --deny-self-hosted-runners
+        elif command -v cosign >/dev/null 2>&1; then
+          cosign verify-blob-attestation \
+            --bundle "$dir/$archive.sigstore.json" \
+            --new-bundle-format \
+            --type slsaprovenance1 \
+            --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+            --certificate-identity "https://github.com/$workflow@refs/tags/v$LOOTR_VERSION" \
+            "$dir/$archive"
+        else
+          echo "::error::lootr: neither gh nor cosign is installed; cannot verify the release"
+          exit 2
+        fi
+        tar -xzf "$dir/$archive" -C "$dir"
+        bin="$dir/$name/lootr"
+        if [ ! -x "$bin" ]; then
+          echo "::error::lootr: $archive does not contain $name/lootr"
+          exit 2
+        fi
+        "$bin" --version
+        echo "bin=$bin" >>"$GITHUB_OUTPUT"
+
+    - name: Run lootr
+      id: scan
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        LOOTR_BIN: ${{ steps.install.outputs.bin }}
+        LOOTR_CONFIG: ${{ inputs.config }}
+        LOOTR_ARGS: ${{ inputs.args }}
+        LOOTR_FAIL_ON: ${{ inputs.fail-on }}
+        LOOTR_REDACT: ${{ inputs.redact-paths }}
+        LOOTR_SARIF: ${{ inputs.sarif }}
+        LOOTR_SUMMARY: ${{ inputs.job-summary }}
+      run: |
+        set -uo pipefail
+        bin=$LOOTR_BIN
+        args=(--fail-on "$LOOTR_FAIL_ON")
+        while IFS= read -r line; do
+          [ -n "$line" ] && args+=(--config "$line")
+        done <<<"$LOOTR_CONFIG"
+        while IFS= read -r line; do
+          [ -n "$line" ] && args+=("$line")
+        done <<<"$LOOTR_ARGS"
+        [ "$LOOTR_REDACT" = true ] && args+=(--redact-paths)
+        sarif=$LOOTR_SARIF summary=$LOOTR_SUMMARY
+        # The action's own variables are not part of what the job exposes.
+        unset LOOTR_BIN LOOTR_CONFIG LOOTR_ARGS LOOTR_FAIL_ON LOOTR_REDACT LOOTR_SARIF LOOTR_SUMMARY
+        out="$RUNNER_TEMP/lootr-report"
+        mkdir -p "$out"
+        code=
+        run() {
+          local c=0
+          "$bin" "${args[@]}" "$@" || c=$?
+          if [ -z "$code" ]; then
+            code=$c
+          elif [ "$c" != "$code" ]; then
+            echo "::warning::lootr: the second run exited with $c, the first with $code"
+          fi
+        }
+        if [ "$sarif" = true ]; then
+          run --format sarif --output "$out/lootr.sarif"
+          echo "sarif-file=$out/lootr.sarif" >>"$GITHUB_OUTPUT"
+        fi
+        if [ "$summary" = true ]; then
+          run --quiet --format markdown --output "$out/lootr.md"
+          if [ -f "$out/lootr.md" ]; then
+            cat "$out/lootr.md" >>"$GITHUB_STEP_SUMMARY"
+            echo "markdown-file=$out/lootr.md" >>"$GITHUB_OUTPUT"
+          fi
+        fi
+        if [ -z "$code" ]; then
+          run --format json --output "$out/lootr.json"
+        fi
+        echo "exit-code=$code" >>"$GITHUB_OUTPUT"
+
+    - name: Upload SARIF to code scanning
+      if: ${{ inputs.sarif == 'true' && steps.scan.outputs.sarif-file != '' }}
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+        LOOTR_SARIF_FILE: ${{ steps.scan.outputs.sarif-file }}
+        LOOTR_CATEGORY: ${{ inputs.sarif-category }}
+      run: |
+        set -euo pipefail
+        if [ ! -s "$LOOTR_SARIF_FILE" ]; then
+          echo "::warning::lootr: no SARIF report to upload"
+          exit 0
+        fi
+        payload="$RUNNER_TEMP/lootr-report/lootr.sarif.gz.b64"
+        jq --arg id "$LOOTR_CATEGORY/" '.runs[0].automationDetails = {id: $id}' "$LOOTR_SARIF_FILE" \
+          | gzip -c | base64 | tr -d '\n' >"$payload"
+        # REST API instead of a third-party upload action.
+        if ! gh api --method POST "repos/$GITHUB_REPOSITORY/code-scanning/sarifs" \
+          -f commit_sha="$GITHUB_SHA" -f ref="$GITHUB_REF" -f tool_name=lootr \
+          -F sarif=@"$payload" >/dev/null; then
+          echo "::warning::lootr: SARIF upload failed (needs permissions: security-events: write; pull requests from forks cannot upload)"
+        fi
+
+    - name: Result
+      shell: bash
+      env:
+        LOOTR_CODE: ${{ steps.scan.outputs.exit-code }}
+        LOOTR_FAIL_ON: ${{ inputs.fail-on }}
+      run: |
+        case "$LOOTR_CODE" in
+          0) echo "lootr: no unwaived finding at or above $LOOTR_FAIL_ON" ;;
+          1)
+            echo "::error::lootr: unwaived findings at or above $LOOTR_FAIL_ON (see the job summary)"
+            exit 1
+            ;;
+          *)
+            echo "::error::lootr failed (exit code ${LOOTR_CODE:-unknown}): invalid config or a rule error"
+            exit 2
+            ;;
+        esac

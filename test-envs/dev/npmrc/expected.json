@@ -1,0 +1,301 @@
+{
+  "exit_code": 1,
+  "report": {
+    "schema_version": 1,
+    "tool": {
+      "name": "lootr"
+    },
+    "run": {
+      "fail_on": "high",
+      "config_layers": [
+        "<built-in>",
+        "/Users/zdrng/Projects/lootr/test-envs/common.toml"
+      ],
+      "cwd": "<root>/workdir",
+      "home": "<root>/home"
+    },
+    "custom_types": [],
+    "summary": {
+      "candidates": 8,
+      "facts": 5,
+      "findings": 5,
+      "waived": 0,
+      "failing": 3,
+      "by_severity": {
+        "critical": 0,
+        "high": 3,
+        "medium": 2,
+        "low": 0,
+        "info": 0
+      },
+      "rule_errors": 0,
+      "expired_waivers": 0,
+      "skipped": 0,
+      "failing_skipped": 0,
+      "by_rule": {
+        "api-key": 1,
+        "credential-file-readable-npmrc": 1,
+        "npmrc-inline-token": 2,
+        "npmrc-token-not-gitignored": 1
+      }
+    },
+    "findings": [
+      {
+        "rule": "api-key",
+        "severity": "high",
+        "message": "npm key (access_token) visible in ~/.npmrc#//registry.npmjs.org/:_authToken",
+        "remediation": "Revoke the key if it leaked; give it only to the processes that need it (a secret manager, files with mode 0600)",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null,
+        "fact": {
+          "type": "api_key",
+          "location": {
+            "kind": "file",
+            "path": "~/.npmrc",
+            "key_path": "//registry.npmjs.org/:_authToken"
+          },
+          "source": "npmrc",
+          "attrs": {
+            "world_readable": false,
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kind": "access_token",
+            "mode": 384,
+            "owner_is_self": true,
+            "service": "npm",
+            "size": 256
+          }
+        }
+      },
+      {
+        "rule": "credential-file-readable-npmrc",
+        "severity": "high",
+        "message": "<root>/workdir/.npmrc with stored credentials is readable by others (mode 0644)",
+        "remediation": "chmod 600 <root>/workdir/.npmrc and rotate the credentials",
+        "tags": {
+          "category": "file-permissions"
+        },
+        "waived": null,
+        "fact": {
+          "type": "npmrc",
+          "location": {
+            "kind": "file",
+            "path": "<root>/workdir/.npmrc"
+          },
+          "source": "npmrc",
+          "attrs": {
+            "world_readable": true,
+            "env_refs": 0,
+            "gitignored": false,
+            "group_readable": true,
+            "hosts": [
+              "npm.corp.example"
+            ],
+            "in_git_repo": true,
+            "inline_tokens": 1,
+            "mode": 420,
+            "owner_is_self": true,
+            "size": 113
+          }
+        }
+      },
+      {
+        "rule": "npmrc-token-not-gitignored",
+        "severity": "high",
+        "message": "<root>/workdir/.npmrc stores registry credentials and is inside a git work tree without being ignored",
+        "remediation": "Remove the token from <root>/workdir/.npmrc, check the history (git log -- <root>/workdir/.npmrc) and rotate it",
+        "tags": {
+          "category": "version-control"
+        },
+        "waived": null,
+        "fact": {
+          "type": "npmrc",
+          "location": {
+            "kind": "file",
+            "path": "<root>/workdir/.npmrc"
+          },
+          "source": "npmrc",
+          "attrs": {
+            "world_readable": true,
+            "env_refs": 0,
+            "gitignored": false,
+            "group_readable": true,
+            "hosts": [
+              "npm.corp.example"
+            ],
+            "in_git_repo": true,
+            "inline_tokens": 1,
+            "mode": 420,
+            "owner_is_self": true,
+            "size": 113
+          }
+        }
+      },
+      {
+        "rule": "npmrc-inline-token",
+        "severity": "medium",
+        "message": "Registry credentials are stored in ~/.npmrc (hosts: npm.corp.example, registry.npmjs.org)",
+        "remediation": "Reference an environment variable instead (//registry.example/:_authToken=${NPM_TOKEN}) and rotate the token",
+        "tags": {
+          "category": "plaintext-storage"
+        },
+        "waived": null,
+        "fact": {
+          "type": "npmrc",
+          "location": {
+            "kind": "file",
+            "path": "~/.npmrc"
+          },
+          "source": "npmrc",
+          "attrs": {
+            "world_readable": false,
+            "env_refs": 1,
+            "gitignored": false,
+            "group_readable": false,
+            "hosts": [
+              "npm.corp.example",
+              "registry.npmjs.org"
+            ],
+            "in_git_repo": false,
+            "inline_tokens": 2,
+            "mode": 384,
+            "owner_is_self": true,
+            "size": 256
+          }
+        }
+      },
+      {
+        "rule": "npmrc-inline-token",
+        "severity": "medium",
+        "message": "Registry credentials are stored in <root>/workdir/.npmrc (hosts: npm.corp.example)",
+        "remediation": "Reference an environment variable instead (//registry.example/:_authToken=${NPM_TOKEN}) and rotate the token",
+        "tags": {
+          "category": "plaintext-storage"
+        },
+        "waived": null,
+        "fact": {
+          "type": "npmrc",
+          "location": {
+            "kind": "file",
+            "path": "<root>/workdir/.npmrc"
+          },
+          "source": "npmrc",
+          "attrs": {
+            "world_readable": true,
+            "env_refs": 0,
+            "gitignored": false,
+            "group_readable": true,
+            "hosts": [
+              "npm.corp.example"
+            ],
+            "in_git_repo": true,
+            "inline_tokens": 1,
+            "mode": 420,
+            "owner_is_self": true,
+            "size": 113
+          }
+        }
+      }
+    ],
+    "rule_errors": [],
+    "expired_waivers": [],
+    "skipped": [],
+    "facts": [
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "HOME"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [],
+          "name": "HOME",
+          "length": 45
+        }
+      },
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "NPM_TOKEN"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [],
+          "entropy": 58,
+          "length": 19,
+          "name": "NPM_TOKEN"
+        }
+      },
+      {
+        "type": "npmrc",
+        "location": {
+          "kind": "file",
+          "path": "~/.npmrc"
+        },
+        "source": "npmrc",
+        "attrs": {
+          "world_readable": false,
+          "env_refs": 1,
+          "gitignored": false,
+          "group_readable": false,
+          "hosts": [
+            "npm.corp.example",
+            "registry.npmjs.org"
+          ],
+          "in_git_repo": false,
+          "inline_tokens": 2,
+          "mode": 384,
+          "owner_is_self": true,
+          "size": 256
+        }
+      },
+      {
+        "type": "api_key",
+        "location": {
+          "kind": "file",
+          "path": "~/.npmrc",
+          "key_path": "//registry.npmjs.org/:_authToken"
+        },
+        "source": "npmrc",
+        "attrs": {
+          "world_readable": false,
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kind": "access_token",
+          "mode": 384,
+          "owner_is_self": true,
+          "service": "npm",
+          "size": 256
+        }
+      },
+      {
+        "type": "npmrc",
+        "location": {
+          "kind": "file",
+          "path": "<root>/workdir/.npmrc"
+        },
+        "source": "npmrc",
+        "attrs": {
+          "world_readable": true,
+          "env_refs": 0,
+          "gitignored": false,
+          "group_readable": true,
+          "hosts": [
+            "npm.corp.example"
+          ],
+          "in_git_repo": true,
+          "inline_tokens": 1,
+          "mode": 420,
+          "owner_is_self": true,
+          "size": 113
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,876 @@
+{
+  "exit_code": 1,
+  "report": {
+    "custom_types": [],
+    "expired_waivers": [],
+    "facts": [
+      {
+        "attrs": {
+          "classified_as": [
+            "jwt"
+          ],
+          "entropy": 1748,
+          "length": 310,
+          "name": "ACTIONS_ID_TOKEN_REQUEST_TOKEN"
+        },
+        "location": {
+          "kind": "env",
+          "name": "ACTIONS_ID_TOKEN_REQUEST_TOKEN"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "alg": "RS256",
+          "audience": [
+            "api://ActionsTokenExchange"
+          ],
+          "expired": false,
+          "issuer": "https://oidc.actions.example",
+          "lifetime_hours": 667345,
+          "scopes": [
+            "Actions.GenericRead",
+            "generate_id_token"
+          ]
+        },
+        "location": {
+          "kind": "env",
+          "name": "ACTIONS_ID_TOKEN_REQUEST_TOKEN"
+        },
+        "source": "process-env",
+        "type": "jwt"
+      },
+      {
+        "attrs": {
+          "classified_as": [
+            "jwt"
+          ],
+          "entropy": 1269,
+          "length": 228,
+          "name": "ACTIONS_RUNTIME_TOKEN"
+        },
+        "location": {
+          "kind": "env",
+          "name": "ACTIONS_RUNTIME_TOKEN"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "alg": "RS256",
+          "audience": [
+            "vso:runtime"
+          ],
+          "expired": true,
+          "issuer": "https://runtime.actions.example",
+          "lifetime_hours": 6
+        },
+        "location": {
+          "kind": "env",
+          "name": "ACTIONS_RUNTIME_TOKEN"
+        },
+        "source": "process-env",
+        "type": "jwt"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 8,
+          "length": 4,
+          "name": "CI"
+        },
+        "location": {
+          "kind": "env",
+          "name": "CI"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "classified_as": [
+            "github_token"
+          ],
+          "entropy": 193,
+          "length": 40,
+          "name": "GH_TOKEN"
+        },
+        "location": {
+          "kind": "env",
+          "name": "GH_TOKEN"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "checksum_valid": true,
+          "kind": "classic",
+          "prefix": "ghp_"
+        },
+        "location": {
+          "kind": "env",
+          "name": "GH_TOKEN"
+        },
+        "source": "process-env",
+        "type": "github_token"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 8,
+          "length": 4,
+          "name": "GITHUB_ACTIONS"
+        },
+        "location": {
+          "kind": "env",
+          "name": "GITHUB_ACTIONS"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 29,
+          "length": 11,
+          "name": "GITHUB_REPOSITORY"
+        },
+        "location": {
+          "kind": "env",
+          "name": "GITHUB_REPOSITORY"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "classified_as": [
+            "github_token"
+          ],
+          "entropy": 183,
+          "length": 40,
+          "name": "GITHUB_TOKEN"
+        },
+        "location": {
+          "kind": "env",
+          "name": "GITHUB_TOKEN"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "checksum_valid": true,
+          "kind": "app",
+          "prefix": "ghs_"
+        },
+        "location": {
+          "kind": "env",
+          "name": "GITHUB_TOKEN"
+        },
+        "source": "process-env",
+        "type": "github_token"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 35,
+          "length": 12,
+          "name": "HOME"
+        },
+        "location": {
+          "kind": "env",
+          "name": "HOME"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 173,
+          "length": 36,
+          "name": "NPM_TOKEN"
+        },
+        "location": {
+          "kind": "env",
+          "name": "NPM_TOKEN"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 299,
+          "length": 82,
+          "name": "PATH"
+        },
+        "location": {
+          "kind": "env",
+          "name": "PATH"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 83,
+          "length": 25,
+          "name": "PWD"
+        },
+        "location": {
+          "kind": "env",
+          "name": "PWD"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 11,
+          "length": 5,
+          "name": "RUNNER_OS"
+        },
+        "location": {
+          "kind": "env",
+          "name": "RUNNER_OS"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 6,
+          "gitignored": false,
+          "group_readable": true,
+          "in_git_repo": true,
+          "length": 4,
+          "mode": 420,
+          "name": "NODE_ENV",
+          "owner_is_self": true,
+          "world_readable": true
+        },
+        "location": {
+          "key_path": "NODE_ENV",
+          "kind": "file",
+          "path": "~/work/app/app/.env"
+        },
+        "source": "dotenv",
+        "type": "dotenv_entry"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 11,
+          "gitignored": false,
+          "group_readable": true,
+          "in_git_repo": true,
+          "length": 5,
+          "mode": 420,
+          "name": "LOG_LEVEL",
+          "owner_is_self": true,
+          "world_readable": true
+        },
+        "location": {
+          "key_path": "LOG_LEVEL",
+          "kind": "file",
+          "path": "~/work/app/app/.env"
+        },
+        "source": "dotenv",
+        "type": "dotenv_entry"
+      },
+      {
+        "attrs": {
+          "default_permissions": "none",
+          "gitignored": false,
+          "group_readable": true,
+          "in_git_repo": true,
+          "job": "test",
+          "mode": 420,
+          "owner_is_self": true,
+          "permissions": {
+            "actions": "none",
+            "attestations": "none",
+            "checks": "none",
+            "contents": "read",
+            "deployments": "none",
+            "discussions": "none",
+            "id-token": "none",
+            "issues": "none",
+            "models": "none",
+            "packages": "none",
+            "pages": "none",
+            "pull-requests": "none",
+            "repository-projects": "none",
+            "security-events": "none",
+            "statuses": "none"
+          },
+          "permissions_source": "workflow",
+          "triggers": [
+            "pull_request",
+            "push"
+          ],
+          "world_readable": true,
+          "write_scopes": []
+        },
+        "location": {
+          "key_path": "jobs.test",
+          "kind": "file",
+          "path": "~/work/app/app/.github/workflows/ci.yml"
+        },
+        "source": "workflows",
+        "type": "github_workflow"
+      },
+      {
+        "attrs": {
+          "default_permissions": "none",
+          "gitignored": false,
+          "group_readable": true,
+          "in_git_repo": true,
+          "job": "preview",
+          "mode": 420,
+          "owner_is_self": true,
+          "permissions": {
+            "actions": "none",
+            "attestations": "none",
+            "checks": "none",
+            "contents": "write",
+            "deployments": "none",
+            "discussions": "none",
+            "id-token": "none",
+            "issues": "none",
+            "models": "none",
+            "packages": "none",
+            "pages": "none",
+            "pull-requests": "write",
+            "repository-projects": "none",
+            "security-events": "none",
+            "statuses": "none"
+          },
+          "permissions_source": "job",
+          "triggers": [
+            "pull_request_target"
+          ],
+          "world_readable": true,
+          "write_scopes": [
+            "contents",
+            "pull-requests"
+          ]
+        },
+        "location": {
+          "key_path": "jobs.preview",
+          "kind": "file",
+          "path": "~/work/app/app/.github/workflows/preview.yml"
+        },
+        "source": "workflows",
+        "type": "github_workflow"
+      },
+      {
+        "attrs": {
+          "groups": [
+            "runner",
+            "sudo"
+          ],
+          "in_container": true,
+          "is_root": false,
+          "uid": 1001
+        },
+        "location": {
+          "kind": "probe",
+          "name": "process"
+        },
+        "source": "process",
+        "type": "process"
+      },
+      {
+        "attrs": {
+          "foreign_processes": 0,
+          "names": [],
+          "readable_environ": 0
+        },
+        "location": {
+          "kind": "probe",
+          "name": "proc_environ"
+        },
+        "source": "proc-environ",
+        "type": "proc_environ"
+      },
+      {
+        "attrs": {
+          "dir": "/opt/runner-tools/bin",
+          "group_writable": true,
+          "mode": 511,
+          "owner_is_self": false,
+          "symlink": false,
+          "world_writable": true,
+          "writable": true
+        },
+        "location": {
+          "kind": "file",
+          "path": "/opt/runner-tools/bin"
+        },
+        "source": "path-dirs",
+        "type": "writable_path_dir"
+      },
+      {
+        "attrs": {
+          "dir": "~/.cache/pip",
+          "group_writable": true,
+          "mode": 1533,
+          "owner_is_self": false,
+          "symlink": false,
+          "world_writable": false,
+          "writable": true
+        },
+        "location": {
+          "kind": "file",
+          "path": "~/.cache/pip"
+        },
+        "source": "shared-caches",
+        "type": "writable_path_dir"
+      },
+      {
+        "attrs": {
+          "dir": "/opt/hostedtoolcache",
+          "group_writable": true,
+          "mode": 511,
+          "owner_is_self": false,
+          "symlink": false,
+          "world_writable": true,
+          "writable": true
+        },
+        "location": {
+          "kind": "file",
+          "path": "/opt/hostedtoolcache"
+        },
+        "source": "shared-caches",
+        "type": "writable_path_dir"
+      }
+    ],
+    "findings": [
+      {
+        "fact": {
+          "attrs": {
+            "checksum_valid": true,
+            "kind": "classic",
+            "prefix": "ghp_"
+          },
+          "location": {
+            "kind": "env",
+            "name": "GH_TOKEN"
+          },
+          "source": "process-env",
+          "type": "github_token"
+        },
+        "message": "Classic GitHub personal access token visible in $GH_TOKEN",
+        "remediation": "Revoke it and use a fine-grained token with minimal permissions and an expiry",
+        "rule": "github-classic-token",
+        "severity": "high",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "default_permissions": "none",
+            "gitignored": false,
+            "group_readable": true,
+            "in_git_repo": true,
+            "job": "preview",
+            "mode": 420,
+            "owner_is_self": true,
+            "permissions": {
+              "actions": "none",
+              "attestations": "none",
+              "checks": "none",
+              "contents": "write",
+              "deployments": "none",
+              "discussions": "none",
+              "id-token": "none",
+              "issues": "none",
+              "models": "none",
+              "packages": "none",
+              "pages": "none",
+              "pull-requests": "write",
+              "repository-projects": "none",
+              "security-events": "none",
+              "statuses": "none"
+            },
+            "permissions_source": "job",
+            "triggers": [
+              "pull_request_target"
+            ],
+            "world_readable": true,
+            "write_scopes": [
+              "contents",
+              "pull-requests"
+            ]
+          },
+          "location": {
+            "key_path": "jobs.preview",
+            "kind": "file",
+            "path": "~/work/app/app/.github/workflows/preview.yml"
+          },
+          "source": "workflows",
+          "type": "github_workflow"
+        },
+        "message": "Job preview in ~/work/app/app/.github/workflows/preview.yml runs on events others can cause (pull_request_target) with write access (contents, pull-requests)",
+        "remediation": "Split the workflow: untrusted input in a read-only job, writes in a separate job that does not run code or text from the event",
+        "rule": "workflow-untrusted-trigger-write",
+        "severity": "high",
+        "tags": {
+          "category": "ci-permissions"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "dir": "/opt/hostedtoolcache",
+            "group_writable": true,
+            "mode": 511,
+            "owner_is_self": false,
+            "symlink": false,
+            "world_writable": true,
+            "writable": true
+          },
+          "location": {
+            "kind": "file",
+            "path": "/opt/hostedtoolcache"
+          },
+          "source": "shared-caches",
+          "type": "writable_path_dir"
+        },
+        "message": "PATH/cache directory /opt/hostedtoolcache is world-writable (mode 0777): anyone can plant a binary or poison a cached artifact a later command runs",
+        "remediation": "chmod o-w /opt/hostedtoolcache (and g-w if its group is not trusted); keep PATH and shared caches writable only by their owner",
+        "rule": "writable-path-dir-world",
+        "severity": "high",
+        "tags": {
+          "category": "privilege"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "dir": "/opt/runner-tools/bin",
+            "group_writable": true,
+            "mode": 511,
+            "owner_is_self": false,
+            "symlink": false,
+            "world_writable": true,
+            "writable": true
+          },
+          "location": {
+            "kind": "file",
+            "path": "/opt/runner-tools/bin"
+          },
+          "source": "path-dirs",
+          "type": "writable_path_dir"
+        },
+        "message": "PATH/cache directory /opt/runner-tools/bin is world-writable (mode 0777): anyone can plant a binary or poison a cached artifact a later command runs",
+        "remediation": "chmod o-w /opt/runner-tools/bin (and g-w if its group is not trusted); keep PATH and shared caches writable only by their owner",
+        "rule": "writable-path-dir-world",
+        "severity": "high",
+        "tags": {
+          "category": "privilege"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "checksum_valid": true,
+            "kind": "app",
+            "prefix": "ghs_"
+          },
+          "location": {
+            "kind": "env",
+            "name": "GITHUB_TOKEN"
+          },
+          "source": "process-env",
+          "type": "github_token"
+        },
+        "message": "GitHub app token (ghs_) visible in $GITHUB_TOKEN",
+        "remediation": "Make sure only the processes that need it can see GITHUB_TOKEN; revoke it if it leaked",
+        "rule": "github-token",
+        "severity": "medium",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "alg": "RS256",
+            "audience": [
+              "api://ActionsTokenExchange"
+            ],
+            "expired": false,
+            "issuer": "https://oidc.actions.example",
+            "lifetime_hours": 667345,
+            "scopes": [
+              "Actions.GenericRead",
+              "generate_id_token"
+            ]
+          },
+          "location": {
+            "kind": "env",
+            "name": "ACTIONS_ID_TOKEN_REQUEST_TOKEN"
+          },
+          "source": "process-env",
+          "type": "jwt"
+        },
+        "message": "JWT in $ACTIONS_ID_TOKEN_REQUEST_TOKEN is valid for 667345 hours (issuer: https://oidc.actions.example)",
+        "remediation": "Use short-lived tokens (hours, not days) and keep them out of long-lived storage",
+        "rule": "jwt-long-lived",
+        "severity": "medium",
+        "tags": {
+          "category": "long-lived-credential"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "default_permissions": "none",
+            "gitignored": false,
+            "group_readable": true,
+            "in_git_repo": true,
+            "job": "preview",
+            "mode": 420,
+            "owner_is_self": true,
+            "permissions": {
+              "actions": "none",
+              "attestations": "none",
+              "checks": "none",
+              "contents": "write",
+              "deployments": "none",
+              "discussions": "none",
+              "id-token": "none",
+              "issues": "none",
+              "models": "none",
+              "packages": "none",
+              "pages": "none",
+              "pull-requests": "write",
+              "repository-projects": "none",
+              "security-events": "none",
+              "statuses": "none"
+            },
+            "permissions_source": "job",
+            "triggers": [
+              "pull_request_target"
+            ],
+            "world_readable": true,
+            "write_scopes": [
+              "contents",
+              "pull-requests"
+            ]
+          },
+          "location": {
+            "key_path": "jobs.preview",
+            "kind": "file",
+            "path": "~/work/app/app/.github/workflows/preview.yml"
+          },
+          "source": "workflows",
+          "type": "github_workflow"
+        },
+        "message": "Job preview in ~/work/app/app/.github/workflows/preview.yml runs on pull_request_target: with the repository's secrets, also for pull requests from forks",
+        "remediation": "Never check out or run code from the pull request in this workflow; use pull_request for builds and tests",
+        "rule": "workflow-pull-request-target",
+        "severity": "medium",
+        "tags": {
+          "category": "ci-permissions"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "dir": "~/.cache/pip",
+            "group_writable": true,
+            "mode": 1533,
+            "owner_is_self": false,
+            "symlink": false,
+            "world_writable": false,
+            "writable": true
+          },
+          "location": {
+            "kind": "file",
+            "path": "~/.cache/pip"
+          },
+          "source": "shared-caches",
+          "type": "writable_path_dir"
+        },
+        "message": "Directory ~/.cache/pip is group-writable (mode 2775): another member of its group can replace a binary or cached artifact",
+        "remediation": "chmod g-w ~/.cache/pip unless every member of its group is trusted",
+        "rule": "writable-cache-dir-group",
+        "severity": "medium",
+        "tags": {
+          "category": "privilege"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "classified_as": [],
+            "entropy": 173,
+            "length": 36,
+            "name": "NPM_TOKEN"
+          },
+          "location": {
+            "kind": "env",
+            "name": "NPM_TOKEN"
+          },
+          "source": "process-env",
+          "type": "env_var"
+        },
+        "message": "$NPM_TOKEN looks like a secret (36 bytes, 173 bits) and every child process inherits it",
+        "remediation": "Pass secrets only to the processes that need them (files with mode 0600, a secret manager)",
+        "rule": "env-secret-like",
+        "severity": "low",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "groups": [
+              "runner",
+              "sudo"
+            ],
+            "in_container": true,
+            "is_root": false,
+            "uid": 1001
+          },
+          "location": {
+            "kind": "probe",
+            "name": "process"
+          },
+          "source": "process",
+          "type": "process"
+        },
+        "message": "The user is in an administrator group (runner, sudo) and may be able to sudo",
+        "remediation": "Use a separate account without sudo rights for builds and untrusted code",
+        "rule": "process-sudo-group",
+        "severity": "low",
+        "tags": {
+          "category": "privilege"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "default_permissions": "none",
+            "gitignored": false,
+            "group_readable": true,
+            "in_git_repo": true,
+            "job": "preview",
+            "mode": 420,
+            "owner_is_self": true,
+            "permissions": {
+              "actions": "none",
+              "attestations": "none",
+              "checks": "none",
+              "contents": "write",
+              "deployments": "none",
+              "discussions": "none",
+              "id-token": "none",
+              "issues": "none",
+              "models": "none",
+              "packages": "none",
+              "pages": "none",
+              "pull-requests": "write",
+              "repository-projects": "none",
+              "security-events": "none",
+              "statuses": "none"
+            },
+            "permissions_source": "job",
+            "triggers": [
+              "pull_request_target"
+            ],
+            "world_readable": true,
+            "write_scopes": [
+              "contents",
+              "pull-requests"
+            ]
+          },
+          "location": {
+            "key_path": "jobs.preview",
+            "kind": "file",
+            "path": "~/work/app/app/.github/workflows/preview.yml"
+          },
+          "source": "workflows",
+          "type": "github_workflow"
+        },
+        "message": "Job preview in ~/work/app/app/.github/workflows/preview.yml can push to the repository (contents: write)",
+        "remediation": "Grant contents: write only to the job that needs it (releases, generated commits)",
+        "rule": "workflow-contents-write",
+        "severity": "low",
+        "tags": {
+          "category": "ci-permissions"
+        },
+        "waived": null
+      }
+    ],
+    "rule_errors": [],
+    "run": {
+      "config_layers": [
+        "<built-in>"
+      ],
+      "cwd": "/home/runner/work/app/app",
+      "fail_on": "high",
+      "home": "/home/runner",
+      "uid": 1001
+    },
+    "schema_version": 1,
+    "skipped": [],
+    "summary": {
+      "by_rule": {
+        "env-secret-like": 1,
+        "github-classic-token": 1,
+        "github-token": 1,
+        "jwt-long-lived": 1,
+        "process-sudo-group": 1,
+        "workflow-contents-write": 1,
+        "workflow-pull-request-target": 1,
+        "workflow-untrusted-trigger-write": 1,
+        "writable-cache-dir-group": 1,
+        "writable-path-dir-world": 2
+      },
+      "by_severity": {
+        "critical": 0,
+        "high": 4,
+        "info": 0,
+        "low": 3,
+        "medium": 4
+      },
+      "candidates": 26,
+      "expired_waivers": 0,
+      "facts": 25,
+      "failing": 4,
+      "failing_skipped": 0,
+      "findings": 11,
+      "rule_errors": 0,
+      "skipped": 0,
+      "waived": 0
+    },
+    "tool": {
+      "name": "lootr"
+    }
+  }
+}

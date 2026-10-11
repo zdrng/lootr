@@ -1,0 +1,79 @@
+# cargo-deny: supply-chain rules from PLAN.md ("Code rules", "License").
+# Run: nix develop -c cargo deny check
+
+[graph]
+all-features = false
+
+[advisories]
+version = 2
+yanked = "deny"
+
+[licenses]
+version = 2
+confidence-threshold = 0.93
+# The allowlist is a policy, not an inventory.
+unused-allowed-license = "allow"
+# GPL-3.0-compatible licenses only.
+allow = [
+    "Apache-2.0",
+    "Apache-2.0 WITH LLVM-exception",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "ISC",
+    "MIT",
+    "MPL-2.0",
+    "Unicode-3.0",
+    "Zlib",
+    "GPL-3.0-only",
+]
+
+[licenses.private]
+# lootr itself (publish = false) is GPL-3.0-only.
+ignore = true
+
+[bans]
+multiple-versions = "warn"
+wildcards = "deny"
+# lootr has no network code and no async runtime. These crates must never
+# enter the dependency tree, not even transitively.
+deny = [
+    # HTTP clients and servers
+    { crate = "reqwest", reason = "network" },
+    { crate = "ureq", reason = "network" },
+    { crate = "hyper", reason = "network" },
+    { crate = "h2", reason = "network" },
+    { crate = "h3", reason = "network" },
+    { crate = "curl", reason = "network" },
+    { crate = "curl-sys", reason = "network" },
+    { crate = "isahc", reason = "network" },
+    { crate = "attohttpc", reason = "network" },
+    { crate = "surf", reason = "network" },
+    { crate = "minreq", reason = "network" },
+    { crate = "http-req", reason = "network" },
+    { crate = "tungstenite", reason = "network" },
+    { crate = "quinn", reason = "network" },
+    { crate = "socket2", reason = "network" },
+    { crate = "trust-dns-resolver", reason = "network" },
+    { crate = "hickory-resolver", reason = "network" },
+    # TLS stacks (only useful for network access)
+    { crate = "rustls", reason = "network" },
+    { crate = "native-tls", reason = "network" },
+    { crate = "openssl", reason = "network" },
+    { crate = "openssl-sys", reason = "network" },
+    # async runtimes and their I/O
+    { crate = "tokio", reason = "async runtime" },
+    { crate = "async-std", reason = "async runtime" },
+    { crate = "smol", reason = "async runtime" },
+    { crate = "async-io", reason = "async runtime" },
+    { crate = "mio", reason = "async I/O" },
+    { crate = "futures", reason = "async" },
+    # subprocess helpers
+    { crate = "duct", reason = "subprocesses" },
+    { crate = "subprocess", reason = "subprocesses" },
+]
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]
+allow-git = []

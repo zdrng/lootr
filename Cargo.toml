@@ -1,0 +1,57 @@
+[package]
+name = "lootr"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.88"
+license = "GPL-3.0-only"
+description = "Shows which secrets and credentials the current user can reach and checks them against a CEL policy"
+publish = false
+
+# Every dependency needs a reason (see PLAN.md, "Supply chain"). No network or
+# async crates: enforced by deny.toml.
+[dependencies]
+# Policy expressions. Only the `regex` feature: no chrono, no base64 encoders.
+cel = { version = "0.15.0", default-features = false, features = ["regex"] }
+clap = { version = "4.6.7", features = ["derive"] }
+# Custom value types and globs (linear time, no backtracking).
+regex = "1.13.1"
+# Safe wrappers for open/fstat/setrlimit/prctl (the crate forbids unsafe code).
+rustix = { version = "1.1.5", features = ["fs", "process"] }
+# YAML (kubeconfig, GitHub workflows, gh hosts, the yaml extractor): only the
+# event parser. Pure Rust without unsafe code, MIT/Apache-2.0, YAML 1.2; the
+# tree (with depth, size and alias-expansion limits) is built in
+# domain::format::yaml. Pulls only arraydeque and thiserror.
+saphyr-parser = "0.1.0"
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = { version = "1.0.151", features = ["preserve_order"] }
+thiserror = "2.0.21"
+toml = "1.1.7"
+# Wipes secret buffers on drop.
+zeroize = "1.8.2"
+
+[dev-dependencies]
+tempfile = "3.27.0"
+
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+unwrap_used = "deny"
+expect_used = "deny"
+dbg_macro = "deny"
+print_stdout = "deny"
+print_stderr = "deny"
+todo = "deny"
+disallowed_methods = "deny"
+disallowed_types = "deny"
+disallowed_macros = "deny"
+
+# Release binaries are reproducible (scripts/release.sh adds --locked, path
+# remapping and fixed archive metadata): one codegen unit, no debug info, no
+# symbols.
+[profile.release]
+codegen-units = 1
+lto = true
+panic = "abort"
+debug = false
+strip = true

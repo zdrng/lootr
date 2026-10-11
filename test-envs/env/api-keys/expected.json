@@ -1,0 +1,830 @@
+{
+  "exit_code": 1,
+  "report": {
+    "schema_version": 1,
+    "tool": {
+      "name": "lootr"
+    },
+    "run": {
+      "fail_on": "high",
+      "config_layers": [
+        "<built-in>",
+        "/Users/zdrng/Projects/lootr/test-envs/common.toml"
+      ],
+      "cwd": "<root>/home",
+      "home": "<root>/home"
+    },
+    "custom_types": [],
+    "summary": {
+      "candidates": 20,
+      "facts": 32,
+      "findings": 15,
+      "waived": 0,
+      "failing": 12,
+      "by_severity": {
+        "critical": 0,
+        "high": 12,
+        "medium": 0,
+        "low": 3,
+        "info": 0
+      },
+      "rule_errors": 0,
+      "expired_waivers": 0,
+      "skipped": 0,
+      "failing_skipped": 0,
+      "by_rule": {
+        "api-key": 11,
+        "api-key-test-mode": 1,
+        "aws-session-key": 1,
+        "gitlab-ci-job-token": 1,
+        "gitlab-token": 1
+      }
+    },
+    "findings": [
+      {
+        "rule": "api-key",
+        "severity": "high",
+        "message": "anthropic key (api_key) visible in $ANTHROPIC_API_KEY",
+        "remediation": "Revoke the key if it leaked; give it only to the processes that need it (a secret manager, files with mode 0600)",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null,
+        "fact": {
+          "type": "api_key",
+          "location": {
+            "kind": "env",
+            "name": "ANTHROPIC_API_KEY"
+          },
+          "source": "process-env",
+          "attrs": {
+            "kind": "api_key",
+            "service": "anthropic"
+          }
+        }
+      },
+      {
+        "rule": "api-key",
+        "severity": "high",
+        "message": "digitalocean key (personal_access_token) visible in $DIGITALOCEAN_TOKEN",
+        "remediation": "Revoke the key if it leaked; give it only to the processes that need it (a secret manager, files with mode 0600)",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null,
+        "fact": {
+          "type": "api_key",
+          "location": {
+            "kind": "env",
+            "name": "DIGITALOCEAN_TOKEN"
+          },
+          "source": "process-env",
+          "attrs": {
+            "kind": "personal_access_token",
+            "service": "digitalocean"
+          }
+        }
+      },
+      {
+        "rule": "api-key",
+        "severity": "high",
+        "message": "google key (api_key) visible in $GOOGLE_API_KEY",
+        "remediation": "Revoke the key if it leaked; give it only to the processes that need it (a secret manager, files with mode 0600)",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null,
+        "fact": {
+          "type": "api_key",
+          "location": {
+            "kind": "env",
+            "name": "GOOGLE_API_KEY"
+          },
+          "source": "process-env",
+          "attrs": {
+            "kind": "api_key",
+            "service": "google"
+          }
+        }
+      },
+      {
+        "rule": "api-key",
+        "severity": "high",
+        "message": "huggingface key (access_token) visible in $HF_TOKEN",
+        "remediation": "Revoke the key if it leaked; give it only to the processes that need it (a secret manager, files with mode 0600)",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null,
+        "fact": {
+          "type": "api_key",
+          "location": {
+            "kind": "env",
+            "name": "HF_TOKEN"
+          },
+          "source": "process-env",
+          "attrs": {
+            "kind": "access_token",
+            "service": "huggingface"
+          }
+        }
+      },
+      {
+        "rule": "api-key",
+        "severity": "high",
+        "message": "npm key (access_token) visible in $NPM_TOKEN",
+        "remediation": "Revoke the key if it leaked; give it only to the processes that need it (a secret manager, files with mode 0600)",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null,
+        "fact": {
+          "type": "api_key",
+          "location": {
+            "kind": "env",
+            "name": "NPM_TOKEN"
+          },
+          "source": "process-env",
+          "attrs": {
+            "kind": "access_token",
+            "service": "npm"
+          }
+        }
+      },
+      {
+        "rule": "api-key",
+        "severity": "high",
+        "message": "openai key (project) visible in $OPENAI_API_KEY",
+        "remediation": "Revoke the key if it leaked; give it only to the processes that need it (a secret manager, files with mode 0600)",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null,
+        "fact": {
+          "type": "api_key",
+          "location": {
+            "kind": "env",
+            "name": "OPENAI_API_KEY"
+          },
+          "source": "process-env",
+          "attrs": {
+            "kind": "project",
+            "service": "openai"
+          }
+        }
+      },
+      {
+        "rule": "api-key",
+        "severity": "high",
+        "message": "sendgrid key (api_key) visible in $SENDGRID_API_KEY",
+        "remediation": "Revoke the key if it leaked; give it only to the processes that need it (a secret manager, files with mode 0600)",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null,
+        "fact": {
+          "type": "api_key",
+          "location": {
+            "kind": "env",
+            "name": "SENDGRID_API_KEY"
+          },
+          "source": "process-env",
+          "attrs": {
+            "kind": "api_key",
+            "service": "sendgrid"
+          }
+        }
+      },
+      {
+        "rule": "api-key",
+        "severity": "high",
+        "message": "slack key (bot) visible in $SLACK_BOT_TOKEN",
+        "remediation": "Revoke the key if it leaked; give it only to the processes that need it (a secret manager, files with mode 0600)",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null,
+        "fact": {
+          "type": "api_key",
+          "location": {
+            "kind": "env",
+            "name": "SLACK_BOT_TOKEN"
+          },
+          "source": "process-env",
+          "attrs": {
+            "kind": "bot",
+            "service": "slack"
+          }
+        }
+      },
+      {
+        "rule": "api-key",
+        "severity": "high",
+        "message": "slack key (webhook) visible in $SLACK_WEBHOOK_URL",
+        "remediation": "Revoke the key if it leaked; give it only to the processes that need it (a secret manager, files with mode 0600)",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null,
+        "fact": {
+          "type": "api_key",
+          "location": {
+            "kind": "env",
+            "name": "SLACK_WEBHOOK_URL"
+          },
+          "source": "process-env",
+          "attrs": {
+            "kind": "webhook",
+            "service": "slack"
+          }
+        }
+      },
+      {
+        "rule": "api-key",
+        "severity": "high",
+        "message": "stripe key (secret) visible in $STRIPE_SECRET_KEY",
+        "remediation": "Revoke the key if it leaked; give it only to the processes that need it (a secret manager, files with mode 0600)",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null,
+        "fact": {
+          "type": "api_key",
+          "location": {
+            "kind": "env",
+            "name": "STRIPE_SECRET_KEY"
+          },
+          "source": "process-env",
+          "attrs": {
+            "kind": "secret",
+            "live": true,
+            "service": "stripe"
+          }
+        }
+      },
+      {
+        "rule": "api-key",
+        "severity": "high",
+        "message": "hashicorp_vault key (service_token) visible in $VAULT_TOKEN",
+        "remediation": "Revoke the key if it leaked; give it only to the processes that need it (a secret manager, files with mode 0600)",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null,
+        "fact": {
+          "type": "api_key",
+          "location": {
+            "kind": "env",
+            "name": "VAULT_TOKEN"
+          },
+          "source": "process-env",
+          "attrs": {
+            "kind": "service_token",
+            "service": "hashicorp_vault"
+          }
+        }
+      },
+      {
+        "rule": "gitlab-token",
+        "severity": "high",
+        "message": "GitLab token (access_token, glpat-) visible in $GITLAB_TOKEN",
+        "remediation": "Revoke it if it leaked; prefer short-lived tokens with minimal scopes and an expiry",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null,
+        "fact": {
+          "type": "gitlab_token",
+          "location": {
+            "kind": "env",
+            "name": "GITLAB_TOKEN"
+          },
+          "source": "process-env",
+          "attrs": {
+            "kind": "access_token",
+            "prefix": "glpat-"
+          }
+        }
+      },
+      {
+        "rule": "api-key-test-mode",
+        "severity": "low",
+        "message": "stripe test-mode key (secret) visible in $STRIPE_TEST_KEY",
+        "remediation": "Test keys cannot move real money, but can read test data; keep them out of shared places",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null,
+        "fact": {
+          "type": "api_key",
+          "location": {
+            "kind": "env",
+            "name": "STRIPE_TEST_KEY"
+          },
+          "source": "process-env",
+          "attrs": {
+            "kind": "secret",
+            "live": false,
+            "service": "stripe"
+          }
+        }
+      },
+      {
+        "rule": "aws-session-key",
+        "severity": "low",
+        "message": "Temporary AWS session credentials visible in $AWS_ACCESS_KEY_ID",
+        "remediation": "They expire, but work until then: make sure only the processes that need them can see AWS_ACCESS_KEY_ID",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null,
+        "fact": {
+          "type": "aws_access_key_id",
+          "location": {
+            "kind": "env",
+            "name": "AWS_ACCESS_KEY_ID"
+          },
+          "source": "process-env",
+          "attrs": {
+            "kind": "session"
+          }
+        }
+      },
+      {
+        "rule": "gitlab-ci-job-token",
+        "severity": "low",
+        "message": "GitLab CI job token visible in $CI_JOB_TOKEN",
+        "remediation": "Job tokens expire with the job; make sure only the steps that need it can see CI_JOB_TOKEN",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null,
+        "fact": {
+          "type": "gitlab_token",
+          "location": {
+            "kind": "env",
+            "name": "CI_JOB_TOKEN"
+          },
+          "source": "process-env",
+          "attrs": {
+            "kind": "ci_job",
+            "prefix": "glcbt-"
+          }
+        }
+      }
+    ],
+    "rule_errors": [],
+    "expired_waivers": [],
+    "skipped": [],
+    "facts": [
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "ANTHROPIC_API_KEY"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [
+            "api_key"
+          ],
+          "entropy": 289,
+          "length": 57,
+          "name": "ANTHROPIC_API_KEY"
+        }
+      },
+      {
+        "type": "api_key",
+        "location": {
+          "kind": "env",
+          "name": "ANTHROPIC_API_KEY"
+        },
+        "source": "process-env",
+        "attrs": {
+          "kind": "api_key",
+          "service": "anthropic"
+        }
+      },
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "AWS_ACCESS_KEY_ID"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [
+            "aws_access_key_id"
+          ],
+          "entropy": 64,
+          "length": 20,
+          "name": "AWS_ACCESS_KEY_ID"
+        }
+      },
+      {
+        "type": "aws_access_key_id",
+        "location": {
+          "kind": "env",
+          "name": "AWS_ACCESS_KEY_ID"
+        },
+        "source": "process-env",
+        "attrs": {
+          "kind": "session"
+        }
+      },
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "CI_JOB_TOKEN"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [
+            "gitlab_token"
+          ],
+          "entropy": 152,
+          "length": 33,
+          "name": "CI_JOB_TOKEN"
+        }
+      },
+      {
+        "type": "gitlab_token",
+        "location": {
+          "kind": "env",
+          "name": "CI_JOB_TOKEN"
+        },
+        "source": "process-env",
+        "attrs": {
+          "kind": "ci_job",
+          "prefix": "glcbt-"
+        }
+      },
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "DIGITALOCEAN_TOKEN"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [
+            "api_key"
+          ],
+          "entropy": 299,
+          "length": 71,
+          "name": "DIGITALOCEAN_TOKEN"
+        }
+      },
+      {
+        "type": "api_key",
+        "location": {
+          "kind": "env",
+          "name": "DIGITALOCEAN_TOKEN"
+        },
+        "source": "process-env",
+        "attrs": {
+          "kind": "personal_access_token",
+          "service": "digitalocean"
+        }
+      },
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "GITLAB_TOKEN"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [
+            "gitlab_token"
+          ],
+          "entropy": 137,
+          "length": 31,
+          "name": "GITLAB_TOKEN"
+        }
+      },
+      {
+        "type": "gitlab_token",
+        "location": {
+          "kind": "env",
+          "name": "GITLAB_TOKEN"
+        },
+        "source": "process-env",
+        "attrs": {
+          "kind": "access_token",
+          "prefix": "glpat-"
+        }
+      },
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "GOOGLE_API_KEY"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [
+            "api_key"
+          ],
+          "entropy": 186,
+          "length": 39,
+          "name": "GOOGLE_API_KEY"
+        }
+      },
+      {
+        "type": "api_key",
+        "location": {
+          "kind": "env",
+          "name": "GOOGLE_API_KEY"
+        },
+        "source": "process-env",
+        "attrs": {
+          "kind": "api_key",
+          "service": "google"
+        }
+      },
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "HF_TOKEN"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [
+            "api_key"
+          ],
+          "entropy": 175,
+          "length": 37,
+          "name": "HF_TOKEN"
+        }
+      },
+      {
+        "type": "api_key",
+        "location": {
+          "kind": "env",
+          "name": "HF_TOKEN"
+        },
+        "source": "process-env",
+        "attrs": {
+          "kind": "access_token",
+          "service": "huggingface"
+        }
+      },
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "HOME"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [],
+          "name": "HOME",
+          "length": 45
+        }
+      },
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "NOT_A_KEY"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [],
+          "entropy": 44,
+          "length": 13,
+          "name": "NOT_A_KEY"
+        }
+      },
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "NPM_TOKEN"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [
+            "api_key"
+          ],
+          "entropy": 188,
+          "length": 40,
+          "name": "NPM_TOKEN"
+        }
+      },
+      {
+        "type": "api_key",
+        "location": {
+          "kind": "env",
+          "name": "NPM_TOKEN"
+        },
+        "source": "process-env",
+        "attrs": {
+          "kind": "access_token",
+          "service": "npm"
+        }
+      },
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "OPENAI_API_KEY"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [
+            "api_key"
+          ],
+          "entropy": 336,
+          "length": 68,
+          "name": "OPENAI_API_KEY"
+        }
+      },
+      {
+        "type": "api_key",
+        "location": {
+          "kind": "env",
+          "name": "OPENAI_API_KEY"
+        },
+        "source": "process-env",
+        "attrs": {
+          "kind": "project",
+          "service": "openai"
+        }
+      },
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "SENDGRID_API_KEY"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [
+            "api_key"
+          ],
+          "entropy": 334,
+          "length": 69,
+          "name": "SENDGRID_API_KEY"
+        }
+      },
+      {
+        "type": "api_key",
+        "location": {
+          "kind": "env",
+          "name": "SENDGRID_API_KEY"
+        },
+        "source": "process-env",
+        "attrs": {
+          "kind": "api_key",
+          "service": "sendgrid"
+        }
+      },
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "SLACK_BOT_TOKEN"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [
+            "api_key"
+          ],
+          "entropy": 252,
+          "length": 51,
+          "name": "SLACK_BOT_TOKEN"
+        }
+      },
+      {
+        "type": "api_key",
+        "location": {
+          "kind": "env",
+          "name": "SLACK_BOT_TOKEN"
+        },
+        "source": "process-env",
+        "attrs": {
+          "kind": "bot",
+          "service": "slack"
+        }
+      },
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "SLACK_WEBHOOK_URL"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [
+            "api_key"
+          ],
+          "entropy": 318,
+          "length": 73,
+          "name": "SLACK_WEBHOOK_URL"
+        }
+      },
+      {
+        "type": "api_key",
+        "location": {
+          "kind": "env",
+          "name": "SLACK_WEBHOOK_URL"
+        },
+        "source": "process-env",
+        "attrs": {
+          "kind": "webhook",
+          "service": "slack"
+        }
+      },
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "STRIPE_SECRET_KEY"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [
+            "api_key"
+          ],
+          "entropy": 173,
+          "length": 37,
+          "name": "STRIPE_SECRET_KEY"
+        }
+      },
+      {
+        "type": "api_key",
+        "location": {
+          "kind": "env",
+          "name": "STRIPE_SECRET_KEY"
+        },
+        "source": "process-env",
+        "attrs": {
+          "kind": "secret",
+          "live": true,
+          "service": "stripe"
+        }
+      },
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "STRIPE_TEST_KEY"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [
+            "api_key"
+          ],
+          "entropy": 169,
+          "length": 37,
+          "name": "STRIPE_TEST_KEY"
+        }
+      },
+      {
+        "type": "api_key",
+        "location": {
+          "kind": "env",
+          "name": "STRIPE_TEST_KEY"
+        },
+        "source": "process-env",
+        "attrs": {
+          "kind": "secret",
+          "live": false,
+          "service": "stripe"
+        }
+      },
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "VAULT_TOKEN"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [
+            "api_key"
+          ],
+          "entropy": 200,
+          "length": 40,
+          "name": "VAULT_TOKEN"
+        }
+      },
+      {
+        "type": "api_key",
+        "location": {
+          "kind": "env",
+          "name": "VAULT_TOKEN"
+        },
+        "source": "process-env",
+        "attrs": {
+          "kind": "service_token",
+          "service": "hashicorp_vault"
+        }
+      }
+    ]
+  }
+}

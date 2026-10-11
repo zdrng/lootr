@@ -1,0 +1,1588 @@
+{
+  "exit_code": 1,
+  "report": {
+    "custom_types": [],
+    "expired_waivers": [],
+    "facts": [
+      {
+        "attrs": {
+          "classified_as": [
+            "aws_access_key_id"
+          ],
+          "entropy": 68,
+          "length": 20,
+          "name": "AWS_ACCESS_KEY_ID"
+        },
+        "location": {
+          "kind": "env",
+          "name": "AWS_ACCESS_KEY_ID"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "kind": "long_lived"
+        },
+        "location": {
+          "kind": "env",
+          "name": "AWS_ACCESS_KEY_ID"
+        },
+        "source": "process-env",
+        "type": "aws_access_key_id"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 206,
+          "length": 42,
+          "name": "AWS_SECRET_ACCESS_KEY"
+        },
+        "location": {
+          "kind": "env",
+          "name": "AWS_SECRET_ACCESS_KEY"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 24,
+          "length": 9,
+          "name": "HOME"
+        },
+        "location": {
+          "kind": "env",
+          "name": "HOME"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "classified_as": [
+            "api_key"
+          ],
+          "entropy": 336,
+          "length": 68,
+          "name": "OPENAI_API_KEY"
+        },
+        "location": {
+          "kind": "env",
+          "name": "OPENAI_API_KEY"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "kind": "project",
+          "service": "openai"
+        },
+        "location": {
+          "kind": "env",
+          "name": "OPENAI_API_KEY"
+        },
+        "source": "process-env",
+        "type": "api_key"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 203,
+          "length": 60,
+          "name": "PATH"
+        },
+        "location": {
+          "kind": "env",
+          "name": "PATH"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 24,
+          "length": 9,
+          "name": "PWD"
+        },
+        "location": {
+          "kind": "env",
+          "name": "PWD"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "classified_as": [
+            "api_key"
+          ],
+          "entropy": 252,
+          "length": 51,
+          "name": "SLACK_BOT_TOKEN"
+        },
+        "location": {
+          "kind": "env",
+          "name": "SLACK_BOT_TOKEN"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "kind": "bot",
+          "service": "slack"
+        },
+        "location": {
+          "kind": "env",
+          "name": "SLACK_BOT_TOKEN"
+        },
+        "source": "process-env",
+        "type": "api_key"
+      },
+      {
+        "attrs": {
+          "classified_as": [
+            "api_key"
+          ],
+          "entropy": 173,
+          "length": 37,
+          "name": "STRIPE_SECRET_KEY"
+        },
+        "location": {
+          "kind": "env",
+          "name": "STRIPE_SECRET_KEY"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "kind": "secret",
+          "live": true,
+          "service": "stripe"
+        },
+        "location": {
+          "kind": "env",
+          "name": "STRIPE_SECRET_KEY"
+        },
+        "source": "process-env",
+        "type": "api_key"
+      },
+      {
+        "attrs": {
+          "certificates": 0,
+          "encrypted": false,
+          "gitignored": false,
+          "group_readable": true,
+          "in_git_repo": false,
+          "key_type": "ecdsa",
+          "kind": "private_key",
+          "mode": 420,
+          "owner_is_self": true,
+          "private_keys": 1,
+          "world_readable": true
+        },
+        "location": {
+          "kind": "file",
+          "path": "~/.docker/certs/key.pem"
+        },
+        "source": "pem",
+        "type": "pem"
+      },
+      {
+        "attrs": {
+          "credential_process": 1,
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "long_lived_keys": 0,
+          "mode": 384,
+          "owner_is_self": true,
+          "profiles": [
+            "default",
+            "dev",
+            "vault"
+          ],
+          "role_profiles": 0,
+          "secret_keys": 0,
+          "session_keys": 0,
+          "sso_profiles": 1,
+          "world_readable": false
+        },
+        "location": {
+          "kind": "file",
+          "path": "~/.aws/config"
+        },
+        "source": "aws",
+        "type": "aws_credentials"
+      },
+      {
+        "attrs": {
+          "credential_process": 0,
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "long_lived_keys": 1,
+          "mode": 384,
+          "owner_is_self": true,
+          "profiles": [
+            "ci-temp",
+            "default"
+          ],
+          "role_profiles": 0,
+          "secret_keys": 2,
+          "session_keys": 1,
+          "sso_profiles": 0,
+          "world_readable": false
+        },
+        "location": {
+          "kind": "file",
+          "path": "~/.aws/credentials"
+        },
+        "source": "aws",
+        "type": "aws_credentials"
+      },
+      {
+        "attrs": {
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kind": "long_lived",
+          "mode": 384,
+          "owner_is_self": true,
+          "world_readable": false
+        },
+        "location": {
+          "key_path": "default.aws_access_key_id",
+          "kind": "file",
+          "path": "~/.aws/credentials"
+        },
+        "source": "aws",
+        "type": "aws_access_key_id"
+      },
+      {
+        "attrs": {
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kind": "session",
+          "mode": 384,
+          "owner_is_self": true,
+          "world_readable": false
+        },
+        "location": {
+          "key_path": "ci-temp.aws_access_key_id",
+          "kind": "file",
+          "path": "~/.aws/credentials"
+        },
+        "source": "aws",
+        "type": "aws_access_key_id"
+      },
+      {
+        "attrs": {
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kind": "authorized_user",
+          "mode": 384,
+          "owner_is_self": true,
+          "project": "demo-project",
+          "world_readable": false
+        },
+        "location": {
+          "kind": "file",
+          "path": "~/.config/gcloud/application_default_credentials.json"
+        },
+        "source": "gcp",
+        "type": "gcp_credentials"
+      },
+      {
+        "attrs": {
+          "account": "ci-deployer@demo-project.iam.gserviceaccount.com",
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kind": "service_account",
+          "mode": 384,
+          "owner_is_self": true,
+          "project": "demo-project",
+          "world_readable": false
+        },
+        "location": {
+          "kind": "file",
+          "path": "~/.config/gcloud/legacy_credentials/ci-deployer/adc.json"
+        },
+        "source": "gcp",
+        "type": "gcp_credentials"
+      },
+      {
+        "attrs": {
+          "access_tokens": 1,
+          "gitignored": false,
+          "group_readable": true,
+          "has_cached_tokens": true,
+          "in_git_repo": false,
+          "kind": "msal_token_cache",
+          "mode": 420,
+          "owner_is_self": true,
+          "refresh_tokens": 1,
+          "service_principal_secrets": 0,
+          "subscriptions": 0,
+          "world_readable": true
+        },
+        "location": {
+          "kind": "file",
+          "path": "~/.azure/msal_token_cache.json"
+        },
+        "source": "azure",
+        "type": "azure_profile"
+      },
+      {
+        "attrs": {
+          "alg": "RS256",
+          "audience": [
+            "https://management.core.windows.net/"
+          ],
+          "expired": true,
+          "gitignored": false,
+          "group_readable": true,
+          "in_git_repo": false,
+          "issuer": "https://sts.windows.net/00000000-0000-0000-0000-000000000000/",
+          "lifetime_hours": 1,
+          "mode": 420,
+          "owner_is_self": true,
+          "world_readable": true
+        },
+        "location": {
+          "key_path": "AccessToken.0",
+          "kind": "file",
+          "path": "~/.azure/msal_token_cache.json"
+        },
+        "source": "azure",
+        "type": "jwt"
+      },
+      {
+        "attrs": {
+          "access_tokens": 0,
+          "gitignored": false,
+          "group_readable": false,
+          "has_cached_tokens": false,
+          "in_git_repo": false,
+          "kind": "service_principals",
+          "mode": 384,
+          "owner_is_self": true,
+          "refresh_tokens": 0,
+          "service_principal_secrets": 1,
+          "subscriptions": 0,
+          "world_readable": false
+        },
+        "location": {
+          "kind": "file",
+          "path": "~/.azure/service_principal_entries.json"
+        },
+        "source": "azure",
+        "type": "azure_profile"
+      },
+      {
+        "attrs": {
+          "cred_helpers": 1,
+          "gitignored": false,
+          "group_readable": false,
+          "hosts": [
+            "ghcr.io"
+          ],
+          "in_git_repo": false,
+          "inline_auths": 1,
+          "mode": 384,
+          "owner_is_self": true,
+          "world_readable": false
+        },
+        "location": {
+          "kind": "file",
+          "path": "~/.docker/config.json"
+        },
+        "source": "docker-config",
+        "type": "docker_config"
+      },
+      {
+        "attrs": {
+          "checksum_valid": true,
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kind": "classic",
+          "mode": 384,
+          "owner_is_self": true,
+          "prefix": "ghp_",
+          "world_readable": false
+        },
+        "location": {
+          "key_path": "auths.ghcr.io.auth",
+          "kind": "file",
+          "path": "~/.docker/config.json"
+        },
+        "source": "docker-config",
+        "type": "github_token"
+      },
+      {
+        "attrs": {
+          "env_refs": 1,
+          "gitignored": false,
+          "group_readable": false,
+          "hosts": [
+            "registry.npmjs.org"
+          ],
+          "in_git_repo": false,
+          "inline_tokens": 1,
+          "mode": 384,
+          "owner_is_self": true,
+          "world_readable": false
+        },
+        "location": {
+          "kind": "file",
+          "path": "~/.npmrc"
+        },
+        "source": "npmrc",
+        "type": "npmrc"
+      },
+      {
+        "attrs": {
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kind": "access_token",
+          "mode": 384,
+          "owner_is_self": true,
+          "service": "npm",
+          "world_readable": false
+        },
+        "location": {
+          "key_path": "//registry.npmjs.org/:_authToken",
+          "kind": "file",
+          "path": "~/.npmrc"
+        },
+        "source": "npmrc",
+        "type": "api_key"
+      },
+      {
+        "attrs": {
+          "gitignored": false,
+          "group_readable": false,
+          "hosts": [
+            "upload.pypi.org"
+          ],
+          "in_git_repo": false,
+          "inline_tokens": 1,
+          "mode": 384,
+          "owner_is_self": true,
+          "world_readable": false
+        },
+        "location": {
+          "kind": "file",
+          "path": "~/.pypirc"
+        },
+        "source": "pypirc",
+        "type": "pypirc"
+      },
+      {
+        "attrs": {
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kind": "api_token",
+          "mode": 384,
+          "owner_is_self": true,
+          "service": "pypi",
+          "world_readable": false
+        },
+        "location": {
+          "key_path": "pypi.password",
+          "kind": "file",
+          "path": "~/.pypirc"
+        },
+        "source": "pypirc",
+        "type": "api_key"
+      },
+      {
+        "attrs": {
+          "default_entry": false,
+          "gitignored": false,
+          "group_readable": false,
+          "hosts": [
+            "api.github.com"
+          ],
+          "in_git_repo": false,
+          "inline_tokens": 1,
+          "mode": 384,
+          "owner_is_self": true,
+          "world_readable": false
+        },
+        "location": {
+          "kind": "file",
+          "path": "~/.netrc"
+        },
+        "source": "netrc",
+        "type": "netrc"
+      },
+      {
+        "attrs": {
+          "checksum_valid": true,
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kind": "classic",
+          "mode": 384,
+          "owner_is_self": true,
+          "prefix": "ghp_",
+          "world_readable": false
+        },
+        "location": {
+          "key_path": "api.github.com.password",
+          "kind": "file",
+          "path": "~/.netrc"
+        },
+        "source": "netrc",
+        "type": "github_token"
+      },
+      {
+        "attrs": {
+          "gitignored": false,
+          "group_readable": false,
+          "hosts": [
+            "gitlab.corp.example"
+          ],
+          "in_git_repo": false,
+          "inline_tokens": 1,
+          "mode": 384,
+          "owner_is_self": true,
+          "world_readable": false
+        },
+        "location": {
+          "kind": "file",
+          "path": "~/.git-credentials"
+        },
+        "source": "git-credentials",
+        "type": "git_credentials"
+      },
+      {
+        "attrs": {
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kind": "access_token",
+          "mode": 384,
+          "owner_is_self": true,
+          "prefix": "glpat-",
+          "world_readable": false
+        },
+        "location": {
+          "key_path": "gitlab.corp.example",
+          "kind": "file",
+          "path": "~/.git-credentials"
+        },
+        "source": "git-credentials",
+        "type": "gitlab_token"
+      },
+      {
+        "attrs": {
+          "gitignored": false,
+          "group_readable": false,
+          "hosts": [
+            "github.com"
+          ],
+          "in_git_repo": false,
+          "inline_tokens": 1,
+          "mode": 384,
+          "owner_is_self": true,
+          "world_readable": false
+        },
+        "location": {
+          "kind": "file",
+          "path": "~/.config/gh/hosts.yml"
+        },
+        "source": "gh-hosts",
+        "type": "gh_hosts"
+      },
+      {
+        "attrs": {
+          "checksum_valid": true,
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kind": "oauth",
+          "mode": 384,
+          "owner_is_self": true,
+          "prefix": "gho_",
+          "world_readable": false
+        },
+        "location": {
+          "key_path": "github.com.oauth_token",
+          "kind": "file",
+          "path": "~/.config/gh/hosts.yml"
+        },
+        "source": "gh-hosts",
+        "type": "github_token"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 196,
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "length": 40,
+          "mode": 384,
+          "name": "registry.token",
+          "owner_is_self": true,
+          "world_readable": false
+        },
+        "location": {
+          "key_path": "registry.token",
+          "kind": "file",
+          "path": "~/.cargo/credentials.toml"
+        },
+        "source": "cargo-credentials",
+        "type": "config_entry"
+      },
+      {
+        "attrs": {
+          "groups": [
+            "dev"
+          ],
+          "in_container": true,
+          "is_root": false,
+          "uid": 1000
+        },
+        "location": {
+          "kind": "probe",
+          "name": "process"
+        },
+        "source": "process",
+        "type": "process"
+      },
+      {
+        "attrs": {
+          "foreign_processes": 0,
+          "names": [],
+          "readable_environ": 0
+        },
+        "location": {
+          "kind": "probe",
+          "name": "proc_environ"
+        },
+        "source": "proc-environ",
+        "type": "proc_environ"
+      },
+      {
+        "attrs": {
+          "alg": "RS256",
+          "audience": [
+            "https://management.core.windows.net/"
+          ],
+          "expired": true,
+          "gitignored": false,
+          "group_readable": true,
+          "in_git_repo": false,
+          "issuer": "https://sts.windows.net/00000000-0000-0000-0000-000000000000/",
+          "lifetime_hours": 1,
+          "mode": 420,
+          "owner_is_self": true,
+          "world_readable": true
+        },
+        "location": {
+          "key_path": "L1",
+          "kind": "file",
+          "path": "~/.azure/msal_token_cache.json"
+        },
+        "source": "content",
+        "type": "jwt"
+      },
+      {
+        "attrs": {
+          "checksum_valid": true,
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kind": "oauth",
+          "mode": 384,
+          "owner_is_self": true,
+          "prefix": "gho_",
+          "world_readable": false
+        },
+        "location": {
+          "key_path": "L2",
+          "kind": "file",
+          "path": "~/.config/gh/hosts.yml"
+        },
+        "source": "content",
+        "type": "github_token"
+      }
+    ],
+    "findings": [
+      {
+        "fact": {
+          "attrs": {
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kind": "access_token",
+            "mode": 384,
+            "owner_is_self": true,
+            "service": "npm",
+            "world_readable": false
+          },
+          "location": {
+            "key_path": "//registry.npmjs.org/:_authToken",
+            "kind": "file",
+            "path": "~/.npmrc"
+          },
+          "source": "npmrc",
+          "type": "api_key"
+        },
+        "message": "npm key (access_token) visible in ~/.npmrc#//registry.npmjs.org/:_authToken",
+        "remediation": "Revoke the key if it leaked; give it only to the processes that need it (a secret manager, files with mode 0600)",
+        "rule": "api-key",
+        "severity": "high",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kind": "api_token",
+            "mode": 384,
+            "owner_is_self": true,
+            "service": "pypi",
+            "world_readable": false
+          },
+          "location": {
+            "key_path": "pypi.password",
+            "kind": "file",
+            "path": "~/.pypirc"
+          },
+          "source": "pypirc",
+          "type": "api_key"
+        },
+        "message": "pypi key (api_token) visible in ~/.pypirc#pypi.password",
+        "remediation": "Revoke the key if it leaked; give it only to the processes that need it (a secret manager, files with mode 0600)",
+        "rule": "api-key",
+        "severity": "high",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "kind": "project",
+            "service": "openai"
+          },
+          "location": {
+            "kind": "env",
+            "name": "OPENAI_API_KEY"
+          },
+          "source": "process-env",
+          "type": "api_key"
+        },
+        "message": "openai key (project) visible in $OPENAI_API_KEY",
+        "remediation": "Revoke the key if it leaked; give it only to the processes that need it (a secret manager, files with mode 0600)",
+        "rule": "api-key",
+        "severity": "high",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "kind": "bot",
+            "service": "slack"
+          },
+          "location": {
+            "kind": "env",
+            "name": "SLACK_BOT_TOKEN"
+          },
+          "source": "process-env",
+          "type": "api_key"
+        },
+        "message": "slack key (bot) visible in $SLACK_BOT_TOKEN",
+        "remediation": "Revoke the key if it leaked; give it only to the processes that need it (a secret manager, files with mode 0600)",
+        "rule": "api-key",
+        "severity": "high",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "kind": "secret",
+            "live": true,
+            "service": "stripe"
+          },
+          "location": {
+            "kind": "env",
+            "name": "STRIPE_SECRET_KEY"
+          },
+          "source": "process-env",
+          "type": "api_key"
+        },
+        "message": "stripe key (secret) visible in $STRIPE_SECRET_KEY",
+        "remediation": "Revoke the key if it leaked; give it only to the processes that need it (a secret manager, files with mode 0600)",
+        "rule": "api-key",
+        "severity": "high",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kind": "long_lived",
+            "mode": 384,
+            "owner_is_self": true,
+            "world_readable": false
+          },
+          "location": {
+            "key_path": "default.aws_access_key_id",
+            "kind": "file",
+            "path": "~/.aws/credentials"
+          },
+          "source": "aws",
+          "type": "aws_access_key_id"
+        },
+        "message": "Long-lived AWS access key visible in ~/.aws/credentials#default.aws_access_key_id",
+        "remediation": "Use IAM Identity Center (aws sso login) or roles with short-lived credentials; deactivate and delete the key",
+        "rule": "aws-long-lived-key",
+        "severity": "high",
+        "tags": {
+          "category": "long-lived-credential"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "kind": "long_lived"
+          },
+          "location": {
+            "kind": "env",
+            "name": "AWS_ACCESS_KEY_ID"
+          },
+          "source": "process-env",
+          "type": "aws_access_key_id"
+        },
+        "message": "Long-lived AWS access key visible in $AWS_ACCESS_KEY_ID",
+        "remediation": "Use IAM Identity Center (aws sso login) or roles with short-lived credentials; deactivate and delete the key",
+        "rule": "aws-long-lived-key",
+        "severity": "high",
+        "tags": {
+          "category": "long-lived-credential"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "access_tokens": 1,
+            "gitignored": false,
+            "group_readable": true,
+            "has_cached_tokens": true,
+            "in_git_repo": false,
+            "kind": "msal_token_cache",
+            "mode": 420,
+            "owner_is_self": true,
+            "refresh_tokens": 1,
+            "service_principal_secrets": 0,
+            "subscriptions": 0,
+            "world_readable": true
+          },
+          "location": {
+            "kind": "file",
+            "path": "~/.azure/msal_token_cache.json"
+          },
+          "source": "azure",
+          "type": "azure_profile"
+        },
+        "message": "Azure CLI credential file ~/.azure/msal_token_cache.json is readable by others (mode 0644)",
+        "remediation": "chmod 600 ~/.azure/msal_token_cache.json, az logout and rotate service principal secrets",
+        "rule": "azure-credentials-readable",
+        "severity": "high",
+        "tags": {
+          "category": "file-permissions"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "access_tokens": 0,
+            "gitignored": false,
+            "group_readable": false,
+            "has_cached_tokens": false,
+            "in_git_repo": false,
+            "kind": "service_principals",
+            "mode": 384,
+            "owner_is_self": true,
+            "refresh_tokens": 0,
+            "service_principal_secrets": 1,
+            "subscriptions": 0,
+            "world_readable": false
+          },
+          "location": {
+            "kind": "file",
+            "path": "~/.azure/service_principal_entries.json"
+          },
+          "source": "azure",
+          "type": "azure_profile"
+        },
+        "message": "Azure service principal secrets (1) are stored in ~/.azure/service_principal_entries.json",
+        "remediation": "Use a managed or workload identity (or a certificate) instead of client secrets; az logout and rotate the secret",
+        "rule": "azure-service-principal-secret",
+        "severity": "high",
+        "tags": {
+          "category": "plaintext-storage"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "account": "ci-deployer@demo-project.iam.gserviceaccount.com",
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kind": "service_account",
+            "mode": 384,
+            "owner_is_self": true,
+            "project": "demo-project",
+            "world_readable": false
+          },
+          "location": {
+            "kind": "file",
+            "path": "~/.config/gcloud/legacy_credentials/ci-deployer/adc.json"
+          },
+          "source": "gcp",
+          "type": "gcp_credentials"
+        },
+        "message": "Google service account key ~/.config/gcloud/legacy_credentials/ci-deployer/adc.json (ci-deployer@demo-project.iam.gserviceaccount.com)",
+        "remediation": "Use workload identity federation or service account impersonation instead of key files; delete the key in IAM",
+        "rule": "gcp-service-account-key",
+        "severity": "high",
+        "tags": {
+          "category": "long-lived-credential"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "checksum_valid": true,
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kind": "classic",
+            "mode": 384,
+            "owner_is_self": true,
+            "prefix": "ghp_",
+            "world_readable": false
+          },
+          "location": {
+            "key_path": "auths.ghcr.io.auth",
+            "kind": "file",
+            "path": "~/.docker/config.json"
+          },
+          "source": "docker-config",
+          "type": "github_token"
+        },
+        "message": "Classic GitHub personal access token visible in ~/.docker/config.json#auths.ghcr.io.auth",
+        "remediation": "Revoke it and use a fine-grained token with minimal permissions and an expiry",
+        "rule": "github-classic-token",
+        "severity": "high",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "checksum_valid": true,
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kind": "classic",
+            "mode": 384,
+            "owner_is_self": true,
+            "prefix": "ghp_",
+            "world_readable": false
+          },
+          "location": {
+            "key_path": "api.github.com.password",
+            "kind": "file",
+            "path": "~/.netrc"
+          },
+          "source": "netrc",
+          "type": "github_token"
+        },
+        "message": "Classic GitHub personal access token visible in ~/.netrc#api.github.com.password",
+        "remediation": "Revoke it and use a fine-grained token with minimal permissions and an expiry",
+        "rule": "github-classic-token",
+        "severity": "high",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kind": "access_token",
+            "mode": 384,
+            "owner_is_self": true,
+            "prefix": "glpat-",
+            "world_readable": false
+          },
+          "location": {
+            "key_path": "gitlab.corp.example",
+            "kind": "file",
+            "path": "~/.git-credentials"
+          },
+          "source": "git-credentials",
+          "type": "gitlab_token"
+        },
+        "message": "GitLab token (access_token, glpat-) visible in ~/.git-credentials#gitlab.corp.example",
+        "remediation": "Revoke it if it leaked; prefer short-lived tokens with minimal scopes and an expiry",
+        "rule": "gitlab-token",
+        "severity": "high",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "certificates": 0,
+            "encrypted": false,
+            "gitignored": false,
+            "group_readable": true,
+            "in_git_repo": false,
+            "key_type": "ecdsa",
+            "kind": "private_key",
+            "mode": 420,
+            "owner_is_self": true,
+            "private_keys": 1,
+            "world_readable": true
+          },
+          "location": {
+            "kind": "file",
+            "path": "~/.docker/certs/key.pem"
+          },
+          "source": "pem",
+          "type": "pem"
+        },
+        "message": "Private key ~/.docker/certs/key.pem is readable by every user (mode 0644)",
+        "remediation": "chmod 600 ~/.docker/certs/key.pem, then rotate the key: others may have copied it",
+        "rule": "pem-private-key-world-readable",
+        "severity": "high",
+        "tags": {
+          "category": "file-permissions"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "cred_helpers": 1,
+            "gitignored": false,
+            "group_readable": false,
+            "hosts": [
+              "ghcr.io"
+            ],
+            "in_git_repo": false,
+            "inline_auths": 1,
+            "mode": 384,
+            "owner_is_self": true,
+            "world_readable": false
+          },
+          "location": {
+            "kind": "file",
+            "path": "~/.docker/config.json"
+          },
+          "source": "docker-config",
+          "type": "docker_config"
+        },
+        "message": "Registry credentials for ghcr.io are stored in ~/.docker/config.json (base64, not encrypted)",
+        "remediation": "Configure a credential helper (credsStore: desktop, osxkeychain, pass, secretservice), then log out and in again",
+        "rule": "docker-inline-credentials",
+        "severity": "medium",
+        "tags": {
+          "category": "plaintext-storage"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "gitignored": false,
+            "group_readable": false,
+            "hosts": [
+              "gitlab.corp.example"
+            ],
+            "in_git_repo": false,
+            "inline_tokens": 1,
+            "mode": 384,
+            "owner_is_self": true,
+            "world_readable": false
+          },
+          "location": {
+            "kind": "file",
+            "path": "~/.git-credentials"
+          },
+          "source": "git-credentials",
+          "type": "git_credentials"
+        },
+        "message": "git's store helper keeps passwords/tokens in plain text in ~/.git-credentials (hosts: gitlab.corp.example)",
+        "remediation": "Use an OS credential helper (osxkeychain, libsecret, Git Credential Manager), delete ~/.git-credentials and rotate the tokens",
+        "rule": "git-credentials-store",
+        "severity": "medium",
+        "tags": {
+          "category": "plaintext-storage"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "checksum_valid": true,
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kind": "oauth",
+            "mode": 384,
+            "owner_is_self": true,
+            "prefix": "gho_",
+            "world_readable": false
+          },
+          "location": {
+            "key_path": "L2",
+            "kind": "file",
+            "path": "~/.config/gh/hosts.yml"
+          },
+          "source": "content",
+          "type": "github_token"
+        },
+        "message": "GitHub oauth token (gho_) visible in ~/.config/gh/hosts.yml#L2",
+        "remediation": "Make sure only the processes that need it can see L2; revoke it if it leaked",
+        "rule": "github-token",
+        "severity": "medium",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "checksum_valid": true,
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kind": "oauth",
+            "mode": 384,
+            "owner_is_self": true,
+            "prefix": "gho_",
+            "world_readable": false
+          },
+          "location": {
+            "key_path": "github.com.oauth_token",
+            "kind": "file",
+            "path": "~/.config/gh/hosts.yml"
+          },
+          "source": "gh-hosts",
+          "type": "github_token"
+        },
+        "message": "GitHub oauth token (gho_) visible in ~/.config/gh/hosts.yml#github.com.oauth_token",
+        "remediation": "Make sure only the processes that need it can see github.com.oauth_token; revoke it if it leaked",
+        "rule": "github-token",
+        "severity": "medium",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "default_entry": false,
+            "gitignored": false,
+            "group_readable": false,
+            "hosts": [
+              "api.github.com"
+            ],
+            "in_git_repo": false,
+            "inline_tokens": 1,
+            "mode": 384,
+            "owner_is_self": true,
+            "world_readable": false
+          },
+          "location": {
+            "kind": "file",
+            "path": "~/.netrc"
+          },
+          "source": "netrc",
+          "type": "netrc"
+        },
+        "message": "Passwords are stored in plain text in ~/.netrc (hosts: api.github.com)",
+        "remediation": "Use a credential helper or keyring; rotate the passwords/tokens",
+        "rule": "netrc-password",
+        "severity": "medium",
+        "tags": {
+          "category": "plaintext-storage"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "env_refs": 1,
+            "gitignored": false,
+            "group_readable": false,
+            "hosts": [
+              "registry.npmjs.org"
+            ],
+            "in_git_repo": false,
+            "inline_tokens": 1,
+            "mode": 384,
+            "owner_is_self": true,
+            "world_readable": false
+          },
+          "location": {
+            "kind": "file",
+            "path": "~/.npmrc"
+          },
+          "source": "npmrc",
+          "type": "npmrc"
+        },
+        "message": "Registry credentials are stored in ~/.npmrc (hosts: registry.npmjs.org)",
+        "remediation": "Reference an environment variable instead (//registry.example/:_authToken=${NPM_TOKEN}) and rotate the token",
+        "rule": "npmrc-inline-token",
+        "severity": "medium",
+        "tags": {
+          "category": "plaintext-storage"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "gitignored": false,
+            "group_readable": false,
+            "hosts": [
+              "upload.pypi.org"
+            ],
+            "in_git_repo": false,
+            "inline_tokens": 1,
+            "mode": 384,
+            "owner_is_self": true,
+            "world_readable": false
+          },
+          "location": {
+            "kind": "file",
+            "path": "~/.pypirc"
+          },
+          "source": "pypirc",
+          "type": "pypirc"
+        },
+        "message": "Package index passwords or tokens are stored in ~/.pypirc (hosts: upload.pypi.org)",
+        "remediation": "Use trusted publishing (OIDC) or keyring instead of stored tokens; rotate them",
+        "rule": "pypirc-inline-token",
+        "severity": "medium",
+        "tags": {
+          "category": "plaintext-storage"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kind": "session",
+            "mode": 384,
+            "owner_is_self": true,
+            "world_readable": false
+          },
+          "location": {
+            "key_path": "ci-temp.aws_access_key_id",
+            "kind": "file",
+            "path": "~/.aws/credentials"
+          },
+          "source": "aws",
+          "type": "aws_access_key_id"
+        },
+        "message": "Temporary AWS session credentials visible in ~/.aws/credentials#ci-temp.aws_access_key_id",
+        "remediation": "They expire, but work until then: make sure only the processes that need them can see ci-temp.aws_access_key_id",
+        "rule": "aws-session-key",
+        "severity": "low",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "access_tokens": 1,
+            "gitignored": false,
+            "group_readable": true,
+            "has_cached_tokens": true,
+            "in_git_repo": false,
+            "kind": "msal_token_cache",
+            "mode": 420,
+            "owner_is_self": true,
+            "refresh_tokens": 1,
+            "service_principal_secrets": 0,
+            "subscriptions": 0,
+            "world_readable": true
+          },
+          "location": {
+            "kind": "file",
+            "path": "~/.azure/msal_token_cache.json"
+          },
+          "source": "azure",
+          "type": "azure_profile"
+        },
+        "message": "Azure CLI token cache ~/.azure/msal_token_cache.json holds tokens (access: 1, refresh: 1)",
+        "remediation": "Run az logout when the session is not needed",
+        "rule": "azure-cached-tokens",
+        "severity": "low",
+        "tags": {
+          "category": "plaintext-storage"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "classified_as": [],
+            "entropy": 196,
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "length": 40,
+            "mode": 384,
+            "name": "registry.token",
+            "owner_is_self": true,
+            "world_readable": false
+          },
+          "location": {
+            "key_path": "registry.token",
+            "kind": "file",
+            "path": "~/.cargo/credentials.toml"
+          },
+          "source": "cargo-credentials",
+          "type": "config_entry"
+        },
+        "message": "registry.token in ~/.cargo/credentials.toml looks like a secret (196 bits) stored in plain text",
+        "remediation": "Use the tool's credential helper or keyring support where it has one; keep ~/.cargo/credentials.toml private (mode 0600)",
+        "rule": "config-secret-like",
+        "severity": "low",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "classified_as": [],
+            "entropy": 206,
+            "length": 42,
+            "name": "AWS_SECRET_ACCESS_KEY"
+          },
+          "location": {
+            "kind": "env",
+            "name": "AWS_SECRET_ACCESS_KEY"
+          },
+          "source": "process-env",
+          "type": "env_var"
+        },
+        "message": "$AWS_SECRET_ACCESS_KEY looks like a secret (42 bytes, 206 bits) and every child process inherits it",
+        "remediation": "Pass secrets only to the processes that need them (files with mode 0600, a secret manager)",
+        "rule": "env-secret-like",
+        "severity": "low",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kind": "authorized_user",
+            "mode": 384,
+            "owner_is_self": true,
+            "project": "demo-project",
+            "world_readable": false
+          },
+          "location": {
+            "kind": "file",
+            "path": "~/.config/gcloud/application_default_credentials.json"
+          },
+          "source": "gcp",
+          "type": "gcp_credentials"
+        },
+        "message": "Google user credentials with a refresh token in ~/.config/gcloud/application_default_credentials.json",
+        "remediation": "Revoke them when they are not needed (gcloud auth application-default revoke)",
+        "rule": "gcp-user-credentials",
+        "severity": "low",
+        "tags": {
+          "category": "plaintext-storage"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "gitignored": false,
+            "group_readable": false,
+            "hosts": [
+              "github.com"
+            ],
+            "in_git_repo": false,
+            "inline_tokens": 1,
+            "mode": 384,
+            "owner_is_self": true,
+            "world_readable": false
+          },
+          "location": {
+            "kind": "file",
+            "path": "~/.config/gh/hosts.yml"
+          },
+          "source": "gh-hosts",
+          "type": "gh_hosts"
+        },
+        "message": "The GitHub CLI stores its token in plain text in ~/.config/gh/hosts.yml (github.com), not in the keyring",
+        "remediation": "Run gh auth login again on a system with a keyring, or restrict who can read ~/.config/gh/hosts.yml",
+        "rule": "gh-token-in-file",
+        "severity": "low",
+        "tags": {
+          "category": "plaintext-storage"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "certificates": 0,
+            "encrypted": false,
+            "gitignored": false,
+            "group_readable": true,
+            "in_git_repo": false,
+            "key_type": "ecdsa",
+            "kind": "private_key",
+            "mode": 420,
+            "owner_is_self": true,
+            "private_keys": 1,
+            "world_readable": true
+          },
+          "location": {
+            "kind": "file",
+            "path": "~/.docker/certs/key.pem"
+          },
+          "source": "pem",
+          "type": "pem"
+        },
+        "message": "Private key ~/.docker/certs/key.pem (ecdsa) is not protected by a passphrase",
+        "remediation": "Keep it in a key store or hardware token where possible, and readable only by its owner",
+        "rule": "pem-private-key-unencrypted",
+        "severity": "low",
+        "tags": {
+          "category": "key-protection"
+        },
+        "waived": null
+      }
+    ],
+    "rule_errors": [],
+    "run": {
+      "config_layers": [
+        "<built-in>"
+      ],
+      "cwd": "/home/dev",
+      "fail_on": "high",
+      "home": "/home/dev",
+      "uid": 1000
+    },
+    "schema_version": 1,
+    "skipped": [],
+    "summary": {
+      "by_rule": {
+        "api-key": 5,
+        "aws-long-lived-key": 2,
+        "aws-session-key": 1,
+        "azure-cached-tokens": 1,
+        "azure-credentials-readable": 1,
+        "azure-service-principal-secret": 1,
+        "config-secret-like": 1,
+        "docker-inline-credentials": 1,
+        "env-secret-like": 1,
+        "gcp-service-account-key": 1,
+        "gcp-user-credentials": 1,
+        "gh-token-in-file": 1,
+        "git-credentials-store": 1,
+        "github-classic-token": 2,
+        "github-token": 2,
+        "gitlab-token": 1,
+        "netrc-password": 1,
+        "npmrc-inline-token": 1,
+        "pem-private-key-unencrypted": 1,
+        "pem-private-key-world-readable": 1,
+        "pypirc-inline-token": 1
+      },
+      "by_severity": {
+        "critical": 0,
+        "high": 14,
+        "info": 0,
+        "low": 7,
+        "medium": 7
+      },
+      "candidates": 37,
+      "expired_waivers": 0,
+      "facts": 39,
+      "failing": 14,
+      "failing_skipped": 0,
+      "findings": 28,
+      "rule_errors": 0,
+      "skipped": 0,
+      "waived": 0
+    },
+    "tool": {
+      "name": "lootr"
+    }
+  }
+}

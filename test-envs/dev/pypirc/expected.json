@@ -1,0 +1,165 @@
+{
+  "exit_code": 1,
+  "report": {
+    "schema_version": 1,
+    "tool": {
+      "name": "lootr"
+    },
+    "run": {
+      "fail_on": "high",
+      "config_layers": [
+        "<built-in>",
+        "/Users/zdrng/Projects/lootr/test-envs/common.toml"
+      ],
+      "cwd": "<root>/home",
+      "home": "<root>/home"
+    },
+    "custom_types": [],
+    "summary": {
+      "candidates": 5,
+      "facts": 3,
+      "findings": 2,
+      "waived": 0,
+      "failing": 1,
+      "by_severity": {
+        "critical": 0,
+        "high": 1,
+        "medium": 1,
+        "low": 0,
+        "info": 0
+      },
+      "rule_errors": 0,
+      "expired_waivers": 0,
+      "skipped": 0,
+      "failing_skipped": 0,
+      "by_rule": {
+        "api-key": 1,
+        "pypirc-inline-token": 1
+      }
+    },
+    "findings": [
+      {
+        "rule": "api-key",
+        "severity": "high",
+        "message": "pypi key (api_token) visible in ~/.pypirc#pypi.password",
+        "remediation": "Revoke the key if it leaked; give it only to the processes that need it (a secret manager, files with mode 0600)",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null,
+        "fact": {
+          "type": "api_key",
+          "location": {
+            "kind": "file",
+            "path": "~/.pypirc",
+            "key_path": "pypi.password"
+          },
+          "source": "pypirc",
+          "attrs": {
+            "world_readable": false,
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kind": "api_token",
+            "mode": 384,
+            "owner_is_self": true,
+            "service": "pypi",
+            "size": 281
+          }
+        }
+      },
+      {
+        "rule": "pypirc-inline-token",
+        "severity": "medium",
+        "message": "Package index passwords or tokens are stored in ~/.pypirc (hosts: pypi.corp.example, upload.pypi.org)",
+        "remediation": "Use trusted publishing (OIDC) or keyring instead of stored tokens; rotate them",
+        "tags": {
+          "category": "plaintext-storage"
+        },
+        "waived": null,
+        "fact": {
+          "type": "pypirc",
+          "location": {
+            "kind": "file",
+            "path": "~/.pypirc"
+          },
+          "source": "pypirc",
+          "attrs": {
+            "world_readable": false,
+            "gitignored": false,
+            "group_readable": false,
+            "hosts": [
+              "pypi.corp.example",
+              "upload.pypi.org"
+            ],
+            "in_git_repo": false,
+            "inline_tokens": 2,
+            "mode": 384,
+            "owner_is_self": true,
+            "size": 281
+          }
+        }
+      }
+    ],
+    "rule_errors": [],
+    "expired_waivers": [],
+    "skipped": [],
+    "facts": [
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "HOME"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [],
+          "name": "HOME",
+          "length": 45
+        }
+      },
+      {
+        "type": "pypirc",
+        "location": {
+          "kind": "file",
+          "path": "~/.pypirc"
+        },
+        "source": "pypirc",
+        "attrs": {
+          "world_readable": false,
+          "gitignored": false,
+          "group_readable": false,
+          "hosts": [
+            "pypi.corp.example",
+            "upload.pypi.org"
+          ],
+          "in_git_repo": false,
+          "inline_tokens": 2,
+          "mode": 384,
+          "owner_is_self": true,
+          "size": 281
+        }
+      },
+      {
+        "type": "api_key",
+        "location": {
+          "kind": "file",
+          "path": "~/.pypirc",
+          "key_path": "pypi.password"
+        },
+        "source": "pypirc",
+        "attrs": {
+          "world_readable": false,
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kind": "api_token",
+          "mode": 384,
+          "owner_is_self": true,
+          "service": "pypi",
+          "size": 281
+        }
+      }
+    ]
+  }
+}

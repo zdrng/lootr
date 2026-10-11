@@ -1,0 +1,4 @@
+# Build context for containers/: only what the build needs.
+target
+fuzz/target
+.git

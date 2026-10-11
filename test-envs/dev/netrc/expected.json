@@ -1,0 +1,237 @@
+{
+  "exit_code": 1,
+  "report": {
+    "schema_version": 1,
+    "tool": {
+      "name": "lootr"
+    },
+    "run": {
+      "fail_on": "high",
+      "config_layers": [
+        "<built-in>",
+        "/Users/zdrng/Projects/lootr/test-envs/common.toml"
+      ],
+      "cwd": "<root>/home",
+      "home": "<root>/home"
+    },
+    "custom_types": [],
+    "summary": {
+      "candidates": 5,
+      "facts": 3,
+      "findings": 4,
+      "waived": 0,
+      "failing": 2,
+      "by_severity": {
+        "critical": 0,
+        "high": 2,
+        "medium": 2,
+        "low": 0,
+        "info": 0
+      },
+      "rule_errors": 0,
+      "expired_waivers": 0,
+      "skipped": 0,
+      "failing_skipped": 0,
+      "by_rule": {
+        "credential-file-readable-netrc": 1,
+        "github-classic-token": 1,
+        "netrc-default-entry": 1,
+        "netrc-password": 1
+      }
+    },
+    "findings": [
+      {
+        "rule": "credential-file-readable-netrc",
+        "severity": "high",
+        "message": "~/.netrc with stored credentials is readable by others (mode 0644)",
+        "remediation": "chmod 600 ~/.netrc and rotate the credentials",
+        "tags": {
+          "category": "file-permissions"
+        },
+        "waived": null,
+        "fact": {
+          "type": "netrc",
+          "location": {
+            "kind": "file",
+            "path": "~/.netrc"
+          },
+          "source": "netrc",
+          "attrs": {
+            "world_readable": true,
+            "default_entry": true,
+            "gitignored": false,
+            "group_readable": true,
+            "hosts": [
+              "api.github.com",
+              "ftp.example.org"
+            ],
+            "in_git_repo": false,
+            "inline_tokens": 3,
+            "mode": 420,
+            "owner_is_self": true,
+            "size": 236
+          }
+        }
+      },
+      {
+        "rule": "github-classic-token",
+        "severity": "high",
+        "message": "Classic GitHub personal access token visible in ~/.netrc#api.github.com.password",
+        "remediation": "Revoke it and use a fine-grained token with minimal permissions and an expiry",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null,
+        "fact": {
+          "type": "github_token",
+          "location": {
+            "kind": "file",
+            "path": "~/.netrc",
+            "key_path": "api.github.com.password"
+          },
+          "source": "netrc",
+          "attrs": {
+            "world_readable": true,
+            "checksum_valid": true,
+            "gitignored": false,
+            "group_readable": true,
+            "in_git_repo": false,
+            "kind": "classic",
+            "mode": 420,
+            "owner_is_self": true,
+            "prefix": "ghp_",
+            "size": 236
+          }
+        }
+      },
+      {
+        "rule": "netrc-default-entry",
+        "severity": "medium",
+        "message": "~/.netrc has a `default` entry: its credentials are sent to every host without an entry",
+        "remediation": "Replace the default entry with machine entries for the hosts that need it",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null,
+        "fact": {
+          "type": "netrc",
+          "location": {
+            "kind": "file",
+            "path": "~/.netrc"
+          },
+          "source": "netrc",
+          "attrs": {
+            "world_readable": true,
+            "default_entry": true,
+            "gitignored": false,
+            "group_readable": true,
+            "hosts": [
+              "api.github.com",
+              "ftp.example.org"
+            ],
+            "in_git_repo": false,
+            "inline_tokens": 3,
+            "mode": 420,
+            "owner_is_self": true,
+            "size": 236
+          }
+        }
+      },
+      {
+        "rule": "netrc-password",
+        "severity": "medium",
+        "message": "Passwords are stored in plain text in ~/.netrc (hosts: api.github.com, ftp.example.org)",
+        "remediation": "Use a credential helper or keyring; rotate the passwords/tokens",
+        "tags": {
+          "category": "plaintext-storage"
+        },
+        "waived": null,
+        "fact": {
+          "type": "netrc",
+          "location": {
+            "kind": "file",
+            "path": "~/.netrc"
+          },
+          "source": "netrc",
+          "attrs": {
+            "world_readable": true,
+            "default_entry": true,
+            "gitignored": false,
+            "group_readable": true,
+            "hosts": [
+              "api.github.com",
+              "ftp.example.org"
+            ],
+            "in_git_repo": false,
+            "inline_tokens": 3,
+            "mode": 420,
+            "owner_is_self": true,
+            "size": 236
+          }
+        }
+      }
+    ],
+    "rule_errors": [],
+    "expired_waivers": [],
+    "skipped": [],
+    "facts": [
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "HOME"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [],
+          "name": "HOME",
+          "length": 45
+        }
+      },
+      {
+        "type": "netrc",
+        "location": {
+          "kind": "file",
+          "path": "~/.netrc"
+        },
+        "source": "netrc",
+        "attrs": {
+          "world_readable": true,
+          "default_entry": true,
+          "gitignored": false,
+          "group_readable": true,
+          "hosts": [
+            "api.github.com",
+            "ftp.example.org"
+          ],
+          "in_git_repo": false,
+          "inline_tokens": 3,
+          "mode": 420,
+          "owner_is_self": true,
+          "size": 236
+        }
+      },
+      {
+        "type": "github_token",
+        "location": {
+          "kind": "file",
+          "path": "~/.netrc",
+          "key_path": "api.github.com.password"
+        },
+        "source": "netrc",
+        "attrs": {
+          "world_readable": true,
+          "checksum_valid": true,
+          "gitignored": false,
+          "group_readable": true,
+          "in_git_repo": false,
+          "kind": "classic",
+          "mode": 420,
+          "owner_is_self": true,
+          "prefix": "ghp_",
+          "size": 236
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,127 @@
+# ACME security baseline: owned by the security team, applied first after
+# lootr's built-in default on every developer machine and CI runner.
+#
+#   lootr --config baseline.toml --config team-platform.toml --config project.toml
+#
+# `locked = true` rules cannot be disabled, weakened (type, condition, lower
+# severity) or waived by the layers after this one; they may only be made
+# stricter (higher severity) or get another message, remediation or tags.
+# Control ids (`control = "ACME-..."`) are this example's own; use yours.
+
+version = 1
+
+[scan]
+# macOS asks for permission when a process reads ~/Library; nothing there is
+# in scope for this baseline.
+exclude = ["~/Library/**"]
+
+# ---- a company-specific secret format --------------------------------------------
+
+[[type]]
+name = "acme_api_key"
+pattern = '^acme_(live|test)_[A-Za-z0-9]{24}$'
+
+[[rule]]
+id = "acme-api-key"
+type = "acme_api_key"
+when = "true"
+severity = "high"
+message = "ACME API key visible in {location}"
+remediation = "Fetch ACME keys from the vault at run time (acme-vault get), never store them; rotate this one"
+tags = { category = "credential-exposure", control = "ACME-SEC-12" }
+locked = true
+
+# ---- locked rules from the built-in default ------------------------------------------
+# Only the fields that change are given; type and condition come from the
+# default layer.
+
+[[rule]]
+id = "ssh-key-unencrypted"
+severity = "high"
+remediation = "Use the hardware-backed key from the ACME onboarding guide, or ssh-keygen -p -f {path}"
+tags = { control = "ACME-SEC-01" }
+locked = true
+
+[[rule]]
+id = "ssh-key-world-readable"
+severity = "critical"
+tags = { control = "ACME-SEC-02" }
+locked = true
+
+[[rule]]
+id = "github-classic-token"
+severity = "critical"
+tags = { control = "ACME-SEC-07" }
+locked = true
+
+[[rule]]
+id = "aws-long-lived-key"
+tags = { control = "ACME-SEC-08" }
+locked = true
+
+[[rule]]
+id = "dotenv-token-not-gitignored"
+tags = { control = "ACME-SEC-09" }
+locked = true
+
+# Credential files readable by other users: one rule per file type in the
+# default layer, all locked.
+[[rule]]
+id = "credential-file-readable-npmrc"
+tags = { control = "ACME-SEC-03" }
+locked = true
+
+[[rule]]
+id = "credential-file-readable-pypirc"
+tags = { control = "ACME-SEC-03" }
+locked = true
+
+[[rule]]
+id = "credential-file-readable-netrc"
+tags = { control = "ACME-SEC-03" }
+locked = true
+
+[[rule]]
+id = "credential-file-readable-git"
+tags = { control = "ACME-SEC-03" }
+locked = true
+
+[[rule]]
+id = "credential-file-readable-gh"
+tags = { control = "ACME-SEC-03" }
+locked = true
+
+[[rule]]
+id = "aws-credentials-readable"
+tags = { control = "ACME-SEC-03" }
+locked = true
+
+# ---- rules over waivers ------------------------------------------------------------
+
+# Expired waivers fail the run: renew them with a reason, or fix the finding.
+[[rule]]
+id = "waiver-expired"
+severity = "high"
+tags = { control = "ACME-GOV-01" }
+locked = true
+
+# Every waiver needs an expiry date.
+[[rule]]
+id = "waiver-without-expiry"
+type = "waiver"
+when = "!has(attrs.expires)"
+severity = "high"
+message = "Waiver for {waived_rule} ({location}) has no expiry date"
+remediation = "Add `expires = YYYY-MM-DD` (at most a year ahead) and a reason with a ticket"
+tags = { category = "policy-hygiene", control = "ACME-GOV-02" }
+locked = true
+
+# Waivers that matched nothing in this run are probably stale.
+[[rule]]
+id = "waiver-unused"
+type = "waiver"
+when = "!expired && matched == 0"
+severity = "info"
+message = "Waiver for {waived_rule} ({location}) matched nothing in this run"
+remediation = "Remove the waiver if the finding is gone for good"
+tags = { category = "policy-hygiene" }

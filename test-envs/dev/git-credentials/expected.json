@@ -1,0 +1,220 @@
+{
+  "exit_code": 1,
+  "report": {
+    "schema_version": 1,
+    "tool": {
+      "name": "lootr"
+    },
+    "run": {
+      "fail_on": "high",
+      "config_layers": [
+        "<built-in>",
+        "/Users/zdrng/Projects/lootr/test-envs/common.toml"
+      ],
+      "cwd": "<root>/home",
+      "home": "<root>/home"
+    },
+    "custom_types": [],
+    "summary": {
+      "candidates": 5,
+      "facts": 4,
+      "findings": 3,
+      "waived": 0,
+      "failing": 2,
+      "by_severity": {
+        "critical": 0,
+        "high": 2,
+        "medium": 1,
+        "low": 0,
+        "info": 0
+      },
+      "rule_errors": 0,
+      "expired_waivers": 0,
+      "skipped": 0,
+      "failing_skipped": 0,
+      "by_rule": {
+        "git-credentials-store": 1,
+        "github-classic-token": 1,
+        "gitlab-token": 1
+      }
+    },
+    "findings": [
+      {
+        "rule": "github-classic-token",
+        "severity": "high",
+        "message": "Classic GitHub personal access token visible in ~/.git-credentials#github.com",
+        "remediation": "Revoke it and use a fine-grained token with minimal permissions and an expiry",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null,
+        "fact": {
+          "type": "github_token",
+          "location": {
+            "kind": "file",
+            "path": "~/.git-credentials",
+            "key_path": "github.com"
+          },
+          "source": "git-credentials",
+          "attrs": {
+            "world_readable": false,
+            "checksum_valid": true,
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kind": "classic",
+            "mode": 384,
+            "owner_is_self": true,
+            "prefix": "ghp_",
+            "size": 198
+          }
+        }
+      },
+      {
+        "rule": "gitlab-token",
+        "severity": "high",
+        "message": "GitLab token (access_token, glpat-) visible in ~/.git-credentials#gitlab.corp.example",
+        "remediation": "Revoke it if it leaked; prefer short-lived tokens with minimal scopes and an expiry",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null,
+        "fact": {
+          "type": "gitlab_token",
+          "location": {
+            "kind": "file",
+            "path": "~/.git-credentials",
+            "key_path": "gitlab.corp.example"
+          },
+          "source": "git-credentials",
+          "attrs": {
+            "world_readable": false,
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kind": "access_token",
+            "mode": 384,
+            "owner_is_self": true,
+            "prefix": "glpat-",
+            "size": 198
+          }
+        }
+      },
+      {
+        "rule": "git-credentials-store",
+        "severity": "medium",
+        "message": "git's store helper keeps passwords/tokens in plain text in ~/.git-credentials (hosts: bitbucket.example, github.com, gitlab.corp.example)",
+        "remediation": "Use an OS credential helper (osxkeychain, libsecret, Git Credential Manager), delete ~/.git-credentials and rotate the tokens",
+        "tags": {
+          "category": "plaintext-storage"
+        },
+        "waived": null,
+        "fact": {
+          "type": "git_credentials",
+          "location": {
+            "kind": "file",
+            "path": "~/.git-credentials"
+          },
+          "source": "git-credentials",
+          "attrs": {
+            "world_readable": false,
+            "gitignored": false,
+            "group_readable": false,
+            "hosts": [
+              "bitbucket.example",
+              "github.com",
+              "gitlab.corp.example"
+            ],
+            "in_git_repo": false,
+            "inline_tokens": 3,
+            "mode": 384,
+            "owner_is_self": true,
+            "size": 198
+          }
+        }
+      }
+    ],
+    "rule_errors": [],
+    "expired_waivers": [],
+    "skipped": [],
+    "facts": [
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "HOME"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [],
+          "name": "HOME",
+          "length": 45
+        }
+      },
+      {
+        "type": "git_credentials",
+        "location": {
+          "kind": "file",
+          "path": "~/.git-credentials"
+        },
+        "source": "git-credentials",
+        "attrs": {
+          "world_readable": false,
+          "gitignored": false,
+          "group_readable": false,
+          "hosts": [
+            "bitbucket.example",
+            "github.com",
+            "gitlab.corp.example"
+          ],
+          "in_git_repo": false,
+          "inline_tokens": 3,
+          "mode": 384,
+          "owner_is_self": true,
+          "size": 198
+        }
+      },
+      {
+        "type": "github_token",
+        "location": {
+          "kind": "file",
+          "path": "~/.git-credentials",
+          "key_path": "github.com"
+        },
+        "source": "git-credentials",
+        "attrs": {
+          "world_readable": false,
+          "checksum_valid": true,
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kind": "classic",
+          "mode": 384,
+          "owner_is_self": true,
+          "prefix": "ghp_",
+          "size": 198
+        }
+      },
+      {
+        "type": "gitlab_token",
+        "location": {
+          "kind": "file",
+          "path": "~/.git-credentials",
+          "key_path": "gitlab.corp.example"
+        },
+        "source": "git-credentials",
+        "attrs": {
+          "world_readable": false,
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kind": "access_token",
+          "mode": 384,
+          "owner_is_self": true,
+          "prefix": "glpat-",
+          "size": 198
+        }
+      }
+    ]
+  }
+}

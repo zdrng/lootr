@@ -1,0 +1,182 @@
+{
+  "exit_code": 1,
+  "report": {
+    "custom_types": [],
+    "expired_waivers": [],
+    "facts": [
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 24,
+          "length": 9,
+          "name": "HOME"
+        },
+        "location": {
+          "kind": "env",
+          "name": "HOME"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 203,
+          "length": 60,
+          "name": "PATH"
+        },
+        "location": {
+          "kind": "env",
+          "name": "PATH"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 24,
+          "length": 9,
+          "name": "PWD"
+        },
+        "location": {
+          "kind": "env",
+          "name": "PWD"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "groups": [
+            "app"
+          ],
+          "in_container": true,
+          "is_root": false,
+          "uid": 1000
+        },
+        "location": {
+          "kind": "probe",
+          "name": "process"
+        },
+        "source": "process",
+        "type": "process"
+      },
+      {
+        "attrs": {
+          "foreign_processes": 2,
+          "names": [
+            "sleep"
+          ],
+          "readable_environ": 1
+        },
+        "location": {
+          "kind": "probe",
+          "name": "proc_environ"
+        },
+        "source": "proc-environ",
+        "type": "proc_environ"
+      },
+      {
+        "attrs": {
+          "checksum_valid": true,
+          "kind": "classic",
+          "prefix": "ghp_"
+        },
+        "location": {
+          "kind": "probe",
+          "name": "proc_environ:sleep"
+        },
+        "source": "proc-environ",
+        "type": "github_token"
+      }
+    ],
+    "findings": [
+      {
+        "fact": {
+          "attrs": {
+            "checksum_valid": true,
+            "kind": "classic",
+            "prefix": "ghp_"
+          },
+          "location": {
+            "kind": "probe",
+            "name": "proc_environ:sleep"
+          },
+          "source": "proc-environ",
+          "type": "github_token"
+        },
+        "message": "Classic GitHub personal access token visible in probe:proc_environ:sleep",
+        "remediation": "Revoke it and use a fine-grained token with minimal permissions and an expiry",
+        "rule": "github-classic-token",
+        "severity": "high",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "foreign_processes": 2,
+            "names": [
+              "sleep"
+            ],
+            "readable_environ": 1
+          },
+          "location": {
+            "kind": "probe",
+            "name": "proc_environ"
+          },
+          "source": "proc-environ",
+          "type": "proc_environ"
+        },
+        "message": "The environment of 1 other process(es) is readable (sleep): their secrets are exposed to this user",
+        "remediation": "Pass secrets to processes through files (mode 0600) or a secret manager, not the environment; isolate jobs (separate users, hidepid=2, or per-job runners)",
+        "rule": "proc-environ-readable",
+        "severity": "medium",
+        "tags": {
+          "category": "privilege"
+        },
+        "waived": null
+      }
+    ],
+    "rule_errors": [],
+    "run": {
+      "config_layers": [
+        "<built-in>"
+      ],
+      "cwd": "/home/app",
+      "fail_on": "high",
+      "home": "/home/app",
+      "uid": 1000
+    },
+    "schema_version": 1,
+    "skipped": [],
+    "summary": {
+      "by_rule": {
+        "github-classic-token": 1,
+        "proc-environ-readable": 1
+      },
+      "by_severity": {
+        "critical": 0,
+        "high": 1,
+        "info": 0,
+        "low": 0,
+        "medium": 1
+      },
+      "candidates": 12,
+      "expired_waivers": 0,
+      "facts": 6,
+      "failing": 1,
+      "failing_skipped": 0,
+      "findings": 2,
+      "rule_errors": 0,
+      "skipped": 0,
+      "waived": 0
+    },
+    "tool": {
+      "name": "lootr"
+    }
+  }
+}

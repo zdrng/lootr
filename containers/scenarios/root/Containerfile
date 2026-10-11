@@ -1,0 +1,18 @@
+# root: lootr runs as root (a common CI/container default), with an
+# unencrypted key in /root/.ssh and a Docker socket. Expected: running as
+# root is reported; root's own socket access is not a separate finding.
+FROM lootr-base
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends openssh-client \
+    && rm -rf /var/lib/apt/lists/*
+RUN set -eu; umask 077; mkdir -p /root/.ssh; \
+    ssh-keygen -q -t ed25519 -N "" -C "DUMMY test only LOOTRCANARY" -f /root/.ssh/id_ed25519; \
+    groupadd --system docker; \
+    hooks=/usr/local/lib/lootr-scenario; mkdir -p "$hooks"; \
+    printf '%s\n' '#!/bin/sh' 'set -eu' \
+      'perl -MIO::Socket::UNIX -e "IO::Socket::UNIX->new(Local => shift, Listen => 1) or die" /var/run/docker.sock' \
+      'chown root:docker /var/run/docker.sock; chmod 660 /var/run/docker.sock' \
+      > "$hooks/setup"; \
+    chmod 755 "$hooks/setup"
+USER root
+WORKDIR /root

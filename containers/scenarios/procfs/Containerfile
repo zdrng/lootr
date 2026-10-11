@@ -1,0 +1,27 @@
+# procfs: foreign process environments visible through /proc (DUMMY, carrying
+# the canary). The container entrypoint starts two sleeping processes before
+# lootr runs:
+#
+#   - one as the same user (app) with a dummy GitHub token in its
+#     environment: lootr can read its /proc/<pid>/environ, so the token is
+#     found (proc_environ -> github-classic-token at probe:proc_environ:sleep);
+#   - one as root with a dummy password: a different user, so its environ is
+#     not readable (hidepid-like: counted, never read).
+#
+# Expected: the proc_environ summary reports one readable foreign process and
+# the classic token is reported; the root process's secret never appears.
+FROM lootr-base
+RUN useradd --create-home --uid 1000 --shell /bin/sh app
+RUN set -eu; hooks=/usr/local/lib/lootr-scenario; mkdir -p "$hooks"; \
+    printf '%s\n' \
+      '#!/bin/sh' \
+      'set -eu' \
+      'tok=$(gen-github-token ghp_ LOOTRCANARYprocfsToken01234567)' \
+      'setpriv --reuid=1000 --regid=1000 --init-groups env -i PATH=/usr/bin HOME=/home/app GITHUB_TOKEN="$tok" sleep 600 &' \
+      'env -i PATH=/usr/bin DB_PASSWORD=LOOTRCANARY-root-only-secret sleep 600 &' \
+      'sleep 1' \
+      > "$hooks/setup"; \
+    chmod 755 "$hooks/setup"
+USER root
+ENV LOOTR_SCENARIO_USER=app
+WORKDIR /home/app

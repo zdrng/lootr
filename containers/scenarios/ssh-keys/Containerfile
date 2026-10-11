@@ -1,0 +1,22 @@
+# ssh-keys: a developer with keys in every format and state, generated at
+# build time (DUMMY, comments carry the canary). Expected: unencrypted,
+# readable-by-others, weak and legacy-encrypted keys are reported; the
+# protected ed25519 key, public keys and config are not.
+FROM lootr-base
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends openssh-client openssl \
+    && rm -rf /var/lib/apt/lists/*
+RUN useradd --create-home --uid 1000 --shell /bin/sh dev
+USER dev
+WORKDIR /home/dev
+RUN set -eu; umask 077; mkdir .ssh; cd .ssh; c="DUMMY test only LOOTRCANARY"; \
+    ssh-keygen -q -t ed25519 -N "" -C "$c" -f id_ed25519; \
+    ssh-keygen -q -t ed25519 -N dummy-passphrase -C "$c" -f id_ed25519_protected; \
+    ssh-keygen -q -t rsa -b 2048 -N "" -C "$c" -f id_rsa; \
+    ssh-keygen -q -t rsa -b 3072 -m PEM -N dummy-passphrase -C "$c" -f legacy_pem; \
+    ssh-keygen -q -t ecdsa -b 384 -N "" -C "$c" -f shared_ecdsa; \
+    openssl genpkey -algorithm ed25519 -out pkcs8_ed25519 2>/dev/null; \
+    openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 2>/dev/null \
+        | openssl pkcs8 -topk8 -v2 aes-256-cbc -passout pass:dummy-passphrase -out pkcs8_protected; \
+    printf 'Host *\n    IdentitiesOnly yes\n' > config; \
+    chmod 640 id_rsa; chmod 644 shared_ecdsa *.pub config

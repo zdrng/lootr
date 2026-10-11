@@ -1,0 +1,381 @@
+{
+  "exit_code": 1,
+  "report": {
+    "schema_version": 1,
+    "tool": {
+      "name": "lootr"
+    },
+    "run": {
+      "fail_on": "high",
+      "config_layers": [
+        "<built-in>",
+        "/Users/zdrng/Projects/lootr/test-envs/common.toml"
+      ],
+      "cwd": "<root>/home",
+      "home": "<root>/home"
+    },
+    "custom_types": [],
+    "summary": {
+      "candidates": 5,
+      "facts": 4,
+      "findings": 5,
+      "waived": 0,
+      "failing": 1,
+      "by_severity": {
+        "critical": 0,
+        "high": 1,
+        "medium": 4,
+        "low": 0,
+        "info": 0
+      },
+      "rule_errors": 0,
+      "expired_waivers": 0,
+      "skipped": 0,
+      "failing_skipped": 0,
+      "by_rule": {
+        "jwt-no-expiry": 1,
+        "kubeconfig-embedded-client-key": 1,
+        "kubeconfig-insecure-tls": 1,
+        "kubeconfig-readable": 1,
+        "kubeconfig-static-credentials": 1
+      }
+    },
+    "findings": [
+      {
+        "rule": "kubeconfig-readable",
+        "severity": "high",
+        "message": "kubeconfig ~/.kube/config with stored credentials is readable by others (mode 0640)",
+        "remediation": "chmod 600 ~/.kube/config and rotate the credentials",
+        "tags": {
+          "category": "file-permissions"
+        },
+        "waived": null,
+        "fact": {
+          "type": "kubeconfig",
+          "location": {
+            "kind": "file",
+            "path": "~/.kube/config"
+          },
+          "source": "kubeconfig",
+          "attrs": {
+            "world_readable": false,
+            "auth_providers": 1,
+            "basic_auth": 0,
+            "client_certs": 1,
+            "clusters": [
+              "lab",
+              "prod"
+            ],
+            "contexts": [
+              "dex",
+              "eks",
+              "lab-admin",
+              "prod"
+            ],
+            "current_context": "prod",
+            "embedded_client_keys": 1,
+            "exec_auth": 1,
+            "exec_commands": [
+              "aws"
+            ],
+            "gitignored": false,
+            "group_readable": true,
+            "in_git_repo": false,
+            "insecure_skip_tls": true,
+            "mode": 416,
+            "owner_is_self": true,
+            "size": 1593,
+            "static_tokens": 1,
+            "token_files": 0,
+            "users": 4
+          }
+        }
+      },
+      {
+        "rule": "jwt-no-expiry",
+        "severity": "medium",
+        "message": "JWT in ~/.kube/config#users.deployer.token never expires (issuer: kubernetes/serviceaccount)",
+        "remediation": "Issue tokens with an `exp` claim and revoke this one",
+        "tags": {
+          "category": "long-lived-credential"
+        },
+        "waived": null,
+        "fact": {
+          "type": "jwt",
+          "location": {
+            "kind": "file",
+            "path": "~/.kube/config",
+            "key_path": "users.deployer.token"
+          },
+          "source": "kubeconfig",
+          "attrs": {
+            "world_readable": false,
+            "alg": "RS256",
+            "expired": false,
+            "gitignored": false,
+            "group_readable": true,
+            "in_git_repo": false,
+            "issuer": "kubernetes/serviceaccount",
+            "mode": 416,
+            "owner_is_self": true,
+            "size": 1593
+          }
+        }
+      },
+      {
+        "rule": "kubeconfig-embedded-client-key",
+        "severity": "medium",
+        "message": "kubeconfig ~/.kube/config embeds client private keys (1); client certificates cannot be revoked",
+        "remediation": "Use OIDC or an exec plugin; if client certificates are needed, keep them short-lived",
+        "tags": {
+          "category": "plaintext-storage"
+        },
+        "waived": null,
+        "fact": {
+          "type": "kubeconfig",
+          "location": {
+            "kind": "file",
+            "path": "~/.kube/config"
+          },
+          "source": "kubeconfig",
+          "attrs": {
+            "world_readable": false,
+            "auth_providers": 1,
+            "basic_auth": 0,
+            "client_certs": 1,
+            "clusters": [
+              "lab",
+              "prod"
+            ],
+            "contexts": [
+              "dex",
+              "eks",
+              "lab-admin",
+              "prod"
+            ],
+            "current_context": "prod",
+            "embedded_client_keys": 1,
+            "exec_auth": 1,
+            "exec_commands": [
+              "aws"
+            ],
+            "gitignored": false,
+            "group_readable": true,
+            "in_git_repo": false,
+            "insecure_skip_tls": true,
+            "mode": 416,
+            "owner_is_self": true,
+            "size": 1593,
+            "static_tokens": 1,
+            "token_files": 0,
+            "users": 4
+          }
+        }
+      },
+      {
+        "rule": "kubeconfig-insecure-tls",
+        "severity": "medium",
+        "message": "kubeconfig ~/.kube/config disables TLS verification for a cluster",
+        "remediation": "Set the cluster's certificate-authority-data and remove insecure-skip-tls-verify",
+        "tags": {
+          "category": "transport-security"
+        },
+        "waived": null,
+        "fact": {
+          "type": "kubeconfig",
+          "location": {
+            "kind": "file",
+            "path": "~/.kube/config"
+          },
+          "source": "kubeconfig",
+          "attrs": {
+            "world_readable": false,
+            "auth_providers": 1,
+            "basic_auth": 0,
+            "client_certs": 1,
+            "clusters": [
+              "lab",
+              "prod"
+            ],
+            "contexts": [
+              "dex",
+              "eks",
+              "lab-admin",
+              "prod"
+            ],
+            "current_context": "prod",
+            "embedded_client_keys": 1,
+            "exec_auth": 1,
+            "exec_commands": [
+              "aws"
+            ],
+            "gitignored": false,
+            "group_readable": true,
+            "in_git_repo": false,
+            "insecure_skip_tls": true,
+            "mode": 416,
+            "owner_is_self": true,
+            "size": 1593,
+            "static_tokens": 1,
+            "token_files": 0,
+            "users": 4
+          }
+        }
+      },
+      {
+        "rule": "kubeconfig-static-credentials",
+        "severity": "medium",
+        "message": "kubeconfig ~/.kube/config stores credentials (tokens: 1, passwords: 0, auth providers: 1)",
+        "remediation": "Use short-lived credentials from an exec plugin (cloud CLI, kubelogin/OIDC) instead of static tokens",
+        "tags": {
+          "category": "plaintext-storage"
+        },
+        "waived": null,
+        "fact": {
+          "type": "kubeconfig",
+          "location": {
+            "kind": "file",
+            "path": "~/.kube/config"
+          },
+          "source": "kubeconfig",
+          "attrs": {
+            "world_readable": false,
+            "auth_providers": 1,
+            "basic_auth": 0,
+            "client_certs": 1,
+            "clusters": [
+              "lab",
+              "prod"
+            ],
+            "contexts": [
+              "dex",
+              "eks",
+              "lab-admin",
+              "prod"
+            ],
+            "current_context": "prod",
+            "embedded_client_keys": 1,
+            "exec_auth": 1,
+            "exec_commands": [
+              "aws"
+            ],
+            "gitignored": false,
+            "group_readable": true,
+            "in_git_repo": false,
+            "insecure_skip_tls": true,
+            "mode": 416,
+            "owner_is_self": true,
+            "size": 1593,
+            "static_tokens": 1,
+            "token_files": 0,
+            "users": 4
+          }
+        }
+      }
+    ],
+    "rule_errors": [],
+    "expired_waivers": [],
+    "skipped": [],
+    "facts": [
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "HOME"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [],
+          "name": "HOME",
+          "length": 45
+        }
+      },
+      {
+        "type": "kubeconfig",
+        "location": {
+          "kind": "file",
+          "path": "~/.kube/config"
+        },
+        "source": "kubeconfig",
+        "attrs": {
+          "world_readable": false,
+          "auth_providers": 1,
+          "basic_auth": 0,
+          "client_certs": 1,
+          "clusters": [
+            "lab",
+            "prod"
+          ],
+          "contexts": [
+            "dex",
+            "eks",
+            "lab-admin",
+            "prod"
+          ],
+          "current_context": "prod",
+          "embedded_client_keys": 1,
+          "exec_auth": 1,
+          "exec_commands": [
+            "aws"
+          ],
+          "gitignored": false,
+          "group_readable": true,
+          "in_git_repo": false,
+          "insecure_skip_tls": true,
+          "mode": 416,
+          "owner_is_self": true,
+          "size": 1593,
+          "static_tokens": 1,
+          "token_files": 0,
+          "users": 4
+        }
+      },
+      {
+        "type": "jwt",
+        "location": {
+          "kind": "file",
+          "path": "~/.kube/config",
+          "key_path": "users.deployer.token"
+        },
+        "source": "kubeconfig",
+        "attrs": {
+          "world_readable": false,
+          "alg": "RS256",
+          "expired": false,
+          "gitignored": false,
+          "group_readable": true,
+          "in_git_repo": false,
+          "issuer": "kubernetes/serviceaccount",
+          "mode": 416,
+          "owner_is_self": true,
+          "size": 1593
+        }
+      },
+      {
+        "type": "jwt",
+        "location": {
+          "kind": "file",
+          "path": "~/.kube/config",
+          "key_path": "users.dex.auth-provider.id-token"
+        },
+        "source": "kubeconfig",
+        "attrs": {
+          "world_readable": false,
+          "alg": "RS256",
+          "audience": [
+            "kubectl"
+          ],
+          "expired": true,
+          "size": 1593,
+          "gitignored": false,
+          "group_readable": true,
+          "in_git_repo": false,
+          "issuer": "https://dex.example",
+          "lifetime_hours": 1,
+          "mode": 416,
+          "owner_is_self": true
+        }
+      }
+    ]
+  }
+}

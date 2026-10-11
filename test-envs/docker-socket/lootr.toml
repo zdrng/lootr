@@ -1,0 +1,15 @@
+version = 1
+
+[[source]]
+id = "container-sockets"
+enabled = true
+paths = ["~/.docker/run/docker.sock"]
+
+# The socket is owned by the test user, so the default rule
+# (root-owned sockets) does not apply; this one shows the probe's facts.
+[[rule]]
+id = "container-socket-accessible"
+type = "unix_socket"
+when = "accessible"
+severity = "low"
+message = "{kind} socket {path} is accessible (mode {mode}, rootful {rootful})"

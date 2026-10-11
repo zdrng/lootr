@@ -1,0 +1,104 @@
+{
+  "exit_code": 0,
+  "report": {
+    "schema_version": 1,
+    "tool": {
+      "name": "lootr"
+    },
+    "run": {
+      "fail_on": "high",
+      "config_layers": [
+        "<built-in>",
+        "/Users/zdrng/Projects/lootr/test-envs/common.toml"
+      ],
+      "cwd": "<root>/home",
+      "home": "<root>/home"
+    },
+    "custom_types": [],
+    "summary": {
+      "candidates": 7,
+      "facts": 3,
+      "findings": 0,
+      "waived": 0,
+      "failing": 0,
+      "by_severity": {
+        "critical": 0,
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "info": 0
+      },
+      "rule_errors": 0,
+      "expired_waivers": 0,
+      "skipped": 0,
+      "failing_skipped": 0,
+      "by_rule": {}
+    },
+    "findings": [],
+    "rule_errors": [],
+    "expired_waivers": [],
+    "skipped": [],
+    "facts": [
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "HOME"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [],
+          "name": "HOME",
+          "length": 45
+        }
+      },
+      {
+        "type": "ssh_private_key",
+        "location": {
+          "kind": "file",
+          "path": "~/.ssh/dummy_id_ed25519"
+        },
+        "source": "ssh",
+        "attrs": {
+          "world_readable": false,
+          "bits": 256,
+          "cipher": "aes256-ctr",
+          "encrypted": true,
+          "format": "openssh",
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kdf": "bcrypt",
+          "kdf_rounds": 24,
+          "key_type": "ed25519",
+          "mode": 384,
+          "owner_is_self": true,
+          "size": 464
+        }
+      },
+      {
+        "type": "ssh_private_key",
+        "location": {
+          "kind": "file",
+          "path": "~/.ssh/dummy_pkcs8_enc"
+        },
+        "source": "ssh",
+        "attrs": {
+          "world_readable": false,
+          "cipher": "aes-256-cbc",
+          "encrypted": true,
+          "format": "pkcs8",
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kdf": "pbkdf2",
+          "kdf_rounds": 2048,
+          "key_type": "unknown",
+          "mode": 384,
+          "owner_is_self": true,
+          "size": 1858
+        }
+      }
+    ]
+  }
+}

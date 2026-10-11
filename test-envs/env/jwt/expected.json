@@ -1,0 +1,259 @@
+{
+  "exit_code": 0,
+  "report": {
+    "schema_version": 1,
+    "tool": {
+      "name": "lootr"
+    },
+    "run": {
+      "fail_on": "high",
+      "config_layers": [
+        "<built-in>",
+        "/Users/zdrng/Projects/lootr/test-envs/common.toml"
+      ],
+      "cwd": "<root>/home",
+      "home": "<root>/home"
+    },
+    "custom_types": [],
+    "summary": {
+      "candidates": 9,
+      "facts": 10,
+      "findings": 2,
+      "waived": 0,
+      "failing": 0,
+      "by_severity": {
+        "critical": 0,
+        "high": 0,
+        "medium": 2,
+        "low": 0,
+        "info": 0
+      },
+      "rule_errors": 0,
+      "expired_waivers": 0,
+      "skipped": 0,
+      "failing_skipped": 0,
+      "by_rule": {
+        "jwt-long-lived": 1,
+        "jwt-no-expiry": 1
+      }
+    },
+    "findings": [
+      {
+        "rule": "jwt-long-lived",
+        "severity": "medium",
+        "message": "JWT in $ID_TOKEN is valid for 667345 hours (issuer: https://issuer.example)",
+        "remediation": "Use short-lived tokens (hours, not days) and keep them out of long-lived storage",
+        "tags": {
+          "category": "long-lived-credential"
+        },
+        "waived": null,
+        "fact": {
+          "type": "jwt",
+          "location": {
+            "kind": "env",
+            "name": "ID_TOKEN"
+          },
+          "source": "process-env",
+          "attrs": {
+            "alg": "RS256",
+            "audience": [
+              "api"
+            ],
+            "expired": false,
+            "scopes": [
+              "read:packages",
+              "write:packages"
+            ],
+            "issuer": "https://issuer.example",
+            "lifetime_hours": 667345
+          }
+        }
+      },
+      {
+        "rule": "jwt-no-expiry",
+        "severity": "medium",
+        "message": "JWT in $FOREVER_TOKEN never expires (issuer: https://forever.example)",
+        "remediation": "Issue tokens with an `exp` claim and revoke this one",
+        "tags": {
+          "category": "long-lived-credential"
+        },
+        "waived": null,
+        "fact": {
+          "type": "jwt",
+          "location": {
+            "kind": "env",
+            "name": "FOREVER_TOKEN"
+          },
+          "source": "process-env",
+          "attrs": {
+            "alg": "ES256",
+            "expired": false,
+            "issuer": "https://forever.example"
+          }
+        }
+      }
+    ],
+    "rule_errors": [],
+    "expired_waivers": [],
+    "skipped": [],
+    "facts": [
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "FOREVER_TOKEN"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [
+            "jwt"
+          ],
+          "entropy": 793,
+          "length": 143,
+          "name": "FOREVER_TOKEN"
+        }
+      },
+      {
+        "type": "jwt",
+        "location": {
+          "kind": "env",
+          "name": "FOREVER_TOKEN"
+        },
+        "source": "process-env",
+        "attrs": {
+          "alg": "ES256",
+          "expired": false,
+          "issuer": "https://forever.example"
+        }
+      },
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "HOME"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [],
+          "name": "HOME",
+          "length": 45
+        }
+      },
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "ID_TOKEN"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [
+            "jwt"
+          ],
+          "entropy": 1528,
+          "length": 274,
+          "name": "ID_TOKEN"
+        }
+      },
+      {
+        "type": "jwt",
+        "location": {
+          "kind": "env",
+          "name": "ID_TOKEN"
+        },
+        "source": "process-env",
+        "attrs": {
+          "alg": "RS256",
+          "audience": [
+            "api"
+          ],
+          "expired": false,
+          "scopes": [
+            "read:packages",
+            "write:packages"
+          ],
+          "issuer": "https://issuer.example",
+          "lifetime_hours": 667345
+        }
+      },
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "NOT_A_JWT"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [],
+          "entropy": 9,
+          "length": 5,
+          "name": "NOT_A_JWT"
+        }
+      },
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "OLD_TOKEN"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [
+            "jwt"
+          ],
+          "entropy": 1020,
+          "length": 183,
+          "name": "OLD_TOKEN"
+        }
+      },
+      {
+        "type": "jwt",
+        "location": {
+          "kind": "env",
+          "name": "OLD_TOKEN"
+        },
+        "source": "process-env",
+        "attrs": {
+          "alg": "HS256",
+          "expired": true,
+          "lifetime_hours": 1,
+          "issuer": "https://expired.example"
+        }
+      },
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "SHORT_TOKEN"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [
+            "jwt"
+          ],
+          "entropy": 969,
+          "length": 175,
+          "name": "SHORT_TOKEN"
+        }
+      },
+      {
+        "type": "jwt",
+        "location": {
+          "kind": "env",
+          "name": "SHORT_TOKEN"
+        },
+        "source": "process-env",
+        "attrs": {
+          "alg": "EdDSA",
+          "audience": [
+            "api",
+            "web"
+          ],
+          "expired": false,
+          "lifetime_hours": 1,
+          "issuer": "https://short.example"
+        }
+      }
+    ]
+  }
+}

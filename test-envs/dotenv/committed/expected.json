@@ -1,0 +1,614 @@
+{
+  "exit_code": 1,
+  "report": {
+    "schema_version": 1,
+    "tool": {
+      "name": "lootr"
+    },
+    "run": {
+      "fail_on": "high",
+      "config_layers": [
+        "<built-in>",
+        "/Users/zdrng/Projects/lootr/test-envs/common.toml"
+      ],
+      "cwd": "<root>/workdir",
+      "home": "<root>/home"
+    },
+    "custom_types": [],
+    "summary": {
+      "candidates": 8,
+      "facts": 15,
+      "findings": 7,
+      "waived": 0,
+      "failing": 3,
+      "by_severity": {
+        "critical": 0,
+        "high": 3,
+        "medium": 4,
+        "low": 0,
+        "info": 0
+      },
+      "rule_errors": 0,
+      "expired_waivers": 0,
+      "skipped": 0,
+      "failing_skipped": 0,
+      "by_rule": {
+        "dotenv-secret-not-gitignored": 2,
+        "dotenv-secret-world-readable": 1,
+        "dotenv-token-not-gitignored": 1,
+        "github-classic-token": 2,
+        "jwt-long-lived": 1
+      }
+    },
+    "findings": [
+      {
+        "rule": "dotenv-token-not-gitignored",
+        "severity": "high",
+        "message": "GH_TOKEN in <root>/workdir/.env holds a github_token and the file is not ignored by git",
+        "remediation": "Add the file to .gitignore, check the history (git log -- <root>/workdir/.env) and rotate the token if it was ever committed",
+        "tags": {
+          "category": "version-control"
+        },
+        "waived": null,
+        "fact": {
+          "type": "dotenv_entry",
+          "location": {
+            "kind": "file",
+            "path": "<root>/workdir/.env",
+            "key_path": "GH_TOKEN"
+          },
+          "source": "dotenv",
+          "attrs": {
+            "world_readable": false,
+            "classified_as": [
+              "github_token"
+            ],
+            "entropy": 198,
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": true,
+            "length": 40,
+            "mode": 384,
+            "name": "GH_TOKEN",
+            "owner_is_self": true,
+            "size": 237
+          }
+        }
+      },
+      {
+        "rule": "github-classic-token",
+        "severity": "high",
+        "message": "Classic GitHub personal access token visible in <root>/workdir/.env#GH_TOKEN",
+        "remediation": "Revoke it and use a fine-grained token with minimal permissions and an expiry",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null,
+        "fact": {
+          "type": "github_token",
+          "location": {
+            "kind": "file",
+            "path": "<root>/workdir/.env",
+            "key_path": "GH_TOKEN"
+          },
+          "source": "dotenv",
+          "attrs": {
+            "world_readable": false,
+            "checksum_valid": true,
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": true,
+            "kind": "classic",
+            "mode": 384,
+            "owner_is_self": true,
+            "prefix": "ghp_",
+            "size": 237
+          }
+        }
+      },
+      {
+        "rule": "github-classic-token",
+        "severity": "high",
+        "message": "Classic GitHub personal access token visible in <root>/workdir/.env.local#LOCAL_GH_TOKEN",
+        "remediation": "Revoke it and use a fine-grained token with minimal permissions and an expiry",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null,
+        "fact": {
+          "type": "github_token",
+          "location": {
+            "kind": "file",
+            "path": "<root>/workdir/.env.local",
+            "key_path": "LOCAL_GH_TOKEN"
+          },
+          "source": "dotenv",
+          "attrs": {
+            "world_readable": false,
+            "checksum_valid": true,
+            "gitignored": true,
+            "group_readable": false,
+            "in_git_repo": true,
+            "kind": "classic",
+            "mode": 384,
+            "owner_is_self": true,
+            "prefix": "ghp_",
+            "size": 393
+          }
+        }
+      },
+      {
+        "rule": "dotenv-secret-not-gitignored",
+        "severity": "medium",
+        "message": "SECRET_KEY in <root>/workdir/.env looks like a secret (204 bits) and the file is not ignored by git",
+        "remediation": "Add the file to .gitignore and keep secrets out of the repository",
+        "tags": {
+          "category": "version-control"
+        },
+        "waived": null,
+        "fact": {
+          "type": "dotenv_entry",
+          "location": {
+            "kind": "file",
+            "path": "<root>/workdir/.env",
+            "key_path": "SECRET_KEY"
+          },
+          "source": "dotenv",
+          "attrs": {
+            "world_readable": false,
+            "classified_as": [],
+            "entropy": 204,
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": true,
+            "length": 40,
+            "mode": 384,
+            "name": "SECRET_KEY",
+            "owner_is_self": true,
+            "size": 237
+          }
+        }
+      },
+      {
+        "rule": "dotenv-secret-not-gitignored",
+        "severity": "medium",
+        "message": "API_TOKEN in <root>/workdir/services/api/.env looks like a secret (176 bits) and the file is not ignored by git",
+        "remediation": "Add the file to .gitignore and keep secrets out of the repository",
+        "tags": {
+          "category": "version-control"
+        },
+        "waived": null,
+        "fact": {
+          "type": "dotenv_entry",
+          "location": {
+            "kind": "file",
+            "path": "<root>/workdir/services/api/.env",
+            "key_path": "API_TOKEN"
+          },
+          "source": "dotenv",
+          "attrs": {
+            "world_readable": true,
+            "classified_as": [],
+            "entropy": 176,
+            "gitignored": false,
+            "group_readable": true,
+            "in_git_repo": true,
+            "length": 36,
+            "mode": 420,
+            "name": "API_TOKEN",
+            "owner_is_self": true,
+            "size": 86
+          }
+        }
+      },
+      {
+        "rule": "dotenv-secret-world-readable",
+        "severity": "medium",
+        "message": "API_TOKEN in <root>/workdir/services/api/.env looks like a secret and the file is readable by every user (mode 0644)",
+        "remediation": "chmod 600 <root>/workdir/services/api/.env",
+        "tags": {
+          "category": "file-permissions"
+        },
+        "waived": null,
+        "fact": {
+          "type": "dotenv_entry",
+          "location": {
+            "kind": "file",
+            "path": "<root>/workdir/services/api/.env",
+            "key_path": "API_TOKEN"
+          },
+          "source": "dotenv",
+          "attrs": {
+            "world_readable": true,
+            "classified_as": [],
+            "entropy": 176,
+            "gitignored": false,
+            "group_readable": true,
+            "in_git_repo": true,
+            "length": 36,
+            "mode": 420,
+            "name": "API_TOKEN",
+            "owner_is_self": true,
+            "size": 86
+          }
+        }
+      },
+      {
+        "rule": "jwt-long-lived",
+        "severity": "medium",
+        "message": "JWT in <root>/workdir/.env.local#ID_TOKEN is valid for 667345 hours (issuer: https://issuer.example)",
+        "remediation": "Use short-lived tokens (hours, not days) and keep them out of long-lived storage",
+        "tags": {
+          "category": "long-lived-credential"
+        },
+        "waived": null,
+        "fact": {
+          "type": "jwt",
+          "location": {
+            "kind": "file",
+            "path": "<root>/workdir/.env.local",
+            "key_path": "ID_TOKEN"
+          },
+          "source": "dotenv",
+          "attrs": {
+            "world_readable": false,
+            "alg": "RS256",
+            "audience": [
+              "api"
+            ],
+            "expired": false,
+            "size": 393,
+            "gitignored": true,
+            "group_readable": false,
+            "in_git_repo": true,
+            "issuer": "https://issuer.example",
+            "lifetime_hours": 667345,
+            "mode": 384,
+            "owner_is_self": true,
+            "scopes": [
+              "read:packages",
+              "write:packages"
+            ]
+          }
+        }
+      }
+    ],
+    "rule_errors": [],
+    "expired_waivers": [],
+    "skipped": [],
+    "facts": [
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "HOME"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [],
+          "name": "HOME",
+          "length": 45
+        }
+      },
+      {
+        "type": "dotenv_entry",
+        "location": {
+          "kind": "file",
+          "path": "<root>/workdir/.env",
+          "key_path": "GH_TOKEN"
+        },
+        "source": "dotenv",
+        "attrs": {
+          "world_readable": false,
+          "classified_as": [
+            "github_token"
+          ],
+          "entropy": 198,
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": true,
+          "length": 40,
+          "mode": 384,
+          "name": "GH_TOKEN",
+          "owner_is_self": true,
+          "size": 237
+        }
+      },
+      {
+        "type": "github_token",
+        "location": {
+          "kind": "file",
+          "path": "<root>/workdir/.env",
+          "key_path": "GH_TOKEN"
+        },
+        "source": "dotenv",
+        "attrs": {
+          "world_readable": false,
+          "checksum_valid": true,
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": true,
+          "kind": "classic",
+          "mode": 384,
+          "owner_is_self": true,
+          "prefix": "ghp_",
+          "size": 237
+        }
+      },
+      {
+        "type": "dotenv_entry",
+        "location": {
+          "kind": "file",
+          "path": "<root>/workdir/.env",
+          "key_path": "DATABASE_URL"
+        },
+        "source": "dotenv",
+        "attrs": {
+          "world_readable": false,
+          "classified_as": [],
+          "entropy": 288,
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": true,
+          "length": 57,
+          "mode": 384,
+          "name": "DATABASE_URL",
+          "owner_is_self": true,
+          "size": 237
+        }
+      },
+      {
+        "type": "dotenv_entry",
+        "location": {
+          "kind": "file",
+          "path": "<root>/workdir/.env",
+          "key_path": "SECRET_KEY"
+        },
+        "source": "dotenv",
+        "attrs": {
+          "world_readable": false,
+          "classified_as": [],
+          "entropy": 204,
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": true,
+          "length": 40,
+          "mode": 384,
+          "name": "SECRET_KEY",
+          "owner_is_self": true,
+          "size": 237
+        }
+      },
+      {
+        "type": "dotenv_entry",
+        "location": {
+          "kind": "file",
+          "path": "<root>/workdir/.env",
+          "key_path": "PORT"
+        },
+        "source": "dotenv",
+        "attrs": {
+          "world_readable": false,
+          "classified_as": [],
+          "entropy": 4,
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": true,
+          "length": 4,
+          "mode": 384,
+          "name": "PORT",
+          "owner_is_self": true,
+          "size": 237
+        }
+      },
+      {
+        "type": "dotenv_entry",
+        "location": {
+          "kind": "file",
+          "path": "<root>/workdir/.env",
+          "key_path": "DEBUG"
+        },
+        "source": "dotenv",
+        "attrs": {
+          "world_readable": false,
+          "classified_as": [],
+          "entropy": 8,
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": true,
+          "length": 4,
+          "mode": 384,
+          "name": "DEBUG",
+          "owner_is_self": true,
+          "size": 237
+        }
+      },
+      {
+        "type": "dotenv_entry",
+        "location": {
+          "kind": "file",
+          "path": "<root>/workdir/.env.example",
+          "key_path": "GH_TOKEN"
+        },
+        "source": "dotenv",
+        "attrs": {
+          "world_readable": false,
+          "classified_as": [],
+          "entropy": 0,
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": true,
+          "length": 0,
+          "mode": 384,
+          "name": "GH_TOKEN",
+          "owner_is_self": true,
+          "size": 121
+        }
+      },
+      {
+        "type": "dotenv_entry",
+        "location": {
+          "kind": "file",
+          "path": "<root>/workdir/.env.example",
+          "key_path": "SECRET_KEY"
+        },
+        "source": "dotenv",
+        "attrs": {
+          "world_readable": false,
+          "classified_as": [],
+          "entropy": 22,
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": true,
+          "length": 8,
+          "mode": 384,
+          "name": "SECRET_KEY",
+          "owner_is_self": true,
+          "size": 121
+        }
+      },
+      {
+        "type": "dotenv_entry",
+        "location": {
+          "kind": "file",
+          "path": "<root>/workdir/.env.example",
+          "key_path": "DATABASE_URL"
+        },
+        "source": "dotenv",
+        "attrs": {
+          "world_readable": false,
+          "classified_as": [],
+          "entropy": 145,
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": true,
+          "length": 38,
+          "mode": 384,
+          "name": "DATABASE_URL",
+          "owner_is_self": true,
+          "size": 121
+        }
+      },
+      {
+        "type": "dotenv_entry",
+        "location": {
+          "kind": "file",
+          "path": "<root>/workdir/.env.local",
+          "key_path": "ID_TOKEN"
+        },
+        "source": "dotenv",
+        "attrs": {
+          "world_readable": false,
+          "classified_as": [
+            "jwt"
+          ],
+          "entropy": 1528,
+          "gitignored": true,
+          "group_readable": false,
+          "in_git_repo": true,
+          "length": 274,
+          "mode": 384,
+          "name": "ID_TOKEN",
+          "owner_is_self": true,
+          "size": 393
+        }
+      },
+      {
+        "type": "jwt",
+        "location": {
+          "kind": "file",
+          "path": "<root>/workdir/.env.local",
+          "key_path": "ID_TOKEN"
+        },
+        "source": "dotenv",
+        "attrs": {
+          "world_readable": false,
+          "alg": "RS256",
+          "audience": [
+            "api"
+          ],
+          "expired": false,
+          "size": 393,
+          "gitignored": true,
+          "group_readable": false,
+          "in_git_repo": true,
+          "issuer": "https://issuer.example",
+          "lifetime_hours": 667345,
+          "mode": 384,
+          "owner_is_self": true,
+          "scopes": [
+            "read:packages",
+            "write:packages"
+          ]
+        }
+      },
+      {
+        "type": "dotenv_entry",
+        "location": {
+          "kind": "file",
+          "path": "<root>/workdir/.env.local",
+          "key_path": "LOCAL_GH_TOKEN"
+        },
+        "source": "dotenv",
+        "attrs": {
+          "world_readable": false,
+          "classified_as": [
+            "github_token"
+          ],
+          "entropy": 190,
+          "gitignored": true,
+          "group_readable": false,
+          "in_git_repo": true,
+          "length": 40,
+          "mode": 384,
+          "name": "LOCAL_GH_TOKEN",
+          "owner_is_self": true,
+          "size": 393
+        }
+      },
+      {
+        "type": "github_token",
+        "location": {
+          "kind": "file",
+          "path": "<root>/workdir/.env.local",
+          "key_path": "LOCAL_GH_TOKEN"
+        },
+        "source": "dotenv",
+        "attrs": {
+          "world_readable": false,
+          "checksum_valid": true,
+          "gitignored": true,
+          "group_readable": false,
+          "in_git_repo": true,
+          "kind": "classic",
+          "mode": 384,
+          "owner_is_self": true,
+          "prefix": "ghp_",
+          "size": 393
+        }
+      },
+      {
+        "type": "dotenv_entry",
+        "location": {
+          "kind": "file",
+          "path": "<root>/workdir/services/api/.env",
+          "key_path": "API_TOKEN"
+        },
+        "source": "dotenv",
+        "attrs": {
+          "world_readable": true,
+          "classified_as": [],
+          "entropy": 176,
+          "gitignored": false,
+          "group_readable": true,
+          "in_git_repo": true,
+          "length": 36,
+          "mode": 420,
+          "name": "API_TOKEN",
+          "owner_is_self": true,
+          "size": 86
+        }
+      }
+    ]
+  }
+}

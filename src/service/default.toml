@@ -1,0 +1,991 @@
+# lootr built-in default config: the first layer, replaced by --no-default.
+#
+# It is an ordinary config layer: later layers can override any source or
+# rule by id (e.g. `severity = "low"`), disable it (`enabled = false`) or add
+# their own. Nothing here is locked. See `lootr types` for every attribute and
+# `lootr explain <rule>` for a rule after layering.
+#
+# Every rule has a `category` tag (lootr's own, stable categories):
+# key-protection, key-strength, file-permissions, version-control,
+# credential-exposure, long-lived-credential, plaintext-storage,
+# transport-security, ci-permissions, privilege, policy-hygiene.
+
+version = 1
+
+[scan]
+max-file-size = "1MiB"
+max-depth = 16
+one-file-system = true
+exclude = []
+
+# ---- sources --------------------------------------------------------------------
+
+# Every environment variable is classified by the value types.
+[[source]]
+id = "process-env"
+kind = "env"
+names = ["*"]
+
+# Private keys in ~/.ssh (sniffing skips everything that is not a key).
+[[source]]
+id = "ssh"
+kind = "file"
+paths = ["~/.ssh/**"]
+type = "ssh_private_key"
+
+# .env files below the current directory.
+[[source]]
+id = "dotenv"
+kind = "file"
+paths = ["./**/.env", "./**/.env.*"]
+exclude = ["./**/.git/**", "./**/node_modules/**"]
+extract = "dotenv"
+
+# PEM keys and certificates: in the project and client TLS material
+# (~/.ssh is covered by the ssh source).
+[[source]]
+id = "pem"
+kind = "file"
+paths = [
+    "./**/*.pem",
+    "./**/*.key",
+    "~/.docker/**/*.pem",
+    "~/.kube/**/*.key",
+    "~/.minikube/**/*.key",
+]
+exclude = ["~/.ssh/**", "./**/.git/**", "./**/node_modules/**"]
+type = "pem"
+
+# Cloud credentials.
+[[source]]
+id = "aws"
+kind = "file"
+paths = ["~/.aws/credentials", "~/.aws/config"]
+type = "aws_credentials"
+
+[[source]]
+id = "gcp"
+kind = "file"
+paths = [
+    "~/.config/gcloud/application_default_credentials.json",
+    "~/.config/gcloud/legacy_credentials/*/adc.json",
+]
+type = "gcp_credentials"
+
+[[source]]
+id = "azure"
+kind = "file"
+paths = [
+    "~/.azure/azureProfile.json",
+    "~/.azure/msal_token_cache.json",
+    "~/.azure/accessTokens.json",
+    "~/.azure/service_principal_entries.json",
+]
+type = "azure_profile"
+
+[[source]]
+id = "kubeconfig"
+kind = "file"
+paths = ["~/.kube/config", "~/.kube/*.yaml", "~/.kube/*.yml"]
+type = "kubeconfig"
+
+# Registry and developer tool credentials.
+[[source]]
+id = "docker-config"
+kind = "file"
+paths = ["~/.docker/config.json", "~/.config/containers/auth.json"]
+type = "docker_config"
+
+[[source]]
+id = "npmrc"
+kind = "file"
+paths = ["~/.npmrc", "./**/.npmrc"]
+exclude = ["./**/.git/**", "./**/node_modules/**"]
+type = "npmrc"
+
+[[source]]
+id = "pypirc"
+kind = "file"
+paths = ["~/.pypirc"]
+type = "pypirc"
+
+[[source]]
+id = "netrc"
+kind = "file"
+paths = ["~/.netrc"]
+type = "netrc"
+
+[[source]]
+id = "git-credentials"
+kind = "file"
+paths = ["~/.git-credentials", "~/.config/git/credentials"]
+type = "git_credentials"
+
+[[source]]
+id = "gh-hosts"
+kind = "file"
+paths = ["~/.config/gh/hosts.yml"]
+type = "gh_hosts"
+
+# Credential files of tools without a type of their own: every string value
+# becomes a config_entry and is classified like an environment variable.
+[[source]]
+id = "cargo-credentials"
+kind = "file"
+paths = ["~/.cargo/credentials.toml", "~/.cargo/credentials"]
+extract = "toml"
+
+[[source]]
+id = "terraform-credentials"
+kind = "file"
+paths = ["~/.terraform.d/credentials.tfrc.json"]
+extract = "json"
+
+[[source]]
+id = "composer-auth"
+kind = "file"
+paths = ["~/.config/composer/auth.json", "~/.composer/auth.json"]
+extract = "json"
+
+[[source]]
+id = "gem-credentials"
+kind = "file"
+paths = ["~/.gem/credentials"]
+extract = "yaml"
+
+[[source]]
+id = "yarnrc"
+kind = "file"
+paths = ["~/.yarnrc.yml", "./**/.yarnrc.yml"]
+exclude = ["./**/.git/**", "./**/node_modules/**"]
+extract = "yaml"
+
+[[source]]
+id = "gradle-properties"
+kind = "file"
+paths = ["~/.gradle/gradle.properties"]
+extract = "ini"
+
+# GitHub Actions workflows of the project in the current directory.
+[[source]]
+id = "workflows"
+kind = "file"
+paths = ["./.github/workflows/*.yml", "./.github/workflows/*.yaml"]
+type = "github_workflow"
+
+# Who lootr runs as.
+[[source]]
+id = "process"
+kind = "probe"
+probes = ["process"]
+
+# Container runtime sockets (root-owned ones are root-equivalent when usable).
+[[source]]
+id = "container-sockets"
+kind = "probe"
+probes = ["unix_socket"]
+paths = [
+    "/var/run/docker.sock",
+    "/run/containerd/containerd.sock",
+    "/run/podman/podman.sock",
+    "/run/buildkit/buildkitd.sock",
+    "~/.docker/run/docker.sock",
+    "~/.colima/default/docker.sock",
+    "~/.rd/docker.sock",
+]
+
+# Environments of other processes (Linux /proc): their secrets are visible
+# to a process of the same user. Values are classified like env vars.
+[[source]]
+id = "proc-environ"
+kind = "probe"
+probes = ["proc_environ"]
+
+# PATH directories: a directory others can write lets them plant a binary a
+# later command runs. Every absolute entry of $PATH is probed, plus the usual
+# install directories below. Only directories others (group/world) can write
+# produce a fact.
+[[source]]
+id = "path-dirs"
+kind = "probe"
+probes = ["writable"]
+path-vars = ["PATH"]
+paths = [
+    "/usr/local/bin",
+    "/usr/local/sbin",
+    "/opt/bin",
+    "~/bin",
+    "~/.local/bin",
+]
+
+# Shared caches in CI: a cache others can write is a poisoning surface (a
+# build downloads a tampered dependency or tool). Only directories others
+# (group/world) can write produce a fact.
+[[source]]
+id = "shared-caches"
+kind = "probe"
+probes = ["writable"]
+paths = [
+    "~/.cargo/registry",
+    "~/.cargo/git",
+    "~/.npm",
+    "~/.cache/pip",
+    "~/.cache/go-build",
+    "~/.cache/yarn",
+    "~/.gradle/caches",
+    "~/.m2/repository",
+    "/opt/hostedtoolcache",
+]
+
+# Shell rc files and git hooks: a file (or its directory) others can write
+# lets them inject code that runs as the owner. Only ones others can write
+# produce a fact.
+[[source]]
+id = "shell-rc"
+kind = "probe"
+probes = ["writable"]
+paths = [
+    "~/.bashrc",
+    "~/.bash_profile",
+    "~/.bash_login",
+    "~/.profile",
+    "~/.zshrc",
+    "~/.zshenv",
+    "~/.zprofile",
+    "~/.config/fish/config.fish",
+]
+
+[[source]]
+id = "git-hooks"
+kind = "probe"
+probes = ["writable"]
+paths = ["./.git/hooks/*", "~/.config/git/hooks/*"]
+
+# setuid/setgid binaries and file capabilities where untrusted code can reach
+# them (not a full system inventory: that is a non-goal). Only setuid/setgid
+# binaries or ones with capabilities produce a fact.
+[[source]]
+id = "suid"
+kind = "probe"
+probes = ["suid"]
+paths = [
+    "/usr/local/bin/*",
+    "/usr/local/sbin/*",
+    "/opt/bin/*",
+    "~/bin/*",
+    "~/.local/bin/*",
+]
+
+# In-cluster Kubernetes service account token mounted into a pod.
+[[source]]
+id = "kube-service-account"
+kind = "probe"
+probes = ["kube_service_account"]
+paths = [
+    "/var/run/secrets/kubernetes.io/serviceaccount/token",
+    "/run/secrets/kubernetes.io/serviceaccount/token",
+]
+
+# Content scanning: embedded secrets in source and config files. Every
+# token-like run is classified by the value types (only recognized values
+# become facts, located at file#L<line>).
+[[source]]
+id = "content"
+kind = "file"
+paths = [
+    "./**/*.rs",
+    "./**/*.py",
+    "./**/*.js",
+    "./**/*.ts",
+    "./**/*.go",
+    "./**/*.java",
+    "./**/*.rb",
+    "./**/*.php",
+    "./**/*.yml",
+    "./**/*.yaml",
+    "./**/*.json",
+    "./**/*.tf",
+    "./**/*.sh",
+]
+exclude = ["./**/.git/**", "./**/node_modules/**", "./**/target/**", "./**/vendor/**"]
+extract = "content"
+
+# ---- SSH keys ---------------------------------------------------------------------
+
+[[rule]]
+id = "ssh-key-unencrypted"
+type = "ssh_private_key"
+when = "!encrypted"
+severity = "high"
+tags = { category = "key-protection" }
+message = "SSH private key {path} ({key_type}) is not protected by a passphrase"
+remediation = "Set a passphrase (ssh-keygen -p -f {path}) or move the key to ssh-agent / a hardware token"
+
+[[rule]]
+id = "ssh-key-world-readable"
+type = "ssh_private_key"
+when = "world_readable"
+severity = "high"
+tags = { category = "file-permissions" }
+message = "SSH private key {path} is readable by every user (mode {mode})"
+remediation = "chmod 600 {path}, then rotate the key: others may have copied it"
+
+[[rule]]
+id = "ssh-key-group-readable"
+type = "ssh_private_key"
+when = "group_readable && !world_readable"
+severity = "medium"
+tags = { category = "file-permissions" }
+message = "SSH private key {path} is readable by its group (mode {mode})"
+remediation = "chmod 600 {path}"
+
+[[rule]]
+id = "ssh-key-weak"
+type = "ssh_private_key"
+when = 'key_type == "dsa" || (key_type == "rsa" && has(attrs.bits) && bits < 3072)'
+severity = "medium"
+tags = { category = "key-strength" }
+message = "SSH private key {path} is a weak {key_type} key ({bits} bits)"
+remediation = "Create an ed25519 key (ssh-keygen -t ed25519), deploy it and retire {path}"
+
+[[rule]]
+id = "ssh-key-legacy-encryption"
+type = "ssh_private_key"
+when = 'encrypted && (kdf == "md5" || kdf == "pbes1")'
+severity = "low"
+tags = { category = "key-strength" }
+message = "SSH private key {path} is encrypted with the legacy {kdf} key derivation (cheap to brute force)"
+remediation = "Re-encrypt it in the OpenSSH format with bcrypt: ssh-keygen -p -f {path}"
+
+[[rule]]
+id = "ssh-key-in-git-repo"
+type = "ssh_private_key"
+when = "in_git_repo && !gitignored"
+severity = "high"
+tags = { category = "version-control" }
+message = "SSH private key {path} is inside a git work tree and not ignored: it may be committed"
+remediation = "Move the key out of the repository (or ignore it), check the history (git log -- {path}) and rotate it if it was ever committed"
+
+# ---- tokens -----------------------------------------------------------------------
+
+[[rule]]
+id = "github-classic-token"
+type = "github_token"
+when = 'kind == "classic" && has(attrs.checksum_valid) && checksum_valid'
+severity = "high"
+tags = { category = "credential-exposure" }
+message = "Classic GitHub personal access token visible in {location}"
+remediation = "Revoke it and use a fine-grained token with minimal permissions and an expiry"
+
+[[rule]]
+id = "github-token"
+type = "github_token"
+when = 'kind != "classic" && (!has(attrs.checksum_valid) || checksum_valid)'
+severity = "medium"
+tags = { category = "credential-exposure" }
+message = "GitHub {kind} token ({prefix}) visible in {location}"
+remediation = "Make sure only the processes that need it can see {name}; revoke it if it leaked"
+
+[[rule]]
+id = "jwt-long-lived"
+type = "jwt"
+when = "!expired && has(attrs.lifetime_hours) && lifetime_hours > 24"
+severity = "medium"
+tags = { category = "long-lived-credential" }
+message = "JWT in {location} is valid for {lifetime_hours} hours (issuer: {issuer})"
+remediation = "Use short-lived tokens (hours, not days) and keep them out of long-lived storage"
+
+[[rule]]
+id = "jwt-no-expiry"
+type = "jwt"
+when = "!has(attrs.expires_in_hours)"
+severity = "medium"
+tags = { category = "long-lived-credential" }
+message = "JWT in {location} never expires (issuer: {issuer})"
+remediation = "Issue tokens with an `exp` claim and revoke this one"
+
+[[rule]]
+id = "gitlab-token"
+type = "gitlab_token"
+when = 'kind != "ci_job"'
+severity = "high"
+tags = { category = "credential-exposure" }
+message = "GitLab token ({kind}, {prefix}) visible in {location}"
+remediation = "Revoke it if it leaked; prefer short-lived tokens with minimal scopes and an expiry"
+
+[[rule]]
+id = "gitlab-ci-job-token"
+type = "gitlab_token"
+when = 'kind == "ci_job"'
+severity = "low"
+tags = { category = "credential-exposure" }
+message = "GitLab CI job token visible in {location}"
+remediation = "Job tokens expire with the job; make sure only the steps that need it can see {name}"
+
+[[rule]]
+id = "api-key"
+type = "api_key"
+when = "!has(attrs.live) || live"
+severity = "high"
+tags = { category = "credential-exposure" }
+message = "{service} key ({kind}) visible in {location}"
+remediation = "Revoke the key if it leaked; give it only to the processes that need it (a secret manager, files with mode 0600)"
+
+[[rule]]
+id = "api-key-test-mode"
+type = "api_key"
+when = "has(attrs.live) && !live"
+severity = "low"
+tags = { category = "credential-exposure" }
+message = "{service} test-mode key ({kind}) visible in {location}"
+remediation = "Test keys cannot move real money, but can read test data; keep them out of shared places"
+
+[[rule]]
+id = "aws-long-lived-key"
+type = "aws_access_key_id"
+when = 'kind == "long_lived"'
+severity = "high"
+tags = { category = "long-lived-credential" }
+message = "Long-lived AWS access key visible in {location}"
+remediation = "Use IAM Identity Center (aws sso login) or roles with short-lived credentials; deactivate and delete the key"
+
+[[rule]]
+id = "aws-session-key"
+type = "aws_access_key_id"
+when = 'kind == "session"'
+severity = "low"
+tags = { category = "credential-exposure" }
+message = "Temporary AWS session credentials visible in {location}"
+remediation = "They expire, but work until then: make sure only the processes that need them can see {name}"
+
+# ---- cloud credential files ------------------------------------------------------------
+
+[[rule]]
+id = "aws-credentials-readable"
+type = "aws_credentials"
+when = "(world_readable || group_readable) && (secret_keys > 0 || session_keys > 0)"
+severity = "high"
+tags = { category = "file-permissions" }
+message = "AWS credentials file {path} with stored keys is readable by others (mode {mode})"
+remediation = "chmod 600 {path} and rotate the keys: others may have copied them"
+
+[[rule]]
+id = "gcp-service-account-key"
+type = "gcp_credentials"
+when = 'kind == "service_account"'
+severity = "high"
+tags = { category = "long-lived-credential" }
+message = "Google service account key {path} ({account})"
+remediation = "Use workload identity federation or service account impersonation instead of key files; delete the key in IAM"
+
+[[rule]]
+id = "gcp-user-credentials"
+type = "gcp_credentials"
+when = 'kind == "authorized_user" || kind == "external_account_authorized_user"'
+severity = "low"
+tags = { category = "plaintext-storage" }
+message = "Google user credentials with a refresh token in {path}"
+remediation = "Revoke them when they are not needed (gcloud auth application-default revoke)"
+
+[[rule]]
+id = "gcp-credentials-readable"
+type = "gcp_credentials"
+when = 'kind != "external_account" && (world_readable || group_readable)'
+severity = "high"
+tags = { category = "file-permissions" }
+message = "Google credential file {path} is readable by others (mode {mode})"
+remediation = "chmod 600 {path} and rotate the credentials"
+
+[[rule]]
+id = "azure-service-principal-secret"
+type = "azure_profile"
+when = "service_principal_secrets > 0"
+severity = "high"
+tags = { category = "plaintext-storage" }
+message = "Azure service principal secrets ({service_principal_secrets}) are stored in {path}"
+remediation = "Use a managed or workload identity (or a certificate) instead of client secrets; az logout and rotate the secret"
+
+[[rule]]
+id = "azure-cached-tokens"
+type = "azure_profile"
+when = "has_cached_tokens"
+severity = "low"
+tags = { category = "plaintext-storage" }
+message = "Azure CLI token cache {path} holds tokens (access: {access_tokens}, refresh: {refresh_tokens})"
+remediation = "Run az logout when the session is not needed"
+
+[[rule]]
+id = "azure-credentials-readable"
+type = "azure_profile"
+when = "(has_cached_tokens || service_principal_secrets > 0) && (world_readable || group_readable)"
+severity = "high"
+tags = { category = "file-permissions" }
+message = "Azure CLI credential file {path} is readable by others (mode {mode})"
+remediation = "chmod 600 {path}, az logout and rotate service principal secrets"
+
+[[rule]]
+id = "kubeconfig-static-credentials"
+type = "kubeconfig"
+when = "static_tokens > 0 || basic_auth > 0 || auth_providers > 0"
+severity = "medium"
+tags = { category = "plaintext-storage" }
+message = "kubeconfig {path} stores credentials (tokens: {static_tokens}, passwords: {basic_auth}, auth providers: {auth_providers})"
+remediation = "Use short-lived credentials from an exec plugin (cloud CLI, kubelogin/OIDC) instead of static tokens"
+
+[[rule]]
+id = "kubeconfig-embedded-client-key"
+type = "kubeconfig"
+when = "embedded_client_keys > 0"
+severity = "medium"
+tags = { category = "plaintext-storage" }
+message = "kubeconfig {path} embeds client private keys ({embedded_client_keys}); client certificates cannot be revoked"
+remediation = "Use OIDC or an exec plugin; if client certificates are needed, keep them short-lived"
+
+[[rule]]
+id = "kubeconfig-insecure-tls"
+type = "kubeconfig"
+when = "insecure_skip_tls"
+severity = "medium"
+tags = { category = "transport-security" }
+message = "kubeconfig {path} disables TLS verification for a cluster"
+remediation = "Set the cluster's certificate-authority-data and remove insecure-skip-tls-verify"
+
+[[rule]]
+id = "kubeconfig-readable"
+type = "kubeconfig"
+when = "(world_readable || group_readable) && static_tokens + basic_auth + embedded_client_keys + auth_providers > 0"
+severity = "high"
+tags = { category = "file-permissions" }
+message = "kubeconfig {path} with stored credentials is readable by others (mode {mode})"
+remediation = "chmod 600 {path} and rotate the credentials"
+
+# ---- registry and developer tool credentials ----------------------------------------------
+
+[[rule]]
+id = "docker-inline-credentials"
+type = "docker_config"
+when = "inline_auths > 0"
+severity = "medium"
+tags = { category = "plaintext-storage" }
+message = "Registry credentials for {hosts} are stored in {path} (base64, not encrypted)"
+remediation = "Configure a credential helper (credsStore: desktop, osxkeychain, pass, secretservice), then log out and in again"
+
+[[rule]]
+id = "docker-config-readable"
+type = "docker_config"
+when = "inline_auths > 0 && (world_readable || group_readable)"
+severity = "high"
+tags = { category = "file-permissions" }
+message = "{path} with registry credentials is readable by others (mode {mode})"
+remediation = "chmod 600 {path} and rotate the registry passwords/tokens"
+
+[[rule]]
+id = "npmrc-inline-token"
+type = "npmrc"
+when = "inline_tokens > 0"
+severity = "medium"
+tags = { category = "plaintext-storage" }
+message = "Registry credentials are stored in {path} (hosts: {hosts})"
+remediation = "Reference an environment variable instead (//registry.example/:_authToken=${{NPM_TOKEN}}) and rotate the token"
+
+[[rule]]
+id = "npmrc-token-not-gitignored"
+type = "npmrc"
+when = "inline_tokens > 0 && in_git_repo && !gitignored"
+severity = "high"
+tags = { category = "version-control" }
+message = "{path} stores registry credentials and is inside a git work tree without being ignored"
+remediation = "Remove the token from {path}, check the history (git log -- {path}) and rotate it"
+
+[[rule]]
+id = "pypirc-inline-token"
+type = "pypirc"
+when = "inline_tokens > 0"
+severity = "medium"
+tags = { category = "plaintext-storage" }
+message = "Package index passwords or tokens are stored in {path} (hosts: {hosts})"
+remediation = "Use trusted publishing (OIDC) or keyring instead of stored tokens; rotate them"
+
+[[rule]]
+id = "netrc-password"
+type = "netrc"
+when = "inline_tokens > 0"
+severity = "medium"
+tags = { category = "plaintext-storage" }
+message = "Passwords are stored in plain text in {path} (hosts: {hosts})"
+remediation = "Use a credential helper or keyring; rotate the passwords/tokens"
+
+[[rule]]
+id = "netrc-default-entry"
+type = "netrc"
+when = "default_entry"
+severity = "medium"
+tags = { category = "credential-exposure" }
+message = "{path} has a `default` entry: its credentials are sent to every host without an entry"
+remediation = "Replace the default entry with machine entries for the hosts that need it"
+
+[[rule]]
+id = "git-credentials-store"
+type = "git_credentials"
+when = "inline_tokens > 0"
+severity = "medium"
+tags = { category = "plaintext-storage" }
+message = "git's store helper keeps passwords/tokens in plain text in {path} (hosts: {hosts})"
+remediation = "Use an OS credential helper (osxkeychain, libsecret, Git Credential Manager), delete {path} and rotate the tokens"
+
+[[rule]]
+id = "gh-token-in-file"
+type = "gh_hosts"
+when = "inline_tokens > 0"
+severity = "low"
+tags = { category = "plaintext-storage" }
+message = "The GitHub CLI stores its token in plain text in {path} ({hosts}), not in the keyring"
+remediation = "Run gh auth login again on a system with a keyring, or restrict who can read {path}"
+
+[[rule]]
+id = "credential-file-readable-npmrc"
+type = "npmrc"
+when = "inline_tokens > 0 && (world_readable || group_readable)"
+severity = "high"
+tags = { category = "file-permissions" }
+message = "{path} with stored credentials is readable by others (mode {mode})"
+remediation = "chmod 600 {path} and rotate the credentials"
+
+[[rule]]
+id = "credential-file-readable-pypirc"
+type = "pypirc"
+when = "inline_tokens > 0 && (world_readable || group_readable)"
+severity = "high"
+tags = { category = "file-permissions" }
+message = "{path} with stored credentials is readable by others (mode {mode})"
+remediation = "chmod 600 {path} and rotate the credentials"
+
+[[rule]]
+id = "credential-file-readable-netrc"
+type = "netrc"
+when = "inline_tokens > 0 && (world_readable || group_readable)"
+severity = "high"
+tags = { category = "file-permissions" }
+message = "{path} with stored credentials is readable by others (mode {mode})"
+remediation = "chmod 600 {path} and rotate the credentials"
+
+[[rule]]
+id = "credential-file-readable-git"
+type = "git_credentials"
+when = "inline_tokens > 0 && (world_readable || group_readable)"
+severity = "high"
+tags = { category = "file-permissions" }
+message = "{path} with stored credentials is readable by others (mode {mode})"
+remediation = "chmod 600 {path} and rotate the credentials"
+
+[[rule]]
+id = "credential-file-readable-gh"
+type = "gh_hosts"
+when = "inline_tokens > 0 && (world_readable || group_readable)"
+severity = "high"
+tags = { category = "file-permissions" }
+message = "{path} with stored credentials is readable by others (mode {mode})"
+remediation = "chmod 600 {path} and rotate the credentials"
+
+[[rule]]
+id = "config-secret-like"
+type = "config_entry"
+when = '''
+  size(classified_as) == 0 && entropy >= 64
+  && name.matches("(?i)(secret|token|passw|_pwd($|_)|api_?key|private_?key|credential|(^|[_.:])auth($|_))")
+'''
+severity = "low"
+tags = { category = "credential-exposure" }
+message = "{name} in {path} looks like a secret ({entropy} bits) stored in plain text"
+remediation = "Use the tool's credential helper or keyring support where it has one; keep {path} private (mode 0600)"
+
+[[rule]]
+id = "config-secret-world-readable"
+type = "config_entry"
+when = '''
+  world_readable && (size(classified_as) > 0 || (entropy >= 64
+  && name.matches("(?i)(secret|token|passw|_pwd($|_)|api_?key|private_?key|credential|(^|[_.:])auth($|_))")))
+'''
+severity = "medium"
+tags = { category = "file-permissions" }
+message = "{name} in {path} looks like a secret and the file is readable by every user (mode {mode})"
+remediation = "chmod 600 {path}"
+
+[[rule]]
+id = "config-token-not-gitignored"
+type = "config_entry"
+when = "in_git_repo && !gitignored && size(classified_as) > 0"
+severity = "high"
+tags = { category = "version-control" }
+message = "{name} in {path} holds a {classified_as} and the file is not ignored by git"
+remediation = "Remove the token from {path}, check the history (git log -- {path}) and rotate it"
+
+# ---- private keys and certificates (PEM) -----------------------------------------------------
+
+[[rule]]
+id = "pem-private-key-world-readable"
+type = "pem"
+when = 'kind == "private_key" && world_readable'
+severity = "high"
+tags = { category = "file-permissions" }
+message = "Private key {path} is readable by every user (mode {mode})"
+remediation = "chmod 600 {path}, then rotate the key: others may have copied it"
+
+[[rule]]
+id = "pem-private-key-in-git-repo"
+type = "pem"
+when = 'kind == "private_key" && in_git_repo && !gitignored'
+severity = "high"
+tags = { category = "version-control" }
+message = "Private key {path} is inside a git work tree and not ignored: it may be committed"
+remediation = "Move the key out of the repository (or ignore it), check the history (git log -- {path}) and rotate it if it was ever committed"
+
+[[rule]]
+id = "pem-private-key-unencrypted"
+type = "pem"
+when = 'kind == "private_key" && !encrypted'
+severity = "low"
+tags = { category = "key-protection" }
+message = "Private key {path} ({key_type}) is not protected by a passphrase"
+remediation = "Keep it in a key store or hardware token where possible, and readable only by its owner"
+
+# ---- GitHub Actions workflows ------------------------------------------------------------
+
+[[rule]]
+id = "workflow-write-all"
+type = "github_workflow"
+when = 'default_permissions == "write-all"'
+severity = "high"
+tags = { category = "ci-permissions" }
+message = "Job {job} in {path} gets a write-all token"
+remediation = "Set `permissions:` explicitly with only the scopes the job needs"
+
+[[rule]]
+id = "workflow-untrusted-trigger-write"
+type = "github_workflow"
+when = '''
+  triggers.exists(t, t in ["pull_request_target", "workflow_run", "issue_comment", "issues", "discussion", "discussion_comment"])
+  && size(write_scopes) > 0
+'''
+severity = "high"
+tags = { category = "ci-permissions" }
+message = "Job {job} in {path} runs on events others can cause ({triggers}) with write access ({write_scopes})"
+remediation = "Split the workflow: untrusted input in a read-only job, writes in a separate job that does not run code or text from the event"
+
+[[rule]]
+id = "workflow-untrusted-trigger-default-permissions"
+type = "github_workflow"
+when = '''
+  triggers.exists(t, t in ["pull_request_target", "workflow_run", "issue_comment", "issues", "discussion", "discussion_comment"])
+  && permissions_source == "repository"
+'''
+severity = "high"
+tags = { category = "ci-permissions" }
+message = "Job {job} in {path} runs on events others can cause ({triggers}) with the repository's default token permissions"
+remediation = "Set `permissions:` explicitly (e.g. contents: read) and grant writes only where needed"
+
+[[rule]]
+id = "workflow-pull-request-target"
+type = "github_workflow"
+when = '"pull_request_target" in triggers'
+severity = "medium"
+tags = { category = "ci-permissions" }
+message = "Job {job} in {path} runs on pull_request_target: with the repository's secrets, also for pull requests from forks"
+remediation = "Never check out or run code from the pull request in this workflow; use pull_request for builds and tests"
+
+[[rule]]
+id = "workflow-packages-write"
+type = "github_workflow"
+when = '"packages" in write_scopes && default_permissions != "write-all"'
+severity = "medium"
+tags = { category = "ci-permissions" }
+message = "Job {job} in {path} can publish packages (packages: write)"
+remediation = "Grant packages: write only to the publishing job, run it only for protected branches or tags"
+
+[[rule]]
+id = "workflow-contents-write"
+type = "github_workflow"
+when = '"contents" in write_scopes && default_permissions != "write-all"'
+severity = "low"
+tags = { category = "ci-permissions" }
+message = "Job {job} in {path} can push to the repository (contents: write)"
+remediation = "Grant contents: write only to the job that needs it (releases, generated commits)"
+
+[[rule]]
+id = "workflow-default-permissions"
+type = "github_workflow"
+when = 'permissions_source == "repository"'
+severity = "low"
+tags = { category = "ci-permissions" }
+message = "Job {job} in {path} sets no `permissions:`: its token gets the repository default (write-all in older repositories)"
+remediation = "Add `permissions: contents: read` at the workflow level and grant more per job"
+
+# ---- .env files and the environment --------------------------------------------------
+
+[[rule]]
+id = "dotenv-token-not-gitignored"
+type = "dotenv_entry"
+when = "in_git_repo && !gitignored && size(classified_as) > 0"
+severity = "high"
+tags = { category = "version-control" }
+message = "{name} in {path} holds a {classified_as} and the file is not ignored by git"
+remediation = "Add the file to .gitignore, check the history (git log -- {path}) and rotate the token if it was ever committed"
+
+[[rule]]
+id = "dotenv-secret-not-gitignored"
+type = "dotenv_entry"
+when = '''
+  in_git_repo && !gitignored && size(classified_as) == 0 && entropy >= 64
+  && name.matches("(?i)(secret|token|passw|_pwd($|_)|api_?key|private_?key|credential|(^|_)auth($|_))")
+'''
+severity = "medium"
+tags = { category = "version-control" }
+message = "{name} in {path} looks like a secret ({entropy} bits) and the file is not ignored by git"
+remediation = "Add the file to .gitignore and keep secrets out of the repository"
+
+[[rule]]
+id = "dotenv-secret-world-readable"
+type = "dotenv_entry"
+when = '''
+  world_readable && (size(classified_as) > 0 || (entropy >= 64
+  && name.matches("(?i)(secret|token|passw|_pwd($|_)|api_?key|private_?key|credential|(^|_)auth($|_))")))
+'''
+severity = "medium"
+tags = { category = "file-permissions" }
+message = "{name} in {path} looks like a secret and the file is readable by every user (mode {mode})"
+remediation = "chmod 600 {path}"
+
+[[rule]]
+id = "env-secret-like"
+type = "env_var"
+when = '''
+  size(classified_as) == 0 && entropy >= 64
+  && name.matches("(?i)(secret|token|passw|_pwd($|_)|api_?key|private_?key|credential|(^|_)auth($|_))")
+'''
+severity = "low"
+tags = { category = "credential-exposure" }
+message = "${name} looks like a secret ({length} bytes, {entropy} bits) and every child process inherits it"
+remediation = "Pass secrets only to the processes that need them (files with mode 0600, a secret manager)"
+
+# ---- process and sockets ------------------------------------------------------------
+
+[[rule]]
+id = "process-root"
+type = "process"
+when = "is_root"
+severity = "medium"
+tags = { category = "privilege" }
+message = "lootr runs as root: every file and socket on this machine is reachable"
+remediation = "Run builds and tools as an unprivileged user"
+
+[[rule]]
+id = "process-root-equivalent-group"
+type = "process"
+when = 'groups.exists(g, g in ["docker", "lxd", "incus-admin", "disk"])'
+severity = "high"
+tags = { category = "privilege" }
+message = "The user is in a root-equivalent group ({groups})"
+remediation = "Remove the user from docker/lxd/disk; use rootless containers instead"
+
+[[rule]]
+id = "process-sudo-group"
+type = "process"
+when = '!is_root && groups.exists(g, g in ["sudo", "wheel", "admin"])'
+severity = "low"
+tags = { category = "privilege" }
+message = "The user is in an administrator group ({groups}) and may be able to sudo"
+remediation = "Use a separate account without sudo rights for builds and untrusted code"
+
+[[rule]]
+id = "container-socket-root"
+type = "unix_socket"
+when = "accessible && rootful && !owner_is_self"
+severity = "high"
+tags = { category = "privilege" }
+message = "The {kind} socket {path} is owned by root and usable by this user (group {group}): root-equivalent"
+remediation = "Do not grant access to the {kind} socket; use rootless containers or a socket proxy with an allowlist"
+
+# ---- lateral visibility and privilege escalation ------------------------------------
+
+[[rule]]
+id = "proc-environ-readable"
+type = "proc_environ"
+when = "readable_environ > 0"
+severity = "medium"
+tags = { category = "privilege" }
+message = "The environment of {readable_environ} other process(es) is readable ({names}): their secrets are exposed to this user"
+remediation = "Pass secrets to processes through files (mode 0600) or a secret manager, not the environment; isolate jobs (separate users, hidepid=2, or per-job runners)"
+
+[[rule]]
+id = "writable-path-dir-world"
+type = "writable_path_dir"
+when = "world_writable"
+severity = "high"
+tags = { category = "privilege" }
+message = "PATH/cache directory {dir} is world-writable (mode {mode}): anyone can plant a binary or poison a cached artifact a later command runs"
+remediation = "chmod o-w {dir} (and g-w if its group is not trusted); keep PATH and shared caches writable only by their owner"
+
+[[rule]]
+id = "writable-cache-dir-group"
+type = "writable_path_dir"
+when = "group_writable && !world_writable"
+severity = "medium"
+tags = { category = "privilege" }
+message = "Directory {dir} is group-writable (mode {mode}): another member of its group can replace a binary or cached artifact"
+remediation = "chmod g-w {dir} unless every member of its group is trusted"
+
+[[rule]]
+id = "writable-startup-file"
+type = "writable_file"
+when = "world_writable || group_writable || parent_world_writable || parent_group_writable"
+severity = "high"
+tags = { category = "privilege" }
+message = "Startup file or git hook {path} (or its directory) is writable by others (mode {mode}): they can inject code that runs as its owner"
+remediation = "Restrict {path} and its directory to their owner (chmod go-w); never keep shell rc files or git hooks group- or world-writable"
+
+[[rule]]
+id = "suid-sgid-writable"
+type = "suid_binary"
+when = "(setuid || setgid) && (writable || world_writable)"
+severity = "critical"
+tags = { category = "privilege" }
+message = "setuid/setgid binary {path} is writable (mode {mode}): replacing it runs code as its owner"
+remediation = "Make {path} writable only by root (chmod go-w, correct owner); remove the setuid/setgid bit if it is not needed"
+
+[[rule]]
+id = "suid-not-root-owned"
+type = "suid_binary"
+when = "(setuid || setgid) && !owner_is_root"
+severity = "high"
+tags = { category = "privilege" }
+message = "setuid/setgid binary {path} is owned by a non-root user (mode {mode}): it runs as that user"
+remediation = "Remove the setuid/setgid bit unless it is required and the owner is trusted"
+
+[[rule]]
+id = "file-capabilities"
+type = "suid_binary"
+when = "size(capabilities) > 0"
+severity = "medium"
+tags = { category = "privilege" }
+message = "{path} carries Linux file capabilities ({capabilities})"
+remediation = "Grant capabilities only where required; a capability like cap_setuid, cap_dac_override or cap_sys_admin is close to root"
+
+[[rule]]
+id = "kube-service-account-token"
+type = "kube_service_account"
+when = "true"
+severity = "low"
+tags = { category = "credential-exposure" }
+message = "An in-cluster Kubernetes service account token is mounted at {path} (namespace: {namespace}): it grants this pod's rights on the cluster API"
+remediation = "Set automountServiceAccountToken: false where the pod does not call the API; scope the service account's RBAC to the minimum"
+
+# ---- waivers ------------------------------------------------------------------------
+
+[[rule]]
+id = "waiver-expired"
+type = "waiver"
+when = "expired"
+severity = "low"
+tags = { category = "policy-hygiene" }
+message = "Waiver for {waived_rule} ({location}) expired on {expires}; its findings are reported again"
+remediation = "Fix the findings and remove the waiver, or renew it with a new expiry date and reason"

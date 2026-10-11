@@ -1,0 +1,215 @@
+{
+  "exit_code": 1,
+  "report": {
+    "custom_types": [],
+    "expired_waivers": [],
+    "facts": [
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 9,
+          "length": 5,
+          "name": "HOME"
+        },
+        "location": {
+          "kind": "env",
+          "name": "HOME"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 203,
+          "length": 60,
+          "name": "PATH"
+        },
+        "location": {
+          "kind": "env",
+          "name": "PATH"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 9,
+          "length": 5,
+          "name": "PWD"
+        },
+        "location": {
+          "kind": "env",
+          "name": "PWD"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "bits": 256,
+          "cipher": "none",
+          "encrypted": false,
+          "format": "openssh",
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kdf": "none",
+          "key_type": "ed25519",
+          "mode": 384,
+          "owner_is_self": true,
+          "world_readable": false
+        },
+        "location": {
+          "kind": "file",
+          "path": "~/.ssh/id_ed25519"
+        },
+        "source": "ssh",
+        "type": "ssh_private_key"
+      },
+      {
+        "attrs": {
+          "groups": [
+            "root"
+          ],
+          "in_container": true,
+          "is_root": true,
+          "uid": 0
+        },
+        "location": {
+          "kind": "probe",
+          "name": "process"
+        },
+        "source": "process",
+        "type": "process"
+      },
+      {
+        "attrs": {
+          "accessible": true,
+          "group": "docker",
+          "kind": "docker",
+          "mode": 432,
+          "owner_is_self": true,
+          "rootful": true
+        },
+        "location": {
+          "kind": "file",
+          "path": "/var/run/docker.sock"
+        },
+        "source": "container-sockets",
+        "type": "unix_socket"
+      },
+      {
+        "attrs": {
+          "foreign_processes": 0,
+          "names": [],
+          "readable_environ": 0
+        },
+        "location": {
+          "kind": "probe",
+          "name": "proc_environ"
+        },
+        "source": "proc-environ",
+        "type": "proc_environ"
+      }
+    ],
+    "findings": [
+      {
+        "fact": {
+          "attrs": {
+            "bits": 256,
+            "cipher": "none",
+            "encrypted": false,
+            "format": "openssh",
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kdf": "none",
+            "key_type": "ed25519",
+            "mode": 384,
+            "owner_is_self": true,
+            "world_readable": false
+          },
+          "location": {
+            "kind": "file",
+            "path": "~/.ssh/id_ed25519"
+          },
+          "source": "ssh",
+          "type": "ssh_private_key"
+        },
+        "message": "SSH private key ~/.ssh/id_ed25519 (ed25519) is not protected by a passphrase",
+        "remediation": "Set a passphrase (ssh-keygen -p -f ~/.ssh/id_ed25519) or move the key to ssh-agent / a hardware token",
+        "rule": "ssh-key-unencrypted",
+        "severity": "high",
+        "tags": {
+          "category": "key-protection"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "groups": [
+              "root"
+            ],
+            "in_container": true,
+            "is_root": true,
+            "uid": 0
+          },
+          "location": {
+            "kind": "probe",
+            "name": "process"
+          },
+          "source": "process",
+          "type": "process"
+        },
+        "message": "lootr runs as root: every file and socket on this machine is reachable",
+        "remediation": "Run builds and tools as an unprivileged user",
+        "rule": "process-root",
+        "severity": "medium",
+        "tags": {
+          "category": "privilege"
+        },
+        "waived": null
+      }
+    ],
+    "rule_errors": [],
+    "run": {
+      "config_layers": [
+        "<built-in>"
+      ],
+      "cwd": "/root",
+      "fail_on": "high",
+      "home": "/root",
+      "uid": 0
+    },
+    "schema_version": 1,
+    "skipped": [],
+    "summary": {
+      "by_rule": {
+        "process-root": 1,
+        "ssh-key-unencrypted": 1
+      },
+      "by_severity": {
+        "critical": 0,
+        "high": 1,
+        "info": 0,
+        "low": 0,
+        "medium": 1
+      },
+      "candidates": 14,
+      "expired_waivers": 0,
+      "facts": 7,
+      "failing": 1,
+      "failing_skipped": 0,
+      "findings": 2,
+      "rule_errors": 0,
+      "skipped": 0,
+      "waived": 0
+    },
+    "tool": {
+      "name": "lootr"
+    }
+  }
+}

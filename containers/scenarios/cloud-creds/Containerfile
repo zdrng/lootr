@@ -1,0 +1,51 @@
+# cloud-creds: a developer laptop-like home with cloud and tool credentials,
+# generated at build time (DUMMY, carrying the canary): AWS keys (long-lived
+# and session, SSO and credential_process profiles), gcloud user and service
+# account credentials, an Azure CLI token cache (readable by others) and a
+# service principal secret, a Docker config with an inline ghcr.io login and
+# a TLS key, npm/PyPI/netrc/git/gh credential files, cargo credentials, and
+# API keys in the environment. Well-known prefixes are concatenated at build
+# time so the repository never contains a whole dummy key.
+FROM lootr-base
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends openssl \
+    && rm -rf /var/lib/apt/lists/*
+RUN useradd --create-home --uid 1000 --shell /bin/sh dev
+RUN set -eu; hooks=/usr/local/lib/lootr-scenario; mkdir -p "$hooks"; c=LOOTRCANARY; \
+    ak=AKIA; oa=sk-proj-; st=sk_live_; sl=xoxb-; \
+    { \
+      echo "AWS_ACCESS_KEY_ID=${ak}${c}ENVKY"; \
+      echo "AWS_SECRET_ACCESS_KEY=${c}/envSecretKey0123456789abcdefgh"; \
+      echo "OPENAI_API_KEY=${oa}${c}dummy0123456789T3BlbkFJ${c}dummy0123456789"; \
+      echo "STRIPE_SECRET_KEY=${st}${c}dummyStripeKey0123"; \
+      echo "SLACK_BOT_TOKEN=${sl}1234567890-1234567890-${c}dummySlackBot"; \
+    } > "$hooks/env"; \
+    chmod 644 "$hooks/env"
+USER dev
+WORKDIR /home/dev
+RUN set -eu; umask 077; c=LOOTRCANARY; \
+    b64url() { base64 -w0 | tr '+/' '-_' | tr -d '='; }; \
+    jwt() { printf '%s.%s.%s' "$(printf '%s' "$1" | b64url)" "$(printf '%s' "$2" | b64url)" "$3"; }; \
+    mkdir -p .aws .config/gcloud/legacy_credentials/ci-deployer .azure .kube .docker/certs .config/gh .cargo; \
+    ak=AKIA; as=ASIA; \
+    printf '# DUMMY - test only\n[default]\naws_access_key_id = %s%s\naws_secret_access_key = %s/dummySecretKey0123456789abcdef\n\n[ci-temp]\naws_access_key_id = %s%s\naws_secret_access_key = %s/dummyTempKey0123456789abcdefgh\naws_session_token = %s-dummySessionToken0123456789\n' \
+      "$ak" "${c}23456" "$c" "$as" "${c}76543" "$c" "$c" > .aws/credentials; \
+    printf '[default]\nregion = eu-central-1\n\n[profile dev]\nsso_session = corp\nsso_account_id = 111122223333\nsso_role_name = Developer\n\n[sso-session corp]\nsso_start_url = https://corp.awsapps.example/start\nsso_region = eu-central-1\n\n[profile vault]\ncredential_process = /usr/local/bin/aws-vault export --format=json vault\n' > .aws/config; \
+    printf '{"client_id":"000000000000-dummy.apps.googleusercontent.example","client_secret":"d-%sdummy0123","quota_project_id":"demo-project","refresh_token":"1//%s-dummyRefreshToken0123","type":"authorized_user"}\n' "$c" "$c" \
+      > .config/gcloud/application_default_credentials.json; \
+    printf '{"type":"service_account","project_id":"demo-project","private_key_id":"%s0123","private_key":"-----BEGIN PRIVATE KEY-----\\n%sdummyKeyMaterial\\n-----END PRIVATE KEY-----\\n","client_email":"ci-deployer@demo-project.iam.gserviceaccount.com"}\n' "$c" "$c" \
+      > .config/gcloud/legacy_credentials/ci-deployer/adc.json; \
+    at=$(jwt '{"alg":"RS256","typ":"JWT"}' '{"aud":"https://management.core.windows.net/","iss":"https://sts.windows.net/00000000-0000-0000-0000-000000000000/","iat":1700000000,"nbf":1700000000,"exp":1700003600,"oid":"LOOTRCANARY"}' "${c}-dummyAzureSignature"); \
+    printf '{"AccessToken":{"k1":{"credential_type":"AccessToken","secret":"%s"}},"RefreshToken":{"k2":{"credential_type":"RefreshToken","secret":"1.%s-dummyRefresh0123"}},"IdToken":{},"Account":{},"AppMetadata":{}}\n' "$at" "$c" > .azure/msal_token_cache.json; \
+    chmod 644 .azure/msal_token_cache.json; \
+    printf '[{"client_id":"00000000-5555-6666-7777-888888888888","tenant":"t","client_secret":"%s.dummyClientSecret0123"}]\n' "$c" > .azure/service_principal_entries.json; \
+    ghcr=$(gen-github-token ghp_ LOOTRCANARYdockerGhcrTok012345); \
+    printf '{"auths":{"ghcr.io":{"auth":"%s"},"quay.io":{}},"credHelpers":{"gcr.io":"gcloud"}}\n' "$(printf 'octo:%s' "$ghcr" | base64 -w0)" > .docker/config.json; \
+    openssl genpkey -algorithm EC -pkeyopt ec_paramgen_curve:P-256 -out .docker/certs/key.pem 2>/dev/null; \
+    chmod 644 .docker/certs/key.pem; \
+    np=npm_; printf '//registry.npmjs.org/:_authToken=%s%sdummyNpmToken0123456789ab\n//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}\n' "$np" "$c" > .npmrc; \
+    pp=pypi-AgEIcHlwaS5vcmc; printf '[pypi]\nusername = __token__\npassword = %s%sdummyPypiToken0123456789abcdefghij\n' "$pp" "$c" > .pypirc; \
+    printf 'machine api.github.com login octo password %s\n' "$(gen-github-token ghp_ LOOTRCANARYnetrcTok0123456789a)" > .netrc; \
+    gl=glpat-; printf 'https://oauth2:%s%sdummyGitlab01@gitlab.corp.example\n' "$gl" "$c" > .git-credentials; \
+    printf 'github.com:\n    oauth_token: %s\n    user: octo\n    git_protocol: https\n' "$(gen-github-token gho_ LOOTRCANARYghHostsTok01234567x)" > .config/gh/hosts.yml; \
+    printf '[registry]\ntoken = "cio%sdummyCratesToken0123456789"\n' "$c" > .cargo/credentials.toml

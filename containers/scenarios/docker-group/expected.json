@@ -1,0 +1,205 @@
+{
+  "exit_code": 1,
+  "report": {
+    "custom_types": [],
+    "expired_waivers": [],
+    "facts": [
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 24,
+          "length": 9,
+          "name": "HOME"
+        },
+        "location": {
+          "kind": "env",
+          "name": "HOME"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 203,
+          "length": 60,
+          "name": "PATH"
+        },
+        "location": {
+          "kind": "env",
+          "name": "PATH"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 24,
+          "length": 9,
+          "name": "PWD"
+        },
+        "location": {
+          "kind": "env",
+          "name": "PWD"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "groups": [
+            "dev",
+            "docker"
+          ],
+          "in_container": true,
+          "is_root": false,
+          "uid": 1000
+        },
+        "location": {
+          "kind": "probe",
+          "name": "process"
+        },
+        "source": "process",
+        "type": "process"
+      },
+      {
+        "attrs": {
+          "accessible": false,
+          "group": "root",
+          "kind": "containerd",
+          "mode": 432,
+          "owner_is_self": false,
+          "rootful": true
+        },
+        "location": {
+          "kind": "file",
+          "path": "/run/containerd/containerd.sock"
+        },
+        "source": "container-sockets",
+        "type": "unix_socket"
+      },
+      {
+        "attrs": {
+          "accessible": true,
+          "group": "docker",
+          "kind": "docker",
+          "mode": 432,
+          "owner_is_self": false,
+          "rootful": true
+        },
+        "location": {
+          "kind": "file",
+          "path": "/var/run/docker.sock"
+        },
+        "source": "container-sockets",
+        "type": "unix_socket"
+      },
+      {
+        "attrs": {
+          "foreign_processes": 0,
+          "names": [],
+          "readable_environ": 0
+        },
+        "location": {
+          "kind": "probe",
+          "name": "proc_environ"
+        },
+        "source": "proc-environ",
+        "type": "proc_environ"
+      }
+    ],
+    "findings": [
+      {
+        "fact": {
+          "attrs": {
+            "accessible": true,
+            "group": "docker",
+            "kind": "docker",
+            "mode": 432,
+            "owner_is_self": false,
+            "rootful": true
+          },
+          "location": {
+            "kind": "file",
+            "path": "/var/run/docker.sock"
+          },
+          "source": "container-sockets",
+          "type": "unix_socket"
+        },
+        "message": "The docker socket /var/run/docker.sock is owned by root and usable by this user (group docker): root-equivalent",
+        "remediation": "Do not grant access to the docker socket; use rootless containers or a socket proxy with an allowlist",
+        "rule": "container-socket-root",
+        "severity": "high",
+        "tags": {
+          "category": "privilege"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "groups": [
+              "dev",
+              "docker"
+            ],
+            "in_container": true,
+            "is_root": false,
+            "uid": 1000
+          },
+          "location": {
+            "kind": "probe",
+            "name": "process"
+          },
+          "source": "process",
+          "type": "process"
+        },
+        "message": "The user is in a root-equivalent group (dev, docker)",
+        "remediation": "Remove the user from docker/lxd/disk; use rootless containers instead",
+        "rule": "process-root-equivalent-group",
+        "severity": "high",
+        "tags": {
+          "category": "privilege"
+        },
+        "waived": null
+      }
+    ],
+    "rule_errors": [],
+    "run": {
+      "config_layers": [
+        "<built-in>"
+      ],
+      "cwd": "/home/dev",
+      "fail_on": "high",
+      "home": "/home/dev",
+      "uid": 1000
+    },
+    "schema_version": 1,
+    "skipped": [],
+    "summary": {
+      "by_rule": {
+        "container-socket-root": 1,
+        "process-root-equivalent-group": 1
+      },
+      "by_severity": {
+        "critical": 0,
+        "high": 2,
+        "info": 0,
+        "low": 0,
+        "medium": 0
+      },
+      "candidates": 12,
+      "expired_waivers": 0,
+      "facts": 7,
+      "failing": 2,
+      "failing_skipped": 0,
+      "findings": 2,
+      "rule_errors": 0,
+      "skipped": 0,
+      "waived": 0
+    },
+    "tool": {
+      "name": "lootr"
+    }
+  }
+}

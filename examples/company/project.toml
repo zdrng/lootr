@@ -1,0 +1,32 @@
+# Project layer (lootr.toml in the repository): accepted exceptions of this
+# project. Every waiver names a rule, narrows it to a path glob and/or an env
+# var name (or key path), gives a reason and expires: the baseline's locked
+# `waiver-without-expiry` rule reports waivers without `expires`, and locked
+# rules cannot be waived here at all.
+#
+# The dates are far in the future so the example keeps working; real waivers
+# should expire within months.
+
+version = 1
+
+# The read-only package mirror credentials in ~/.netrc are accepted ...
+[[waiver]]
+rule = "netrc-password"
+path = "~/.netrc"
+reason = "Read-only mirror credentials for the build cache (ticket SEC-1234)"
+expires = 2030-06-30
+
+# ... and so is the test database password that the integration tests export.
+[[waiver]]
+rule = "env-secret-like"
+name = "TEST_DB_PASSWORD"
+reason = "Password of the throwaway test database in the CI service container"
+expires = 2030-06-30
+
+# This one has expired: the finding is reported again, and so is the waiver
+# itself (`waiver-expired`, high in the baseline).
+[[waiver]]
+rule = "gh-token-in-file"
+path = "~/.config/gh/hosts.yml"
+reason = "Until the keyring is set up on the shared runner (ticket SEC-1100)"
+expires = 2026-06-30

@@ -1,0 +1,263 @@
+{
+  "exit_code": 1,
+  "report": {
+    "schema_version": 1,
+    "tool": {
+      "name": "lootr"
+    },
+    "run": {
+      "fail_on": "high",
+      "config_layers": [
+        "<built-in>",
+        "/Users/zdrng/Projects/lootr/test-envs/common.toml",
+        "/Users/zdrng/Projects/lootr/test-envs/ssh/in-documents/lootr.toml"
+      ],
+      "cwd": "<root>/home",
+      "home": "<root>/home"
+    },
+    "custom_types": [],
+    "summary": {
+      "candidates": 7,
+      "facts": 4,
+      "findings": 4,
+      "waived": 0,
+      "failing": 3,
+      "by_severity": {
+        "critical": 0,
+        "high": 3,
+        "medium": 1,
+        "low": 0,
+        "info": 0
+      },
+      "rule_errors": 0,
+      "expired_waivers": 0,
+      "skipped": 0,
+      "failing_skipped": 0,
+      "by_rule": {
+        "ssh-key-unencrypted": 3,
+        "ssh-key-weak": 1
+      }
+    },
+    "findings": [
+      {
+        "rule": "ssh-key-unencrypted",
+        "severity": "high",
+        "message": "SSH private key ~/Documents/keys/dummy_deploy_key (ecdsa) is not protected by a passphrase",
+        "remediation": "Set a passphrase (ssh-keygen -p -f ~/Documents/keys/dummy_deploy_key) or move the key to ssh-agent / a hardware token",
+        "tags": {
+          "category": "key-protection"
+        },
+        "waived": null,
+        "fact": {
+          "type": "ssh_private_key",
+          "location": {
+            "kind": "file",
+            "path": "~/Documents/keys/dummy_deploy_key"
+          },
+          "source": "documents-keys",
+          "attrs": {
+            "world_readable": false,
+            "bits": 256,
+            "cipher": "none",
+            "encrypted": false,
+            "format": "pkcs8",
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kdf": "none",
+            "key_type": "ecdsa",
+            "mode": 384,
+            "owner_is_self": true,
+            "size": 241
+          }
+        }
+      },
+      {
+        "rule": "ssh-key-unencrypted",
+        "severity": "high",
+        "message": "SSH private key ~/Documents/keys/dummy_ec_explicit (ecdsa) is not protected by a passphrase",
+        "remediation": "Set a passphrase (ssh-keygen -p -f ~/Documents/keys/dummy_ec_explicit) or move the key to ssh-agent / a hardware token",
+        "tags": {
+          "category": "key-protection"
+        },
+        "waived": null,
+        "fact": {
+          "type": "ssh_private_key",
+          "location": {
+            "kind": "file",
+            "path": "~/Documents/keys/dummy_ec_explicit"
+          },
+          "source": "documents-keys",
+          "attrs": {
+            "world_readable": false,
+            "bits": 256,
+            "cipher": "none",
+            "encrypted": false,
+            "format": "pkcs8",
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kdf": "none",
+            "key_type": "ecdsa",
+            "mode": 384,
+            "owner_is_self": true,
+            "size": 570
+          }
+        }
+      },
+      {
+        "rule": "ssh-key-unencrypted",
+        "severity": "high",
+        "message": "SSH private key ~/Documents/keys/dummy_pkcs8_rsa (rsa) is not protected by a passphrase",
+        "remediation": "Set a passphrase (ssh-keygen -p -f ~/Documents/keys/dummy_pkcs8_rsa) or move the key to ssh-agent / a hardware token",
+        "tags": {
+          "category": "key-protection"
+        },
+        "waived": null,
+        "fact": {
+          "type": "ssh_private_key",
+          "location": {
+            "kind": "file",
+            "path": "~/Documents/keys/dummy_pkcs8_rsa"
+          },
+          "source": "documents-keys",
+          "attrs": {
+            "world_readable": false,
+            "bits": 2048,
+            "cipher": "none",
+            "encrypted": false,
+            "format": "pkcs8",
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kdf": "none",
+            "key_type": "rsa",
+            "mode": 384,
+            "owner_is_self": true,
+            "size": 1708
+          }
+        }
+      },
+      {
+        "rule": "ssh-key-weak",
+        "severity": "medium",
+        "message": "SSH private key ~/Documents/keys/dummy_pkcs8_rsa is a weak rsa key (2048 bits)",
+        "remediation": "Create an ed25519 key (ssh-keygen -t ed25519), deploy it and retire ~/Documents/keys/dummy_pkcs8_rsa",
+        "tags": {
+          "category": "key-strength"
+        },
+        "waived": null,
+        "fact": {
+          "type": "ssh_private_key",
+          "location": {
+            "kind": "file",
+            "path": "~/Documents/keys/dummy_pkcs8_rsa"
+          },
+          "source": "documents-keys",
+          "attrs": {
+            "world_readable": false,
+            "bits": 2048,
+            "cipher": "none",
+            "encrypted": false,
+            "format": "pkcs8",
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kdf": "none",
+            "key_type": "rsa",
+            "mode": 384,
+            "owner_is_self": true,
+            "size": 1708
+          }
+        }
+      }
+    ],
+    "rule_errors": [],
+    "expired_waivers": [],
+    "skipped": [],
+    "facts": [
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "HOME"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [],
+          "name": "HOME",
+          "length": 45
+        }
+      },
+      {
+        "type": "ssh_private_key",
+        "location": {
+          "kind": "file",
+          "path": "~/Documents/keys/dummy_deploy_key"
+        },
+        "source": "documents-keys",
+        "attrs": {
+          "world_readable": false,
+          "bits": 256,
+          "cipher": "none",
+          "encrypted": false,
+          "format": "pkcs8",
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kdf": "none",
+          "key_type": "ecdsa",
+          "mode": 384,
+          "owner_is_self": true,
+          "size": 241
+        }
+      },
+      {
+        "type": "ssh_private_key",
+        "location": {
+          "kind": "file",
+          "path": "~/Documents/keys/dummy_ec_explicit"
+        },
+        "source": "documents-keys",
+        "attrs": {
+          "world_readable": false,
+          "bits": 256,
+          "cipher": "none",
+          "encrypted": false,
+          "format": "pkcs8",
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kdf": "none",
+          "key_type": "ecdsa",
+          "mode": 384,
+          "owner_is_self": true,
+          "size": 570
+        }
+      },
+      {
+        "type": "ssh_private_key",
+        "location": {
+          "kind": "file",
+          "path": "~/Documents/keys/dummy_pkcs8_rsa"
+        },
+        "source": "documents-keys",
+        "attrs": {
+          "world_readable": false,
+          "bits": 2048,
+          "cipher": "none",
+          "encrypted": false,
+          "format": "pkcs8",
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kdf": "none",
+          "key_type": "rsa",
+          "mode": 384,
+          "owner_is_self": true,
+          "size": 1708
+        }
+      }
+    ]
+  }
+}

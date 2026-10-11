@@ -1,0 +1,7 @@
+on: [push, workflow_dispatch]
+permissions: write-all
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - run: ./deploy.sh

@@ -1,0 +1,441 @@
+{
+  "exit_code": 0,
+  "report": {
+    "custom_types": [],
+    "expired_waivers": [],
+    "facts": [
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 8,
+          "length": 4,
+          "name": "CI"
+        },
+        "location": {
+          "kind": "env",
+          "name": "CI"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 24,
+          "length": 9,
+          "name": "HOME"
+        },
+        "location": {
+          "kind": "env",
+          "name": "HOME"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 65,
+          "length": 19,
+          "name": "KUBERNETES_PORT"
+        },
+        "location": {
+          "kind": "env",
+          "name": "KUBERNETES_PORT"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 19,
+          "length": 9,
+          "name": "KUBERNETES_SERVICE_HOST"
+        },
+        "location": {
+          "kind": "env",
+          "name": "KUBERNETES_SERVICE_HOST"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 2,
+          "length": 3,
+          "name": "KUBERNETES_SERVICE_PORT"
+        },
+        "location": {
+          "kind": "env",
+          "name": "KUBERNETES_SERVICE_PORT"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 2,
+          "length": 3,
+          "name": "KUBERNETES_SERVICE_PORT_HTTPS"
+        },
+        "location": {
+          "kind": "env",
+          "name": "KUBERNETES_SERVICE_PORT_HTTPS"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 203,
+          "length": 60,
+          "name": "PATH"
+        },
+        "location": {
+          "kind": "env",
+          "name": "PATH"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 24,
+          "length": 9,
+          "name": "PWD"
+        },
+        "location": {
+          "kind": "env",
+          "name": "PWD"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "auth_providers": 0,
+          "basic_auth": 0,
+          "client_certs": 0,
+          "clusters": [
+            "in-cluster",
+            "staging"
+          ],
+          "contexts": [
+            "in-cluster",
+            "staging"
+          ],
+          "current_context": "in-cluster",
+          "embedded_client_keys": 0,
+          "exec_auth": 0,
+          "exec_commands": [],
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "insecure_skip_tls": true,
+          "mode": 384,
+          "owner_is_self": true,
+          "static_tokens": 2,
+          "token_files": 0,
+          "users": 2,
+          "world_readable": false
+        },
+        "location": {
+          "kind": "file",
+          "path": "~/.kube/config"
+        },
+        "source": "kubeconfig",
+        "type": "kubeconfig"
+      },
+      {
+        "attrs": {
+          "alg": "RS256",
+          "audience": [
+            "https://kubernetes.default.svc.cluster.local"
+          ],
+          "expired": true,
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "issuer": "https://kubernetes.default.svc.cluster.local",
+          "lifetime_hours": 1,
+          "mode": 384,
+          "owner_is_self": true,
+          "world_readable": false
+        },
+        "location": {
+          "key_path": "users.job.token",
+          "kind": "file",
+          "path": "~/.kube/config"
+        },
+        "source": "kubeconfig",
+        "type": "jwt"
+      },
+      {
+        "attrs": {
+          "alg": "RS256",
+          "expired": false,
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "issuer": "kubernetes/serviceaccount",
+          "mode": 384,
+          "owner_is_self": true,
+          "world_readable": false
+        },
+        "location": {
+          "key_path": "users.deployer.token",
+          "kind": "file",
+          "path": "~/.kube/config"
+        },
+        "source": "kubeconfig",
+        "type": "jwt"
+      },
+      {
+        "attrs": {
+          "groups": [
+            "app"
+          ],
+          "in_container": true,
+          "is_root": false,
+          "uid": 1000
+        },
+        "location": {
+          "kind": "probe",
+          "name": "process"
+        },
+        "source": "process",
+        "type": "process"
+      },
+      {
+        "attrs": {
+          "foreign_processes": 0,
+          "names": [],
+          "readable_environ": 0
+        },
+        "location": {
+          "kind": "probe",
+          "name": "proc_environ"
+        },
+        "source": "proc-environ",
+        "type": "proc_environ"
+      },
+      {
+        "attrs": {
+          "alg": "RS256",
+          "audience": [
+            "https://kubernetes.default.svc.cluster.local"
+          ],
+          "expired": true,
+          "issuer": "https://kubernetes.default.svc.cluster.local",
+          "lifetime_hours": 1
+        },
+        "location": {
+          "kind": "file",
+          "path": "/run/secrets/kubernetes.io/serviceaccount/token"
+        },
+        "source": "kube-service-account",
+        "type": "jwt"
+      },
+      {
+        "attrs": {
+          "has_ca": true,
+          "namespace": "ci"
+        },
+        "location": {
+          "kind": "file",
+          "path": "/run/secrets/kubernetes.io/serviceaccount/token"
+        },
+        "source": "kube-service-account",
+        "type": "kube_service_account"
+      }
+    ],
+    "findings": [
+      {
+        "fact": {
+          "attrs": {
+            "alg": "RS256",
+            "expired": false,
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "issuer": "kubernetes/serviceaccount",
+            "mode": 384,
+            "owner_is_self": true,
+            "world_readable": false
+          },
+          "location": {
+            "key_path": "users.deployer.token",
+            "kind": "file",
+            "path": "~/.kube/config"
+          },
+          "source": "kubeconfig",
+          "type": "jwt"
+        },
+        "message": "JWT in ~/.kube/config#users.deployer.token never expires (issuer: kubernetes/serviceaccount)",
+        "remediation": "Issue tokens with an `exp` claim and revoke this one",
+        "rule": "jwt-no-expiry",
+        "severity": "medium",
+        "tags": {
+          "category": "long-lived-credential"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "auth_providers": 0,
+            "basic_auth": 0,
+            "client_certs": 0,
+            "clusters": [
+              "in-cluster",
+              "staging"
+            ],
+            "contexts": [
+              "in-cluster",
+              "staging"
+            ],
+            "current_context": "in-cluster",
+            "embedded_client_keys": 0,
+            "exec_auth": 0,
+            "exec_commands": [],
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "insecure_skip_tls": true,
+            "mode": 384,
+            "owner_is_self": true,
+            "static_tokens": 2,
+            "token_files": 0,
+            "users": 2,
+            "world_readable": false
+          },
+          "location": {
+            "kind": "file",
+            "path": "~/.kube/config"
+          },
+          "source": "kubeconfig",
+          "type": "kubeconfig"
+        },
+        "message": "kubeconfig ~/.kube/config disables TLS verification for a cluster",
+        "remediation": "Set the cluster's certificate-authority-data and remove insecure-skip-tls-verify",
+        "rule": "kubeconfig-insecure-tls",
+        "severity": "medium",
+        "tags": {
+          "category": "transport-security"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "auth_providers": 0,
+            "basic_auth": 0,
+            "client_certs": 0,
+            "clusters": [
+              "in-cluster",
+              "staging"
+            ],
+            "contexts": [
+              "in-cluster",
+              "staging"
+            ],
+            "current_context": "in-cluster",
+            "embedded_client_keys": 0,
+            "exec_auth": 0,
+            "exec_commands": [],
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "insecure_skip_tls": true,
+            "mode": 384,
+            "owner_is_self": true,
+            "static_tokens": 2,
+            "token_files": 0,
+            "users": 2,
+            "world_readable": false
+          },
+          "location": {
+            "kind": "file",
+            "path": "~/.kube/config"
+          },
+          "source": "kubeconfig",
+          "type": "kubeconfig"
+        },
+        "message": "kubeconfig ~/.kube/config stores credentials (tokens: 2, passwords: 0, auth providers: 0)",
+        "remediation": "Use short-lived credentials from an exec plugin (cloud CLI, kubelogin/OIDC) instead of static tokens",
+        "rule": "kubeconfig-static-credentials",
+        "severity": "medium",
+        "tags": {
+          "category": "plaintext-storage"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "has_ca": true,
+            "namespace": "ci"
+          },
+          "location": {
+            "kind": "file",
+            "path": "/run/secrets/kubernetes.io/serviceaccount/token"
+          },
+          "source": "kube-service-account",
+          "type": "kube_service_account"
+        },
+        "message": "An in-cluster Kubernetes service account token is mounted at /run/secrets/kubernetes.io/serviceaccount/token (namespace: ci): it grants this pod's rights on the cluster API",
+        "remediation": "Set automountServiceAccountToken: false where the pod does not call the API; scope the service account's RBAC to the minimum",
+        "rule": "kube-service-account-token",
+        "severity": "low",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null
+      }
+    ],
+    "rule_errors": [],
+    "run": {
+      "config_layers": [
+        "<built-in>"
+      ],
+      "cwd": "/home/app",
+      "fail_on": "high",
+      "home": "/home/app",
+      "uid": 1000
+    },
+    "schema_version": 1,
+    "skipped": [],
+    "summary": {
+      "by_rule": {
+        "jwt-no-expiry": 1,
+        "kube-service-account-token": 1,
+        "kubeconfig-insecure-tls": 1,
+        "kubeconfig-static-credentials": 1
+      },
+      "by_severity": {
+        "critical": 0,
+        "high": 0,
+        "info": 0,
+        "low": 1,
+        "medium": 3
+      },
+      "candidates": 18,
+      "expired_waivers": 0,
+      "facts": 15,
+      "failing": 0,
+      "failing_skipped": 0,
+      "findings": 4,
+      "rule_errors": 0,
+      "skipped": 0,
+      "waived": 0
+    },
+    "tool": {
+      "name": "lootr"
+    }
+  }
+}

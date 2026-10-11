@@ -1,0 +1,28 @@
+# dotenv-project: a git work tree (without git: just .git/) with .env files.
+# .gitignore ignores .env.local and *.local.env; .env and .env.production are
+# not ignored; services/api/.env is world readable; node_modules is excluded
+# by the default config. Tokens are generated at build time (DUMMY, canary).
+FROM lootr-base
+RUN useradd --create-home --uid 1000 --shell /bin/sh dev
+USER dev
+WORKDIR /home/dev/project
+RUN set -eu; umask 077; \
+    b64() { base64 -w0 | tr '+/' '-_' | tr -d '='; }; \
+    mkdir -p .git services/api node_modules/some-pkg; \
+    printf 'ref: refs/heads/main\n' > .git/HEAD; \
+    printf '.env.local\n*.local.env\nnode_modules/\n' > .gitignore; \
+    { \
+      echo "# DUMMY - test only"; \
+      echo "GH_TOKEN=$(gen-github-token ghp_ LOOTRCANARYprojectTok012345678)"; \
+      echo "DATABASE_URL=postgres://app:LOOTRCANARY-Pw7Zq2Kx9@db.internal:5432/app"; \
+      echo "SECRET_KEY='LOOTRCANARY-q8Wn2Xc5Vb7Mz1Lk4Hs6Jd9Pf3Gt'"; \
+      echo "PORT=8080"; \
+    } > .env; \
+    echo "GH_TOKEN=$(gen-github-token ghp_ LOOTRCANARYlocalOnlyTok0123456)" > .env.local; \
+    printf 'SESSION_TOKEN=%s.%s.LOOTRCANARY-Fm4Kx8Rq2Wz6Nc1Vh5Tb9Jd3\n' \
+      "$(printf '{"alg":"HS256"}' | b64)" \
+      "$(printf '{"iss":"https://auth.example","aud":"app","iat":1700000000,"exp":4102444800}' | b64)" \
+      > .env.production; \
+    echo "API_TOKEN=LOOTRCANARY-Zr4Tq9Lm2Wx7Kc5Vn8Bh3Jd6" > services/api/.env; \
+    chmod 644 services/api/.env; \
+    echo "PKG_TOKEN=$(gen-github-token ghp_ LOOTRCANARYnodeModulesTok01234)" > node_modules/some-pkg/.env

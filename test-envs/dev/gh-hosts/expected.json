@@ -1,0 +1,321 @@
+{
+  "exit_code": 0,
+  "report": {
+    "schema_version": 1,
+    "tool": {
+      "name": "lootr"
+    },
+    "run": {
+      "fail_on": "high",
+      "config_layers": [
+        "<built-in>",
+        "/Users/zdrng/Projects/lootr/test-envs/common.toml"
+      ],
+      "cwd": "<root>/home",
+      "home": "<root>/home"
+    },
+    "custom_types": [],
+    "summary": {
+      "candidates": 6,
+      "facts": 6,
+      "findings": 5,
+      "waived": 0,
+      "failing": 0,
+      "by_severity": {
+        "critical": 0,
+        "high": 0,
+        "medium": 4,
+        "low": 1,
+        "info": 0
+      },
+      "rule_errors": 0,
+      "expired_waivers": 0,
+      "skipped": 0,
+      "failing_skipped": 0,
+      "by_rule": {
+        "gh-token-in-file": 1,
+        "github-token": 4
+      }
+    },
+    "findings": [
+      {
+        "rule": "github-token",
+        "severity": "medium",
+        "message": "GitHub oauth token (gho_) visible in ~/.config/gh/hosts.yml#L4",
+        "remediation": "Make sure only the processes that need it can see L4; revoke it if it leaked",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null,
+        "fact": {
+          "type": "github_token",
+          "location": {
+            "kind": "file",
+            "path": "~/.config/gh/hosts.yml",
+            "key_path": "L4"
+          },
+          "source": "content",
+          "attrs": {
+            "world_readable": false,
+            "checksum_valid": true,
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kind": "oauth",
+            "mode": 384,
+            "owner_is_self": true,
+            "prefix": "gho_",
+            "size": 255
+          }
+        }
+      },
+      {
+        "rule": "github-token",
+        "severity": "medium",
+        "message": "GitHub oauth token (gho_) visible in ~/.config/gh/hosts.yml#L7",
+        "remediation": "Make sure only the processes that need it can see L7; revoke it if it leaked",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null,
+        "fact": {
+          "type": "github_token",
+          "location": {
+            "kind": "file",
+            "path": "~/.config/gh/hosts.yml",
+            "key_path": "L7"
+          },
+          "source": "content",
+          "attrs": {
+            "world_readable": false,
+            "checksum_valid": true,
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kind": "oauth",
+            "mode": 384,
+            "owner_is_self": true,
+            "prefix": "gho_",
+            "size": 255
+          }
+        }
+      },
+      {
+        "rule": "github-token",
+        "severity": "medium",
+        "message": "GitHub oauth token (gho_) visible in ~/.config/gh/hosts.yml#github.com.oauth_token",
+        "remediation": "Make sure only the processes that need it can see github.com.oauth_token; revoke it if it leaked",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null,
+        "fact": {
+          "type": "github_token",
+          "location": {
+            "kind": "file",
+            "path": "~/.config/gh/hosts.yml",
+            "key_path": "github.com.oauth_token"
+          },
+          "source": "gh-hosts",
+          "attrs": {
+            "world_readable": false,
+            "checksum_valid": true,
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kind": "oauth",
+            "mode": 384,
+            "owner_is_self": true,
+            "prefix": "gho_",
+            "size": 255
+          }
+        }
+      },
+      {
+        "rule": "github-token",
+        "severity": "medium",
+        "message": "GitHub oauth token (gho_) visible in ~/.config/gh/hosts.yml#github.com.users.octo.oauth_token",
+        "remediation": "Make sure only the processes that need it can see github.com.users.octo.oauth_token; revoke it if it leaked",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null,
+        "fact": {
+          "type": "github_token",
+          "location": {
+            "kind": "file",
+            "path": "~/.config/gh/hosts.yml",
+            "key_path": "github.com.users.octo.oauth_token"
+          },
+          "source": "gh-hosts",
+          "attrs": {
+            "world_readable": false,
+            "checksum_valid": true,
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kind": "oauth",
+            "mode": 384,
+            "owner_is_self": true,
+            "prefix": "gho_",
+            "size": 255
+          }
+        }
+      },
+      {
+        "rule": "gh-token-in-file",
+        "severity": "low",
+        "message": "The GitHub CLI stores its token in plain text in ~/.config/gh/hosts.yml (github.com), not in the keyring",
+        "remediation": "Run gh auth login again on a system with a keyring, or restrict who can read ~/.config/gh/hosts.yml",
+        "tags": {
+          "category": "plaintext-storage"
+        },
+        "waived": null,
+        "fact": {
+          "type": "gh_hosts",
+          "location": {
+            "kind": "file",
+            "path": "~/.config/gh/hosts.yml"
+          },
+          "source": "gh-hosts",
+          "attrs": {
+            "world_readable": false,
+            "gitignored": false,
+            "group_readable": false,
+            "hosts": [
+              "github.com"
+            ],
+            "in_git_repo": false,
+            "inline_tokens": 2,
+            "mode": 384,
+            "owner_is_self": true,
+            "size": 255
+          }
+        }
+      }
+    ],
+    "rule_errors": [],
+    "expired_waivers": [],
+    "skipped": [],
+    "facts": [
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "HOME"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [],
+          "name": "HOME",
+          "length": 45
+        }
+      },
+      {
+        "type": "gh_hosts",
+        "location": {
+          "kind": "file",
+          "path": "~/.config/gh/hosts.yml"
+        },
+        "source": "gh-hosts",
+        "attrs": {
+          "world_readable": false,
+          "gitignored": false,
+          "group_readable": false,
+          "hosts": [
+            "github.com"
+          ],
+          "in_git_repo": false,
+          "inline_tokens": 2,
+          "mode": 384,
+          "owner_is_self": true,
+          "size": 255
+        }
+      },
+      {
+        "type": "github_token",
+        "location": {
+          "kind": "file",
+          "path": "~/.config/gh/hosts.yml",
+          "key_path": "github.com.oauth_token"
+        },
+        "source": "gh-hosts",
+        "attrs": {
+          "world_readable": false,
+          "checksum_valid": true,
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kind": "oauth",
+          "mode": 384,
+          "owner_is_self": true,
+          "prefix": "gho_",
+          "size": 255
+        }
+      },
+      {
+        "type": "github_token",
+        "location": {
+          "kind": "file",
+          "path": "~/.config/gh/hosts.yml",
+          "key_path": "github.com.users.octo.oauth_token"
+        },
+        "source": "gh-hosts",
+        "attrs": {
+          "world_readable": false,
+          "checksum_valid": true,
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kind": "oauth",
+          "mode": 384,
+          "owner_is_self": true,
+          "prefix": "gho_",
+          "size": 255
+        }
+      },
+      {
+        "type": "github_token",
+        "location": {
+          "kind": "file",
+          "path": "~/.config/gh/hosts.yml",
+          "key_path": "L4"
+        },
+        "source": "content",
+        "attrs": {
+          "world_readable": false,
+          "checksum_valid": true,
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kind": "oauth",
+          "mode": 384,
+          "owner_is_self": true,
+          "prefix": "gho_",
+          "size": 255
+        }
+      },
+      {
+        "type": "github_token",
+        "location": {
+          "kind": "file",
+          "path": "~/.config/gh/hosts.yml",
+          "key_path": "L7"
+        },
+        "source": "content",
+        "attrs": {
+          "world_readable": false,
+          "checksum_valid": true,
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kind": "oauth",
+          "mode": 384,
+          "owner_is_self": true,
+          "prefix": "gho_",
+          "size": 255
+        }
+      }
+    ]
+  }
+}

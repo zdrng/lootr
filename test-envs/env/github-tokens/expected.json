@@ -1,0 +1,362 @@
+{
+  "exit_code": 1,
+  "report": {
+    "schema_version": 1,
+    "tool": {
+      "name": "lootr"
+    },
+    "run": {
+      "fail_on": "high",
+      "config_layers": [
+        "<built-in>",
+        "/Users/zdrng/Projects/lootr/test-envs/common.toml"
+      ],
+      "cwd": "<root>/home",
+      "home": "<root>/home"
+    },
+    "custom_types": [],
+    "summary": {
+      "candidates": 11,
+      "facts": 14,
+      "findings": 5,
+      "waived": 0,
+      "failing": 1,
+      "by_severity": {
+        "critical": 0,
+        "high": 1,
+        "medium": 4,
+        "low": 0,
+        "info": 0
+      },
+      "rule_errors": 0,
+      "expired_waivers": 0,
+      "skipped": 0,
+      "failing_skipped": 0,
+      "by_rule": {
+        "github-classic-token": 1,
+        "github-token": 4
+      }
+    },
+    "findings": [
+      {
+        "rule": "github-classic-token",
+        "severity": "high",
+        "message": "Classic GitHub personal access token visible in $GH_TOKEN",
+        "remediation": "Revoke it and use a fine-grained token with minimal permissions and an expiry",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null,
+        "fact": {
+          "type": "github_token",
+          "location": {
+            "kind": "env",
+            "name": "GH_TOKEN"
+          },
+          "source": "process-env",
+          "attrs": {
+            "checksum_valid": true,
+            "kind": "classic",
+            "prefix": "ghp_"
+          }
+        }
+      },
+      {
+        "rule": "github-token",
+        "severity": "medium",
+        "message": "GitHub fine_grained token (github_pat_) visible in $GH_FINE_GRAINED",
+        "remediation": "Make sure only the processes that need it can see GH_FINE_GRAINED; revoke it if it leaked",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null,
+        "fact": {
+          "type": "github_token",
+          "location": {
+            "kind": "env",
+            "name": "GH_FINE_GRAINED"
+          },
+          "source": "process-env",
+          "attrs": {
+            "kind": "fine_grained",
+            "prefix": "github_pat_"
+          }
+        }
+      },
+      {
+        "rule": "github-token",
+        "severity": "medium",
+        "message": "GitHub oauth token (gho_) visible in $GH_OAUTH",
+        "remediation": "Make sure only the processes that need it can see GH_OAUTH; revoke it if it leaked",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null,
+        "fact": {
+          "type": "github_token",
+          "location": {
+            "kind": "env",
+            "name": "GH_OAUTH"
+          },
+          "source": "process-env",
+          "attrs": {
+            "checksum_valid": true,
+            "kind": "oauth",
+            "prefix": "gho_"
+          }
+        }
+      },
+      {
+        "rule": "github-token",
+        "severity": "medium",
+        "message": "GitHub refresh token (ghr_) visible in $GH_REFRESH",
+        "remediation": "Make sure only the processes that need it can see GH_REFRESH; revoke it if it leaked",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null,
+        "fact": {
+          "type": "github_token",
+          "location": {
+            "kind": "env",
+            "name": "GH_REFRESH"
+          },
+          "source": "process-env",
+          "attrs": {
+            "checksum_valid": true,
+            "kind": "refresh",
+            "prefix": "ghr_"
+          }
+        }
+      },
+      {
+        "rule": "github-token",
+        "severity": "medium",
+        "message": "GitHub app token (ghs_) visible in $GITHUB_TOKEN",
+        "remediation": "Make sure only the processes that need it can see GITHUB_TOKEN; revoke it if it leaked",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null,
+        "fact": {
+          "type": "github_token",
+          "location": {
+            "kind": "env",
+            "name": "GITHUB_TOKEN"
+          },
+          "source": "process-env",
+          "attrs": {
+            "checksum_valid": true,
+            "kind": "app",
+            "prefix": "ghs_"
+          }
+        }
+      }
+    ],
+    "rule_errors": [],
+    "expired_waivers": [],
+    "skipped": [],
+    "facts": [
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "GH_FINE_GRAINED"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [
+            "github_token"
+          ],
+          "entropy": 495,
+          "length": 94,
+          "name": "GH_FINE_GRAINED"
+        }
+      },
+      {
+        "type": "github_token",
+        "location": {
+          "kind": "env",
+          "name": "GH_FINE_GRAINED"
+        },
+        "source": "process-env",
+        "attrs": {
+          "kind": "fine_grained",
+          "prefix": "github_pat_"
+        }
+      },
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "GH_OAUTH"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [
+            "github_token"
+          ],
+          "entropy": 185,
+          "length": 40,
+          "name": "GH_OAUTH"
+        }
+      },
+      {
+        "type": "github_token",
+        "location": {
+          "kind": "env",
+          "name": "GH_OAUTH"
+        },
+        "source": "process-env",
+        "attrs": {
+          "checksum_valid": true,
+          "kind": "oauth",
+          "prefix": "gho_"
+        }
+      },
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "GH_REFRESH"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [
+            "github_token"
+          ],
+          "entropy": 186,
+          "length": 40,
+          "name": "GH_REFRESH"
+        }
+      },
+      {
+        "type": "github_token",
+        "location": {
+          "kind": "env",
+          "name": "GH_REFRESH"
+        },
+        "source": "process-env",
+        "attrs": {
+          "checksum_valid": true,
+          "kind": "refresh",
+          "prefix": "ghr_"
+        }
+      },
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "GH_TOKEN"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [
+            "github_token"
+          ],
+          "entropy": 190,
+          "length": 40,
+          "name": "GH_TOKEN"
+        }
+      },
+      {
+        "type": "github_token",
+        "location": {
+          "kind": "env",
+          "name": "GH_TOKEN"
+        },
+        "source": "process-env",
+        "attrs": {
+          "checksum_valid": true,
+          "kind": "classic",
+          "prefix": "ghp_"
+        }
+      },
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "GH_TYPO"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [
+            "github_token"
+          ],
+          "entropy": 181,
+          "length": 40,
+          "name": "GH_TYPO"
+        }
+      },
+      {
+        "type": "github_token",
+        "location": {
+          "kind": "env",
+          "name": "GH_TYPO"
+        },
+        "source": "process-env",
+        "attrs": {
+          "checksum_valid": false,
+          "kind": "classic",
+          "prefix": "ghp_"
+        }
+      },
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "GITHUB_TOKEN"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [
+            "github_token"
+          ],
+          "entropy": 192,
+          "length": 40,
+          "name": "GITHUB_TOKEN"
+        }
+      },
+      {
+        "type": "github_token",
+        "location": {
+          "kind": "env",
+          "name": "GITHUB_TOKEN"
+        },
+        "source": "process-env",
+        "attrs": {
+          "checksum_valid": true,
+          "kind": "app",
+          "prefix": "ghs_"
+        }
+      },
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "HOME"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [],
+          "name": "HOME",
+          "length": 45
+        }
+      },
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "NOT_A_TOKEN"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [],
+          "entropy": 26,
+          "length": 9,
+          "name": "NOT_A_TOKEN"
+        }
+      }
+    ]
+  }
+}

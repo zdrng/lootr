@@ -1,0 +1,11 @@
+{
+  "type": "service_account",
+  "project_id": "demo-project",
+  "private_key_id": "LOOTRCANARY0123456789abcdef0123456789abcd",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nLOOTRCANARYdummyPrivateKeyMaterial0123456789\n-----END PRIVATE KEY-----\n",
+  "client_email": "ci-deployer@demo-project.iam.gserviceaccount.com",
+  "client_id": "100000000000000000001",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "universe_domain": "googleapis.com"
+}

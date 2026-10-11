@@ -1,0 +1,750 @@
+{
+  "exit_code": 1,
+  "report": {
+    "custom_types": [
+      {
+        "name": "acme_api_key",
+        "pattern": "^acme_(live|test)_[A-Za-z0-9]{24}$"
+      }
+    ],
+    "expired_waivers": [
+      {
+        "expires": "2026-06-30",
+        "layer": "~/project/lootr.toml",
+        "name": null,
+        "path": "~/.config/gh/hosts.yml",
+        "reason": "Until the keyring is set up on the shared runner (ticket SEC-1100)",
+        "rule": "gh-token-in-file"
+      }
+    ],
+    "facts": [
+      {
+        "attrs": {
+          "classified_as": [
+            "acme_api_key"
+          ],
+          "entropy": 156,
+          "length": 34,
+          "name": "ACME_KEY"
+        },
+        "location": {
+          "kind": "env",
+          "name": "ACME_KEY"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "charset": "base64url",
+          "entropy": 156,
+          "length": 34
+        },
+        "location": {
+          "kind": "env",
+          "name": "ACME_KEY"
+        },
+        "source": "process-env",
+        "type": "acme_api_key"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 24,
+          "length": 9,
+          "name": "HOME"
+        },
+        "location": {
+          "kind": "env",
+          "name": "HOME"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 203,
+          "length": 60,
+          "name": "PATH"
+        },
+        "location": {
+          "kind": "env",
+          "name": "PATH"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 57,
+          "length": 17,
+          "name": "PWD"
+        },
+        "location": {
+          "kind": "env",
+          "name": "PWD"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 139,
+          "length": 30,
+          "name": "TEST_DB_PASSWORD"
+        },
+        "location": {
+          "kind": "env",
+          "name": "TEST_DB_PASSWORD"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "bits": 256,
+          "cipher": "none",
+          "encrypted": false,
+          "format": "openssh",
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kdf": "none",
+          "key_type": "ed25519",
+          "mode": 384,
+          "owner_is_self": true,
+          "world_readable": false
+        },
+        "location": {
+          "kind": "file",
+          "path": "~/.ssh/id_ed25519"
+        },
+        "source": "ssh",
+        "type": "ssh_private_key"
+      },
+      {
+        "attrs": {
+          "classified_as": [
+            "github_token"
+          ],
+          "entropy": 196,
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": true,
+          "length": 40,
+          "mode": 384,
+          "name": "GH_TOKEN",
+          "owner_is_self": true,
+          "world_readable": false
+        },
+        "location": {
+          "key_path": "GH_TOKEN",
+          "kind": "file",
+          "path": "~/project/.env"
+        },
+        "source": "dotenv",
+        "type": "dotenv_entry"
+      },
+      {
+        "attrs": {
+          "checksum_valid": true,
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": true,
+          "kind": "classic",
+          "mode": 384,
+          "owner_is_self": true,
+          "prefix": "ghp_",
+          "world_readable": false
+        },
+        "location": {
+          "key_path": "GH_TOKEN",
+          "kind": "file",
+          "path": "~/project/.env"
+        },
+        "source": "dotenv",
+        "type": "github_token"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 11,
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": true,
+          "length": 5,
+          "mode": 384,
+          "name": "LOG_LEVEL",
+          "owner_is_self": true,
+          "world_readable": false
+        },
+        "location": {
+          "key_path": "LOG_LEVEL",
+          "kind": "file",
+          "path": "~/project/.env"
+        },
+        "source": "dotenv",
+        "type": "dotenv_entry"
+      },
+      {
+        "attrs": {
+          "default_entry": false,
+          "gitignored": false,
+          "group_readable": true,
+          "hosts": [
+            "mirror.acme.example"
+          ],
+          "in_git_repo": false,
+          "inline_tokens": 1,
+          "mode": 420,
+          "owner_is_self": true,
+          "world_readable": true
+        },
+        "location": {
+          "kind": "file",
+          "path": "~/.netrc"
+        },
+        "source": "netrc",
+        "type": "netrc"
+      },
+      {
+        "attrs": {
+          "gitignored": false,
+          "group_readable": false,
+          "hosts": [
+            "github.com"
+          ],
+          "in_git_repo": false,
+          "inline_tokens": 1,
+          "mode": 384,
+          "owner_is_self": true,
+          "world_readable": false
+        },
+        "location": {
+          "kind": "file",
+          "path": "~/.config/gh/hosts.yml"
+        },
+        "source": "gh-hosts",
+        "type": "gh_hosts"
+      },
+      {
+        "attrs": {
+          "checksum_valid": true,
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kind": "oauth",
+          "mode": 384,
+          "owner_is_self": true,
+          "prefix": "gho_",
+          "world_readable": false
+        },
+        "location": {
+          "key_path": "github.com.oauth_token",
+          "kind": "file",
+          "path": "~/.config/gh/hosts.yml"
+        },
+        "source": "gh-hosts",
+        "type": "github_token"
+      },
+      {
+        "attrs": {
+          "default_permissions": "repository",
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": true,
+          "job": "test",
+          "mode": 384,
+          "owner_is_self": true,
+          "permissions": {},
+          "permissions_source": "repository",
+          "triggers": [
+            "push"
+          ],
+          "world_readable": false,
+          "write_scopes": []
+        },
+        "location": {
+          "key_path": "jobs.test",
+          "kind": "file",
+          "path": "~/project/.github/workflows/ci.yml"
+        },
+        "source": "workflows",
+        "type": "github_workflow"
+      },
+      {
+        "attrs": {
+          "groups": [
+            "dev",
+            "sudo"
+          ],
+          "in_container": true,
+          "is_root": false,
+          "uid": 1000
+        },
+        "location": {
+          "kind": "probe",
+          "name": "process"
+        },
+        "source": "process",
+        "type": "process"
+      },
+      {
+        "attrs": {
+          "foreign_processes": 0,
+          "names": [],
+          "readable_environ": 0
+        },
+        "location": {
+          "kind": "probe",
+          "name": "proc_environ"
+        },
+        "source": "proc-environ",
+        "type": "proc_environ"
+      },
+      {
+        "attrs": {
+          "expired": false,
+          "expires": "2030-06-30",
+          "matched": 1,
+          "reason": "Read-only mirror credentials for the build cache (ticket SEC-1234)",
+          "waived_path": "~/.netrc",
+          "waived_rule": "netrc-password"
+        },
+        "location": {
+          "key_path": "[[waiver]] #1",
+          "kind": "file",
+          "path": "~/project/lootr.toml"
+        },
+        "source": "config",
+        "type": "waiver"
+      },
+      {
+        "attrs": {
+          "expired": false,
+          "expires": "2030-06-30",
+          "matched": 1,
+          "reason": "Password of the throwaway test database in the CI service container",
+          "waived_name": "TEST_DB_PASSWORD",
+          "waived_rule": "env-secret-like"
+        },
+        "location": {
+          "key_path": "[[waiver]] #2",
+          "kind": "file",
+          "path": "~/project/lootr.toml"
+        },
+        "source": "config",
+        "type": "waiver"
+      },
+      {
+        "attrs": {
+          "expired": true,
+          "expires": "2026-06-30",
+          "matched": 0,
+          "reason": "Until the keyring is set up on the shared runner (ticket SEC-1100)",
+          "waived_path": "~/.config/gh/hosts.yml",
+          "waived_rule": "gh-token-in-file"
+        },
+        "location": {
+          "key_path": "[[waiver]] #3",
+          "kind": "file",
+          "path": "~/project/lootr.toml"
+        },
+        "source": "config",
+        "type": "waiver"
+      }
+    ],
+    "findings": [
+      {
+        "fact": {
+          "attrs": {
+            "checksum_valid": true,
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": true,
+            "kind": "classic",
+            "mode": 384,
+            "owner_is_self": true,
+            "prefix": "ghp_",
+            "world_readable": false
+          },
+          "location": {
+            "key_path": "GH_TOKEN",
+            "kind": "file",
+            "path": "~/project/.env"
+          },
+          "source": "dotenv",
+          "type": "github_token"
+        },
+        "message": "Classic GitHub personal access token visible in ~/project/.env#GH_TOKEN",
+        "remediation": "Revoke it and use a fine-grained token with minimal permissions and an expiry",
+        "rule": "github-classic-token",
+        "severity": "critical",
+        "tags": {
+          "category": "credential-exposure",
+          "control": "ACME-SEC-07"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "charset": "base64url",
+            "entropy": 156,
+            "length": 34
+          },
+          "location": {
+            "kind": "env",
+            "name": "ACME_KEY"
+          },
+          "source": "process-env",
+          "type": "acme_api_key"
+        },
+        "message": "ACME API key visible in $ACME_KEY",
+        "remediation": "Fetch ACME keys from the vault at run time (acme-vault get), never store them; rotate this one",
+        "rule": "acme-api-key",
+        "severity": "high",
+        "tags": {
+          "category": "credential-exposure",
+          "control": "ACME-SEC-12"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "default_entry": false,
+            "gitignored": false,
+            "group_readable": true,
+            "hosts": [
+              "mirror.acme.example"
+            ],
+            "in_git_repo": false,
+            "inline_tokens": 1,
+            "mode": 420,
+            "owner_is_self": true,
+            "world_readable": true
+          },
+          "location": {
+            "kind": "file",
+            "path": "~/.netrc"
+          },
+          "source": "netrc",
+          "type": "netrc"
+        },
+        "message": "~/.netrc with stored credentials is readable by others (mode 0644)",
+        "remediation": "chmod 600 ~/.netrc and rotate the credentials",
+        "rule": "credential-file-readable-netrc",
+        "severity": "high",
+        "tags": {
+          "category": "file-permissions",
+          "control": "ACME-SEC-03"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "classified_as": [
+              "github_token"
+            ],
+            "entropy": 196,
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": true,
+            "length": 40,
+            "mode": 384,
+            "name": "GH_TOKEN",
+            "owner_is_self": true,
+            "world_readable": false
+          },
+          "location": {
+            "key_path": "GH_TOKEN",
+            "kind": "file",
+            "path": "~/project/.env"
+          },
+          "source": "dotenv",
+          "type": "dotenv_entry"
+        },
+        "message": "GH_TOKEN in ~/project/.env holds a github_token and the file is not ignored by git",
+        "remediation": "Add the file to .gitignore, check the history (git log -- ~/project/.env) and rotate the token if it was ever committed",
+        "rule": "dotenv-token-not-gitignored",
+        "severity": "high",
+        "tags": {
+          "category": "version-control",
+          "control": "ACME-SEC-09"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "bits": 256,
+            "cipher": "none",
+            "encrypted": false,
+            "format": "openssh",
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kdf": "none",
+            "key_type": "ed25519",
+            "mode": 384,
+            "owner_is_self": true,
+            "world_readable": false
+          },
+          "location": {
+            "kind": "file",
+            "path": "~/.ssh/id_ed25519"
+          },
+          "source": "ssh",
+          "type": "ssh_private_key"
+        },
+        "message": "SSH private key ~/.ssh/id_ed25519 (ed25519) is not protected by a passphrase",
+        "remediation": "Platform runbook: move the key to the YubiKey (ssh-keygen -t ed25519-sk) and delete ~/.ssh/id_ed25519",
+        "rule": "ssh-key-unencrypted",
+        "severity": "high",
+        "tags": {
+          "category": "key-protection",
+          "control": "ACME-SEC-01",
+          "team": "platform"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "expired": true,
+            "expires": "2026-06-30",
+            "matched": 0,
+            "reason": "Until the keyring is set up on the shared runner (ticket SEC-1100)",
+            "waived_path": "~/.config/gh/hosts.yml",
+            "waived_rule": "gh-token-in-file"
+          },
+          "location": {
+            "key_path": "[[waiver]] #3",
+            "kind": "file",
+            "path": "~/project/lootr.toml"
+          },
+          "source": "config",
+          "type": "waiver"
+        },
+        "message": "Waiver for gh-token-in-file (~/project/lootr.toml#[[waiver]] #3) expired on 2026-06-30; its findings are reported again",
+        "remediation": "Fix the findings and remove the waiver, or renew it with a new expiry date and reason",
+        "rule": "waiver-expired",
+        "severity": "high",
+        "tags": {
+          "category": "policy-hygiene",
+          "control": "ACME-GOV-01"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "checksum_valid": true,
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kind": "oauth",
+            "mode": 384,
+            "owner_is_self": true,
+            "prefix": "gho_",
+            "world_readable": false
+          },
+          "location": {
+            "key_path": "github.com.oauth_token",
+            "kind": "file",
+            "path": "~/.config/gh/hosts.yml"
+          },
+          "source": "gh-hosts",
+          "type": "github_token"
+        },
+        "message": "GitHub oauth token (gho_) visible in ~/.config/gh/hosts.yml#github.com.oauth_token",
+        "remediation": "Make sure only the processes that need it can see github.com.oauth_token; revoke it if it leaked",
+        "rule": "github-token",
+        "severity": "medium",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "default_entry": false,
+            "gitignored": false,
+            "group_readable": true,
+            "hosts": [
+              "mirror.acme.example"
+            ],
+            "in_git_repo": false,
+            "inline_tokens": 1,
+            "mode": 420,
+            "owner_is_self": true,
+            "world_readable": true
+          },
+          "location": {
+            "kind": "file",
+            "path": "~/.netrc"
+          },
+          "source": "netrc",
+          "type": "netrc"
+        },
+        "message": "Passwords are stored in plain text in ~/.netrc (hosts: mirror.acme.example)",
+        "remediation": "Use a credential helper or keyring; rotate the passwords/tokens",
+        "rule": "netrc-password",
+        "severity": "medium",
+        "tags": {
+          "category": "plaintext-storage"
+        },
+        "waived": {
+          "expires": "2030-06-30",
+          "reason": "Read-only mirror credentials for the build cache (ticket SEC-1234)"
+        }
+      },
+      {
+        "fact": {
+          "attrs": {
+            "default_permissions": "repository",
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": true,
+            "job": "test",
+            "mode": 384,
+            "owner_is_self": true,
+            "permissions": {},
+            "permissions_source": "repository",
+            "triggers": [
+              "push"
+            ],
+            "world_readable": false,
+            "write_scopes": []
+          },
+          "location": {
+            "key_path": "jobs.test",
+            "kind": "file",
+            "path": "~/project/.github/workflows/ci.yml"
+          },
+          "source": "workflows",
+          "type": "github_workflow"
+        },
+        "message": "Job test in ~/project/.github/workflows/ci.yml sets no `permissions:`: its token gets the repository default (write-all in older repositories)",
+        "remediation": "Add `permissions: contents: read` at the workflow level and grant more per job",
+        "rule": "workflow-default-permissions",
+        "severity": "medium",
+        "tags": {
+          "category": "ci-permissions",
+          "team": "platform"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "classified_as": [],
+            "entropy": 139,
+            "length": 30,
+            "name": "TEST_DB_PASSWORD"
+          },
+          "location": {
+            "kind": "env",
+            "name": "TEST_DB_PASSWORD"
+          },
+          "source": "process-env",
+          "type": "env_var"
+        },
+        "message": "$TEST_DB_PASSWORD looks like a secret (30 bytes, 139 bits) and every child process inherits it",
+        "remediation": "Pass secrets only to the processes that need them (files with mode 0600, a secret manager)",
+        "rule": "env-secret-like",
+        "severity": "low",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": {
+          "expires": "2030-06-30",
+          "reason": "Password of the throwaway test database in the CI service container"
+        }
+      },
+      {
+        "fact": {
+          "attrs": {
+            "gitignored": false,
+            "group_readable": false,
+            "hosts": [
+              "github.com"
+            ],
+            "in_git_repo": false,
+            "inline_tokens": 1,
+            "mode": 384,
+            "owner_is_self": true,
+            "world_readable": false
+          },
+          "location": {
+            "kind": "file",
+            "path": "~/.config/gh/hosts.yml"
+          },
+          "source": "gh-hosts",
+          "type": "gh_hosts"
+        },
+        "message": "The GitHub CLI stores its token in plain text in ~/.config/gh/hosts.yml (github.com), not in the keyring",
+        "remediation": "Run gh auth login again on a system with a keyring, or restrict who can read ~/.config/gh/hosts.yml",
+        "rule": "gh-token-in-file",
+        "severity": "low",
+        "tags": {
+          "category": "plaintext-storage"
+        },
+        "waived": null
+      }
+    ],
+    "rule_errors": [],
+    "run": {
+      "config_layers": [
+        "<built-in>",
+        "/etc/lootr/baseline.toml",
+        "/etc/lootr/team-platform.toml",
+        "~/project/lootr.toml"
+      ],
+      "cwd": "/home/dev/project",
+      "fail_on": "high",
+      "home": "/home/dev",
+      "uid": 1000
+    },
+    "schema_version": 1,
+    "skipped": [],
+    "summary": {
+      "by_rule": {
+        "acme-api-key": 1,
+        "credential-file-readable-netrc": 1,
+        "dotenv-token-not-gitignored": 1,
+        "gh-token-in-file": 1,
+        "github-classic-token": 1,
+        "github-token": 1,
+        "ssh-key-unencrypted": 1,
+        "waiver-expired": 1,
+        "workflow-default-permissions": 1
+      },
+      "by_severity": {
+        "critical": 1,
+        "high": 5,
+        "info": 0,
+        "low": 1,
+        "medium": 2
+      },
+      "candidates": 21,
+      "expired_waivers": 1,
+      "facts": 19,
+      "failing": 6,
+      "failing_skipped": 0,
+      "findings": 11,
+      "rule_errors": 0,
+      "skipped": 0,
+      "waived": 2
+    },
+    "tool": {
+      "name": "lootr"
+    }
+  }
+}

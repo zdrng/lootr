@@ -1,0 +1,6 @@
+# clean-user: an ordinary user with an empty home and nothing secret in the
+# environment. Expected: no findings, exit code 0.
+FROM lootr-base
+RUN useradd --create-home --uid 1000 --shell /bin/sh user
+USER user
+WORKDIR /home/user

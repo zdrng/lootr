@@ -1,0 +1,728 @@
+{
+  "exit_code": 1,
+  "report": {
+    "schema_version": 1,
+    "tool": {
+      "name": "lootr"
+    },
+    "run": {
+      "fail_on": "high",
+      "config_layers": [
+        "<built-in>",
+        "/Users/zdrng/Projects/lootr/test-envs/common.toml"
+      ],
+      "cwd": "<root>/workdir",
+      "home": "<root>/home"
+    },
+    "custom_types": [],
+    "summary": {
+      "candidates": 12,
+      "facts": 7,
+      "findings": 8,
+      "waived": 0,
+      "failing": 3,
+      "by_severity": {
+        "critical": 0,
+        "high": 3,
+        "medium": 3,
+        "low": 2,
+        "info": 0
+      },
+      "rule_errors": 0,
+      "expired_waivers": 0,
+      "skipped": 0,
+      "failing_skipped": 0,
+      "by_rule": {
+        "workflow-contents-write": 1,
+        "workflow-default-permissions": 1,
+        "workflow-packages-write": 1,
+        "workflow-pull-request-target": 2,
+        "workflow-untrusted-trigger-default-permissions": 1,
+        "workflow-untrusted-trigger-write": 1,
+        "workflow-write-all": 1
+      }
+    },
+    "findings": [
+      {
+        "rule": "workflow-untrusted-trigger-default-permissions",
+        "severity": "high",
+        "message": "Job greet in <root>/workdir/.github/workflows/triage.yml runs on events others can cause (issue_comment, pull_request_target) with the repository's default token permissions",
+        "remediation": "Set `permissions:` explicitly (e.g. contents: read) and grant writes only where needed",
+        "tags": {
+          "category": "ci-permissions"
+        },
+        "waived": null,
+        "fact": {
+          "type": "github_workflow",
+          "location": {
+            "kind": "file",
+            "path": "<root>/workdir/.github/workflows/triage.yml",
+            "key_path": "jobs.greet"
+          },
+          "source": "workflows",
+          "attrs": {
+            "write_scopes": [],
+            "default_permissions": "repository",
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "job": "greet",
+            "mode": 384,
+            "owner_is_self": true,
+            "permissions": {},
+            "permissions_source": "repository",
+            "size": 345,
+            "triggers": [
+              "issue_comment",
+              "pull_request_target"
+            ],
+            "world_readable": false
+          }
+        }
+      },
+      {
+        "rule": "workflow-untrusted-trigger-write",
+        "severity": "high",
+        "message": "Job label in <root>/workdir/.github/workflows/triage.yml runs on events others can cause (issue_comment, pull_request_target) with write access (pull-requests)",
+        "remediation": "Split the workflow: untrusted input in a read-only job, writes in a separate job that does not run code or text from the event",
+        "tags": {
+          "category": "ci-permissions"
+        },
+        "waived": null,
+        "fact": {
+          "type": "github_workflow",
+          "location": {
+            "kind": "file",
+            "path": "<root>/workdir/.github/workflows/triage.yml",
+            "key_path": "jobs.label"
+          },
+          "source": "workflows",
+          "attrs": {
+            "write_scopes": [
+              "pull-requests"
+            ],
+            "default_permissions": "none",
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "job": "label",
+            "mode": 384,
+            "owner_is_self": true,
+            "permissions": {
+              "actions": "none",
+              "attestations": "none",
+              "checks": "none",
+              "contents": "none",
+              "deployments": "none",
+              "discussions": "none",
+              "id-token": "none",
+              "issues": "none",
+              "models": "none",
+              "packages": "none",
+              "pages": "none",
+              "pull-requests": "write",
+              "repository-projects": "none",
+              "security-events": "none",
+              "statuses": "none"
+            },
+            "permissions_source": "job",
+            "size": 345,
+            "triggers": [
+              "issue_comment",
+              "pull_request_target"
+            ],
+            "world_readable": false
+          }
+        }
+      },
+      {
+        "rule": "workflow-write-all",
+        "severity": "high",
+        "message": "Job deploy in <root>/workdir/.github/workflows/legacy.yaml gets a write-all token",
+        "remediation": "Set `permissions:` explicitly with only the scopes the job needs",
+        "tags": {
+          "category": "ci-permissions"
+        },
+        "waived": null,
+        "fact": {
+          "type": "github_workflow",
+          "location": {
+            "kind": "file",
+            "path": "<root>/workdir/.github/workflows/legacy.yaml",
+            "key_path": "jobs.deploy"
+          },
+          "source": "workflows",
+          "attrs": {
+            "write_scopes": [
+              "actions",
+              "attestations",
+              "checks",
+              "contents",
+              "deployments",
+              "discussions",
+              "id-token",
+              "issues",
+              "packages",
+              "pages",
+              "pull-requests",
+              "repository-projects",
+              "security-events",
+              "statuses"
+            ],
+            "default_permissions": "write-all",
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "job": "deploy",
+            "mode": 384,
+            "owner_is_self": true,
+            "permissions": {
+              "actions": "write",
+              "attestations": "write",
+              "checks": "write",
+              "contents": "write",
+              "deployments": "write",
+              "discussions": "write",
+              "id-token": "write",
+              "issues": "write",
+              "models": "read",
+              "packages": "write",
+              "pages": "write",
+              "pull-requests": "write",
+              "repository-projects": "write",
+              "security-events": "write",
+              "statuses": "write"
+            },
+            "permissions_source": "workflow",
+            "size": 132,
+            "triggers": [
+              "push",
+              "workflow_dispatch"
+            ],
+            "world_readable": false
+          }
+        }
+      },
+      {
+        "rule": "workflow-packages-write",
+        "severity": "medium",
+        "message": "Job publish in <root>/workdir/.github/workflows/release.yml can publish packages (packages: write)",
+        "remediation": "Grant packages: write only to the publishing job, run it only for protected branches or tags",
+        "tags": {
+          "category": "ci-permissions"
+        },
+        "waived": null,
+        "fact": {
+          "type": "github_workflow",
+          "location": {
+            "kind": "file",
+            "path": "<root>/workdir/.github/workflows/release.yml",
+            "key_path": "jobs.publish"
+          },
+          "source": "workflows",
+          "attrs": {
+            "write_scopes": [
+              "contents",
+              "id-token",
+              "packages"
+            ],
+            "default_permissions": "none",
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "job": "publish",
+            "mode": 384,
+            "owner_is_self": true,
+            "permissions": {
+              "actions": "none",
+              "attestations": "none",
+              "checks": "none",
+              "contents": "write",
+              "deployments": "none",
+              "discussions": "none",
+              "id-token": "write",
+              "issues": "none",
+              "models": "none",
+              "packages": "write",
+              "pages": "none",
+              "pull-requests": "none",
+              "repository-projects": "none",
+              "security-events": "none",
+              "statuses": "none"
+            },
+            "permissions_source": "job",
+            "size": 401,
+            "triggers": [
+              "push"
+            ],
+            "world_readable": false
+          }
+        }
+      },
+      {
+        "rule": "workflow-pull-request-target",
+        "severity": "medium",
+        "message": "Job greet in <root>/workdir/.github/workflows/triage.yml runs on pull_request_target: with the repository's secrets, also for pull requests from forks",
+        "remediation": "Never check out or run code from the pull request in this workflow; use pull_request for builds and tests",
+        "tags": {
+          "category": "ci-permissions"
+        },
+        "waived": null,
+        "fact": {
+          "type": "github_workflow",
+          "location": {
+            "kind": "file",
+            "path": "<root>/workdir/.github/workflows/triage.yml",
+            "key_path": "jobs.greet"
+          },
+          "source": "workflows",
+          "attrs": {
+            "write_scopes": [],
+            "default_permissions": "repository",
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "job": "greet",
+            "mode": 384,
+            "owner_is_self": true,
+            "permissions": {},
+            "permissions_source": "repository",
+            "size": 345,
+            "triggers": [
+              "issue_comment",
+              "pull_request_target"
+            ],
+            "world_readable": false
+          }
+        }
+      },
+      {
+        "rule": "workflow-pull-request-target",
+        "severity": "medium",
+        "message": "Job label in <root>/workdir/.github/workflows/triage.yml runs on pull_request_target: with the repository's secrets, also for pull requests from forks",
+        "remediation": "Never check out or run code from the pull request in this workflow; use pull_request for builds and tests",
+        "tags": {
+          "category": "ci-permissions"
+        },
+        "waived": null,
+        "fact": {
+          "type": "github_workflow",
+          "location": {
+            "kind": "file",
+            "path": "<root>/workdir/.github/workflows/triage.yml",
+            "key_path": "jobs.label"
+          },
+          "source": "workflows",
+          "attrs": {
+            "write_scopes": [
+              "pull-requests"
+            ],
+            "default_permissions": "none",
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "job": "label",
+            "mode": 384,
+            "owner_is_self": true,
+            "permissions": {
+              "actions": "none",
+              "attestations": "none",
+              "checks": "none",
+              "contents": "none",
+              "deployments": "none",
+              "discussions": "none",
+              "id-token": "none",
+              "issues": "none",
+              "models": "none",
+              "packages": "none",
+              "pages": "none",
+              "pull-requests": "write",
+              "repository-projects": "none",
+              "security-events": "none",
+              "statuses": "none"
+            },
+            "permissions_source": "job",
+            "size": 345,
+            "triggers": [
+              "issue_comment",
+              "pull_request_target"
+            ],
+            "world_readable": false
+          }
+        }
+      },
+      {
+        "rule": "workflow-contents-write",
+        "severity": "low",
+        "message": "Job publish in <root>/workdir/.github/workflows/release.yml can push to the repository (contents: write)",
+        "remediation": "Grant contents: write only to the job that needs it (releases, generated commits)",
+        "tags": {
+          "category": "ci-permissions"
+        },
+        "waived": null,
+        "fact": {
+          "type": "github_workflow",
+          "location": {
+            "kind": "file",
+            "path": "<root>/workdir/.github/workflows/release.yml",
+            "key_path": "jobs.publish"
+          },
+          "source": "workflows",
+          "attrs": {
+            "write_scopes": [
+              "contents",
+              "id-token",
+              "packages"
+            ],
+            "default_permissions": "none",
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "job": "publish",
+            "mode": 384,
+            "owner_is_self": true,
+            "permissions": {
+              "actions": "none",
+              "attestations": "none",
+              "checks": "none",
+              "contents": "write",
+              "deployments": "none",
+              "discussions": "none",
+              "id-token": "write",
+              "issues": "none",
+              "models": "none",
+              "packages": "write",
+              "pages": "none",
+              "pull-requests": "none",
+              "repository-projects": "none",
+              "security-events": "none",
+              "statuses": "none"
+            },
+            "permissions_source": "job",
+            "size": 401,
+            "triggers": [
+              "push"
+            ],
+            "world_readable": false
+          }
+        }
+      },
+      {
+        "rule": "workflow-default-permissions",
+        "severity": "low",
+        "message": "Job greet in <root>/workdir/.github/workflows/triage.yml sets no `permissions:`: its token gets the repository default (write-all in older repositories)",
+        "remediation": "Add `permissions: contents: read` at the workflow level and grant more per job",
+        "tags": {
+          "category": "ci-permissions"
+        },
+        "waived": null,
+        "fact": {
+          "type": "github_workflow",
+          "location": {
+            "kind": "file",
+            "path": "<root>/workdir/.github/workflows/triage.yml",
+            "key_path": "jobs.greet"
+          },
+          "source": "workflows",
+          "attrs": {
+            "write_scopes": [],
+            "default_permissions": "repository",
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "job": "greet",
+            "mode": 384,
+            "owner_is_self": true,
+            "permissions": {},
+            "permissions_source": "repository",
+            "size": 345,
+            "triggers": [
+              "issue_comment",
+              "pull_request_target"
+            ],
+            "world_readable": false
+          }
+        }
+      }
+    ],
+    "rule_errors": [],
+    "expired_waivers": [],
+    "skipped": [],
+    "facts": [
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "HOME"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [],
+          "name": "HOME",
+          "length": 45
+        }
+      },
+      {
+        "type": "github_workflow",
+        "location": {
+          "kind": "file",
+          "path": "<root>/workdir/.github/workflows/ci.yml",
+          "key_path": "jobs.test"
+        },
+        "source": "workflows",
+        "attrs": {
+          "write_scopes": [],
+          "default_permissions": "none",
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "job": "test",
+          "mode": 384,
+          "owner_is_self": true,
+          "permissions": {
+            "actions": "none",
+            "attestations": "none",
+            "checks": "none",
+            "contents": "read",
+            "deployments": "none",
+            "discussions": "none",
+            "id-token": "none",
+            "issues": "none",
+            "models": "none",
+            "packages": "none",
+            "pages": "none",
+            "pull-requests": "none",
+            "repository-projects": "none",
+            "security-events": "none",
+            "statuses": "none"
+          },
+          "permissions_source": "workflow",
+          "size": 197,
+          "triggers": [
+            "pull_request",
+            "push"
+          ],
+          "world_readable": false
+        }
+      },
+      {
+        "type": "github_workflow",
+        "location": {
+          "kind": "file",
+          "path": "<root>/workdir/.github/workflows/legacy.yaml",
+          "key_path": "jobs.deploy"
+        },
+        "source": "workflows",
+        "attrs": {
+          "write_scopes": [
+            "actions",
+            "attestations",
+            "checks",
+            "contents",
+            "deployments",
+            "discussions",
+            "id-token",
+            "issues",
+            "packages",
+            "pages",
+            "pull-requests",
+            "repository-projects",
+            "security-events",
+            "statuses"
+          ],
+          "default_permissions": "write-all",
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "job": "deploy",
+          "mode": 384,
+          "owner_is_self": true,
+          "permissions": {
+            "actions": "write",
+            "attestations": "write",
+            "checks": "write",
+            "contents": "write",
+            "deployments": "write",
+            "discussions": "write",
+            "id-token": "write",
+            "issues": "write",
+            "models": "read",
+            "packages": "write",
+            "pages": "write",
+            "pull-requests": "write",
+            "repository-projects": "write",
+            "security-events": "write",
+            "statuses": "write"
+          },
+          "permissions_source": "workflow",
+          "size": 132,
+          "triggers": [
+            "push",
+            "workflow_dispatch"
+          ],
+          "world_readable": false
+        }
+      },
+      {
+        "type": "github_workflow",
+        "location": {
+          "kind": "file",
+          "path": "<root>/workdir/.github/workflows/release.yml",
+          "key_path": "jobs.build"
+        },
+        "source": "workflows",
+        "attrs": {
+          "write_scopes": [],
+          "default_permissions": "read-all",
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "job": "build",
+          "mode": 384,
+          "owner_is_self": true,
+          "permissions": {
+            "actions": "read",
+            "attestations": "read",
+            "checks": "read",
+            "contents": "read",
+            "deployments": "read",
+            "discussions": "read",
+            "id-token": "none",
+            "issues": "read",
+            "models": "read",
+            "packages": "read",
+            "pages": "read",
+            "pull-requests": "read",
+            "repository-projects": "read",
+            "security-events": "read",
+            "statuses": "read"
+          },
+          "permissions_source": "workflow",
+          "size": 401,
+          "triggers": [
+            "push"
+          ],
+          "world_readable": false
+        }
+      },
+      {
+        "type": "github_workflow",
+        "location": {
+          "kind": "file",
+          "path": "<root>/workdir/.github/workflows/release.yml",
+          "key_path": "jobs.publish"
+        },
+        "source": "workflows",
+        "attrs": {
+          "write_scopes": [
+            "contents",
+            "id-token",
+            "packages"
+          ],
+          "default_permissions": "none",
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "job": "publish",
+          "mode": 384,
+          "owner_is_self": true,
+          "permissions": {
+            "actions": "none",
+            "attestations": "none",
+            "checks": "none",
+            "contents": "write",
+            "deployments": "none",
+            "discussions": "none",
+            "id-token": "write",
+            "issues": "none",
+            "models": "none",
+            "packages": "write",
+            "pages": "none",
+            "pull-requests": "none",
+            "repository-projects": "none",
+            "security-events": "none",
+            "statuses": "none"
+          },
+          "permissions_source": "job",
+          "size": 401,
+          "triggers": [
+            "push"
+          ],
+          "world_readable": false
+        }
+      },
+      {
+        "type": "github_workflow",
+        "location": {
+          "kind": "file",
+          "path": "<root>/workdir/.github/workflows/triage.yml",
+          "key_path": "jobs.label"
+        },
+        "source": "workflows",
+        "attrs": {
+          "write_scopes": [
+            "pull-requests"
+          ],
+          "default_permissions": "none",
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "job": "label",
+          "mode": 384,
+          "owner_is_self": true,
+          "permissions": {
+            "actions": "none",
+            "attestations": "none",
+            "checks": "none",
+            "contents": "none",
+            "deployments": "none",
+            "discussions": "none",
+            "id-token": "none",
+            "issues": "none",
+            "models": "none",
+            "packages": "none",
+            "pages": "none",
+            "pull-requests": "write",
+            "repository-projects": "none",
+            "security-events": "none",
+            "statuses": "none"
+          },
+          "permissions_source": "job",
+          "size": 345,
+          "triggers": [
+            "issue_comment",
+            "pull_request_target"
+          ],
+          "world_readable": false
+        }
+      },
+      {
+        "type": "github_workflow",
+        "location": {
+          "kind": "file",
+          "path": "<root>/workdir/.github/workflows/triage.yml",
+          "key_path": "jobs.greet"
+        },
+        "source": "workflows",
+        "attrs": {
+          "write_scopes": [],
+          "default_permissions": "repository",
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "job": "greet",
+          "mode": 384,
+          "owner_is_self": true,
+          "permissions": {},
+          "permissions_source": "repository",
+          "size": 345,
+          "triggers": [
+            "issue_comment",
+            "pull_request_target"
+          ],
+          "world_readable": false
+        }
+      }
+    ]
+  }
+}

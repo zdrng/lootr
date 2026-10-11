@@ -1,0 +1,98 @@
+# Fuzz targets for the parsers (cargo-fuzz, libFuzzer). A separate workspace,
+# so the main crate's dependency tree and `cargo deny` stay unaffected.
+#
+#   nix develop -c cargo fuzz run -s none ssh_key -- -max_total_time=60
+#
+# `-s none` (no AddressSanitizer) works with the flake's stable toolchain;
+# ASan needs a nightly rustc and adds little to a crate that forbids unsafe
+# code. Targets: ssh_key, jwt (also github_token), dotenv, yaml (loader,
+# yaml extractor, kubeconfig, gh_hosts, github_workflow), json (json
+# extractor, gcp, azure, docker), ini (ini extractor, aws, pypirc, npmrc),
+# toml, lines (netrc, git_credentials, pem), values (api_key, gitlab_token,
+# aws_access_key_id), content (the content scanner's tokenizer). See README.md.
+[package]
+name = "lootr-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2024"
+license = "GPL-3.0-only"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+lootr = { path = ".." }
+
+[[bin]]
+name = "ssh_key"
+path = "fuzz_targets/ssh_key.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "jwt"
+path = "fuzz_targets/jwt.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "dotenv"
+path = "fuzz_targets/dotenv.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "yaml"
+path = "fuzz_targets/yaml.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "json"
+path = "fuzz_targets/json.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "ini"
+path = "fuzz_targets/ini.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "toml"
+path = "fuzz_targets/toml.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "lines"
+path = "fuzz_targets/lines.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "values"
+path = "fuzz_targets/values.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "content"
+path = "fuzz_targets/content.rs"
+test = false
+doc = false
+bench = false
+
+[workspace]
+members = ["."]

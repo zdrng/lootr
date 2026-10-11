@@ -1,0 +1,28 @@
+# Platform team layer: applied after the company baseline. It tunes what the
+# baseline leaves open and adds team context; it cannot touch locked rules
+# except to make them stricter or reword them.
+
+version = 1
+
+# Build machines of this team give the build user sudo on purpose.
+[[rule]]
+id = "process-sudo-group"
+enabled = false
+
+# Workflows of this team must set `permissions:` explicitly.
+[[rule]]
+id = "workflow-default-permissions"
+severity = "medium"
+tags = { team = "platform" }
+
+# Locked in the baseline: a new remediation (pointing at the team's runbook)
+# and a team tag are allowed; tags are merged with the baseline's.
+[[rule]]
+id = "ssh-key-unencrypted"
+remediation = "Platform runbook: move the key to the YubiKey (ssh-keygen -t ed25519-sk) and delete {path}"
+tags = { team = "platform" }
+
+# Also locked: raising the severity is allowed.
+[[rule]]
+id = "aws-long-lived-key"
+severity = "critical"

@@ -1,0 +1,531 @@
+{
+  "exit_code": 1,
+  "report": {
+    "custom_types": [],
+    "expired_waivers": [],
+    "facts": [
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 24,
+          "length": 9,
+          "name": "HOME"
+        },
+        "location": {
+          "kind": "env",
+          "name": "HOME"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 203,
+          "length": 60,
+          "name": "PATH"
+        },
+        "location": {
+          "kind": "env",
+          "name": "PATH"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 24,
+          "length": 9,
+          "name": "PWD"
+        },
+        "location": {
+          "kind": "env",
+          "name": "PWD"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "bits": 256,
+          "cipher": "none",
+          "encrypted": false,
+          "format": "openssh",
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kdf": "none",
+          "key_type": "ed25519",
+          "mode": 384,
+          "owner_is_self": true,
+          "world_readable": false
+        },
+        "location": {
+          "kind": "file",
+          "path": "~/.ssh/id_ed25519"
+        },
+        "source": "ssh",
+        "type": "ssh_private_key"
+      },
+      {
+        "attrs": {
+          "bits": 256,
+          "cipher": "aes256-ctr",
+          "encrypted": true,
+          "format": "openssh",
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kdf": "bcrypt",
+          "kdf_rounds": 24,
+          "key_type": "ed25519",
+          "mode": 384,
+          "owner_is_self": true,
+          "world_readable": false
+        },
+        "location": {
+          "kind": "file",
+          "path": "~/.ssh/id_ed25519_protected"
+        },
+        "source": "ssh",
+        "type": "ssh_private_key"
+      },
+      {
+        "attrs": {
+          "bits": 2048,
+          "cipher": "none",
+          "encrypted": false,
+          "format": "openssh",
+          "gitignored": false,
+          "group_readable": true,
+          "in_git_repo": false,
+          "kdf": "none",
+          "key_type": "rsa",
+          "mode": 416,
+          "owner_is_self": true,
+          "world_readable": false
+        },
+        "location": {
+          "kind": "file",
+          "path": "~/.ssh/id_rsa"
+        },
+        "source": "ssh",
+        "type": "ssh_private_key"
+      },
+      {
+        "attrs": {
+          "cipher": "aes-128-cbc",
+          "encrypted": true,
+          "format": "pem",
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kdf": "md5",
+          "key_type": "rsa",
+          "mode": 384,
+          "owner_is_self": true,
+          "world_readable": false
+        },
+        "location": {
+          "kind": "file",
+          "path": "~/.ssh/legacy_pem"
+        },
+        "source": "ssh",
+        "type": "ssh_private_key"
+      },
+      {
+        "attrs": {
+          "bits": 256,
+          "cipher": "none",
+          "encrypted": false,
+          "format": "pkcs8",
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kdf": "none",
+          "key_type": "ed25519",
+          "mode": 384,
+          "owner_is_self": true,
+          "world_readable": false
+        },
+        "location": {
+          "kind": "file",
+          "path": "~/.ssh/pkcs8_ed25519"
+        },
+        "source": "ssh",
+        "type": "ssh_private_key"
+      },
+      {
+        "attrs": {
+          "cipher": "aes-256-cbc",
+          "encrypted": true,
+          "format": "pkcs8",
+          "gitignored": false,
+          "group_readable": false,
+          "in_git_repo": false,
+          "kdf": "pbkdf2",
+          "kdf_rounds": 2048,
+          "key_type": "unknown",
+          "mode": 384,
+          "owner_is_self": true,
+          "world_readable": false
+        },
+        "location": {
+          "kind": "file",
+          "path": "~/.ssh/pkcs8_protected"
+        },
+        "source": "ssh",
+        "type": "ssh_private_key"
+      },
+      {
+        "attrs": {
+          "bits": 384,
+          "cipher": "none",
+          "encrypted": false,
+          "format": "openssh",
+          "gitignored": false,
+          "group_readable": true,
+          "in_git_repo": false,
+          "kdf": "none",
+          "key_type": "ecdsa",
+          "mode": 420,
+          "owner_is_self": true,
+          "world_readable": true
+        },
+        "location": {
+          "kind": "file",
+          "path": "~/.ssh/shared_ecdsa"
+        },
+        "source": "ssh",
+        "type": "ssh_private_key"
+      },
+      {
+        "attrs": {
+          "groups": [
+            "dev"
+          ],
+          "in_container": true,
+          "is_root": false,
+          "uid": 1000
+        },
+        "location": {
+          "kind": "probe",
+          "name": "process"
+        },
+        "source": "process",
+        "type": "process"
+      },
+      {
+        "attrs": {
+          "foreign_processes": 0,
+          "names": [],
+          "readable_environ": 0
+        },
+        "location": {
+          "kind": "probe",
+          "name": "proc_environ"
+        },
+        "source": "proc-environ",
+        "type": "proc_environ"
+      }
+    ],
+    "findings": [
+      {
+        "fact": {
+          "attrs": {
+            "bits": 256,
+            "cipher": "none",
+            "encrypted": false,
+            "format": "openssh",
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kdf": "none",
+            "key_type": "ed25519",
+            "mode": 384,
+            "owner_is_self": true,
+            "world_readable": false
+          },
+          "location": {
+            "kind": "file",
+            "path": "~/.ssh/id_ed25519"
+          },
+          "source": "ssh",
+          "type": "ssh_private_key"
+        },
+        "message": "SSH private key ~/.ssh/id_ed25519 (ed25519) is not protected by a passphrase",
+        "remediation": "Set a passphrase (ssh-keygen -p -f ~/.ssh/id_ed25519) or move the key to ssh-agent / a hardware token",
+        "rule": "ssh-key-unencrypted",
+        "severity": "high",
+        "tags": {
+          "category": "key-protection"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "bits": 2048,
+            "cipher": "none",
+            "encrypted": false,
+            "format": "openssh",
+            "gitignored": false,
+            "group_readable": true,
+            "in_git_repo": false,
+            "kdf": "none",
+            "key_type": "rsa",
+            "mode": 416,
+            "owner_is_self": true,
+            "world_readable": false
+          },
+          "location": {
+            "kind": "file",
+            "path": "~/.ssh/id_rsa"
+          },
+          "source": "ssh",
+          "type": "ssh_private_key"
+        },
+        "message": "SSH private key ~/.ssh/id_rsa (rsa) is not protected by a passphrase",
+        "remediation": "Set a passphrase (ssh-keygen -p -f ~/.ssh/id_rsa) or move the key to ssh-agent / a hardware token",
+        "rule": "ssh-key-unencrypted",
+        "severity": "high",
+        "tags": {
+          "category": "key-protection"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "bits": 256,
+            "cipher": "none",
+            "encrypted": false,
+            "format": "pkcs8",
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kdf": "none",
+            "key_type": "ed25519",
+            "mode": 384,
+            "owner_is_self": true,
+            "world_readable": false
+          },
+          "location": {
+            "kind": "file",
+            "path": "~/.ssh/pkcs8_ed25519"
+          },
+          "source": "ssh",
+          "type": "ssh_private_key"
+        },
+        "message": "SSH private key ~/.ssh/pkcs8_ed25519 (ed25519) is not protected by a passphrase",
+        "remediation": "Set a passphrase (ssh-keygen -p -f ~/.ssh/pkcs8_ed25519) or move the key to ssh-agent / a hardware token",
+        "rule": "ssh-key-unencrypted",
+        "severity": "high",
+        "tags": {
+          "category": "key-protection"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "bits": 384,
+            "cipher": "none",
+            "encrypted": false,
+            "format": "openssh",
+            "gitignored": false,
+            "group_readable": true,
+            "in_git_repo": false,
+            "kdf": "none",
+            "key_type": "ecdsa",
+            "mode": 420,
+            "owner_is_self": true,
+            "world_readable": true
+          },
+          "location": {
+            "kind": "file",
+            "path": "~/.ssh/shared_ecdsa"
+          },
+          "source": "ssh",
+          "type": "ssh_private_key"
+        },
+        "message": "SSH private key ~/.ssh/shared_ecdsa (ecdsa) is not protected by a passphrase",
+        "remediation": "Set a passphrase (ssh-keygen -p -f ~/.ssh/shared_ecdsa) or move the key to ssh-agent / a hardware token",
+        "rule": "ssh-key-unencrypted",
+        "severity": "high",
+        "tags": {
+          "category": "key-protection"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "bits": 384,
+            "cipher": "none",
+            "encrypted": false,
+            "format": "openssh",
+            "gitignored": false,
+            "group_readable": true,
+            "in_git_repo": false,
+            "kdf": "none",
+            "key_type": "ecdsa",
+            "mode": 420,
+            "owner_is_self": true,
+            "world_readable": true
+          },
+          "location": {
+            "kind": "file",
+            "path": "~/.ssh/shared_ecdsa"
+          },
+          "source": "ssh",
+          "type": "ssh_private_key"
+        },
+        "message": "SSH private key ~/.ssh/shared_ecdsa is readable by every user (mode 0644)",
+        "remediation": "chmod 600 ~/.ssh/shared_ecdsa, then rotate the key: others may have copied it",
+        "rule": "ssh-key-world-readable",
+        "severity": "high",
+        "tags": {
+          "category": "file-permissions"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "bits": 2048,
+            "cipher": "none",
+            "encrypted": false,
+            "format": "openssh",
+            "gitignored": false,
+            "group_readable": true,
+            "in_git_repo": false,
+            "kdf": "none",
+            "key_type": "rsa",
+            "mode": 416,
+            "owner_is_self": true,
+            "world_readable": false
+          },
+          "location": {
+            "kind": "file",
+            "path": "~/.ssh/id_rsa"
+          },
+          "source": "ssh",
+          "type": "ssh_private_key"
+        },
+        "message": "SSH private key ~/.ssh/id_rsa is readable by its group (mode 0640)",
+        "remediation": "chmod 600 ~/.ssh/id_rsa",
+        "rule": "ssh-key-group-readable",
+        "severity": "medium",
+        "tags": {
+          "category": "file-permissions"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "bits": 2048,
+            "cipher": "none",
+            "encrypted": false,
+            "format": "openssh",
+            "gitignored": false,
+            "group_readable": true,
+            "in_git_repo": false,
+            "kdf": "none",
+            "key_type": "rsa",
+            "mode": 416,
+            "owner_is_self": true,
+            "world_readable": false
+          },
+          "location": {
+            "kind": "file",
+            "path": "~/.ssh/id_rsa"
+          },
+          "source": "ssh",
+          "type": "ssh_private_key"
+        },
+        "message": "SSH private key ~/.ssh/id_rsa is a weak rsa key (2048 bits)",
+        "remediation": "Create an ed25519 key (ssh-keygen -t ed25519), deploy it and retire ~/.ssh/id_rsa",
+        "rule": "ssh-key-weak",
+        "severity": "medium",
+        "tags": {
+          "category": "key-strength"
+        },
+        "waived": null
+      },
+      {
+        "fact": {
+          "attrs": {
+            "cipher": "aes-128-cbc",
+            "encrypted": true,
+            "format": "pem",
+            "gitignored": false,
+            "group_readable": false,
+            "in_git_repo": false,
+            "kdf": "md5",
+            "key_type": "rsa",
+            "mode": 384,
+            "owner_is_self": true,
+            "world_readable": false
+          },
+          "location": {
+            "kind": "file",
+            "path": "~/.ssh/legacy_pem"
+          },
+          "source": "ssh",
+          "type": "ssh_private_key"
+        },
+        "message": "SSH private key ~/.ssh/legacy_pem is encrypted with the legacy md5 key derivation (cheap to brute force)",
+        "remediation": "Re-encrypt it in the OpenSSH format with bcrypt: ssh-keygen -p -f ~/.ssh/legacy_pem",
+        "rule": "ssh-key-legacy-encryption",
+        "severity": "low",
+        "tags": {
+          "category": "key-strength"
+        },
+        "waived": null
+      }
+    ],
+    "rule_errors": [],
+    "run": {
+      "config_layers": [
+        "<built-in>"
+      ],
+      "cwd": "/home/dev",
+      "fail_on": "high",
+      "home": "/home/dev",
+      "uid": 1000
+    },
+    "schema_version": 1,
+    "skipped": [],
+    "summary": {
+      "by_rule": {
+        "ssh-key-group-readable": 1,
+        "ssh-key-legacy-encryption": 1,
+        "ssh-key-unencrypted": 4,
+        "ssh-key-weak": 1,
+        "ssh-key-world-readable": 1
+      },
+      "by_severity": {
+        "critical": 0,
+        "high": 5,
+        "info": 0,
+        "low": 1,
+        "medium": 2
+      },
+      "candidates": 25,
+      "expired_waivers": 0,
+      "facts": 12,
+      "failing": 5,
+      "failing_skipped": 0,
+      "findings": 8,
+      "rule_errors": 0,
+      "skipped": 0,
+      "waived": 0
+    },
+    "tool": {
+      "name": "lootr"
+    }
+  }
+}

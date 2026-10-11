@@ -1,0 +1,3 @@
+# DUMMY project for lootr tests
+.env.local
+node_modules/

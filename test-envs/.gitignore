@@ -1,0 +1,15 @@
+# The fixtures must be committed even where a global excludes file ignores
+# credential files (.env, keys, tool configs).
+!.env
+!.env.*
+!*.pem
+!*.key
+!.npmrc
+!.netrc
+!.pypirc
+!.git-credentials
+!.yarnrc.yml
+!credentials
+!credentials.toml
+!*.json
+!config

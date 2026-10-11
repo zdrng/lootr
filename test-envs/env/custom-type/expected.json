@@ -1,0 +1,130 @@
+{
+  "exit_code": 1,
+  "report": {
+    "schema_version": 1,
+    "tool": {
+      "name": "lootr"
+    },
+    "run": {
+      "fail_on": "high",
+      "config_layers": [
+        "<built-in>",
+        "/Users/zdrng/Projects/lootr/test-envs/common.toml",
+        "/Users/zdrng/Projects/lootr/test-envs/env/custom-type/lootr.toml"
+      ],
+      "cwd": "<root>/home",
+      "home": "<root>/home"
+    },
+    "custom_types": [
+      {
+        "name": "acme_api_key",
+        "pattern": "^acme_[A-Za-z0-9]{32}$"
+      }
+    ],
+    "summary": {
+      "candidates": 6,
+      "facts": 4,
+      "findings": 1,
+      "waived": 0,
+      "failing": 1,
+      "by_severity": {
+        "critical": 0,
+        "high": 1,
+        "medium": 0,
+        "low": 0,
+        "info": 0
+      },
+      "rule_errors": 0,
+      "expired_waivers": 0,
+      "skipped": 0,
+      "failing_skipped": 0,
+      "by_rule": {
+        "acme-key-anywhere": 1
+      }
+    },
+    "findings": [
+      {
+        "rule": "acme-key-anywhere",
+        "severity": "high",
+        "message": "ACME API key in $ACME_API_KEY (37 bytes, base64url, 180 bits)",
+        "remediation": "Rotate the key and remove ACME_API_KEY",
+        "tags": {},
+        "waived": null,
+        "fact": {
+          "type": "acme_api_key",
+          "location": {
+            "kind": "env",
+            "name": "ACME_API_KEY"
+          },
+          "source": "process-env",
+          "attrs": {
+            "charset": "base64url",
+            "entropy": 180,
+            "length": 37
+          }
+        }
+      }
+    ],
+    "rule_errors": [],
+    "expired_waivers": [],
+    "skipped": [],
+    "facts": [
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "ACME_API_KEY"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [
+            "acme_api_key"
+          ],
+          "entropy": 180,
+          "length": 37,
+          "name": "ACME_API_KEY"
+        }
+      },
+      {
+        "type": "acme_api_key",
+        "location": {
+          "kind": "env",
+          "name": "ACME_API_KEY"
+        },
+        "source": "process-env",
+        "attrs": {
+          "charset": "base64url",
+          "entropy": 180,
+          "length": 37
+        }
+      },
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "ACME_SHORT"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [],
+          "entropy": 24,
+          "length": 8,
+          "name": "ACME_SHORT"
+        }
+      },
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "HOME"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [],
+          "name": "HOME",
+          "length": 45
+        }
+      }
+    ]
+  }
+}

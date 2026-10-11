@@ -1,0 +1,8 @@
+version = 1
+
+# Company policy: deploy keys are also kept in ~/Documents.
+[[source]]
+id = "documents-keys"
+kind = "file"
+paths = ["~/Documents/**"]
+type = "ssh_private_key"

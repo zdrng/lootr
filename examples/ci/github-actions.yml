@@ -1,0 +1,71 @@
+# lootr in GitHub Actions: copy to .github/workflows/lootr.yml.
+#
+# The job runs lootr with the permissions and environment a build job has,
+# so the report shows what a malicious dependency or build step could reach
+# there: tokens in the environment, credentials in the checkout and the
+# runner's home, the workflow permissions of the repository, sockets.
+#
+# Pin every action by commit SHA. TODO before use:
+#   - OWNER/lootr@<sha>: the repository that publishes lootr releases and the
+#     commit of the release tag you use; `version` must be that release.
+name: lootr
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  lootr:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      security-events: write # SARIF upload to code scanning
+    steps:
+      # persist-credentials: false keeps the token out of .git/config (lootr
+      # would rightly report it there).
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: OWNER/lootr@0000000000000000000000000000000000000000 # TODO: commit SHA of tag vX.Y.Z
+        with:
+          version: X.Y.Z # TODO: the release of the pinned commit
+          # Company baseline first, then the project's own layer. Both files
+          # are in this repository, so a pull request can change them (and
+          # their waivers): fine for a project's own policy. Policy a PR
+          # must not weaken belongs outside the checkout (a pinned checkout
+          # of a policy repository, the runner image), with its rules locked,
+          # run by a workflow the PR cannot change (an organization ruleset's
+          # required workflow).
+          config: |
+            .github/lootr/baseline.toml
+            lootr.toml
+          fail-on: high
+          # Defaults: redact-paths, job summary and SARIF upload are on.
+        # The job's environment is what lootr inspects: pass secrets only to
+        # the steps that need them, and lootr will not see them here.
+
+  # Without the action: a lootr binary already on the runner (e.g. from your
+  # own verified cache). Markdown goes to the job summary, SARIF stays an
+  # artifact of this job.
+  lootr-cli:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: lootr
+        run: |
+          set -uo pipefail
+          code=0
+          lootr --config lootr.toml --redact-paths --format sarif --output lootr.sarif || code=$?
+          lootr --config lootr.toml --redact-paths --quiet --format markdown >>"$GITHUB_STEP_SUMMARY" || true
+          exit "$code"

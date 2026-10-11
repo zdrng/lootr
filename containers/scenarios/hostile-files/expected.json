@@ -1,0 +1,286 @@
+{
+  "exit_code": 1,
+  "report": {
+    "custom_types": [],
+    "expired_waivers": [],
+    "facts": [
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 29,
+          "length": 10,
+          "name": "HOME"
+        },
+        "location": {
+          "kind": "env",
+          "name": "HOME"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 203,
+          "length": 60,
+          "name": "PATH"
+        },
+        "location": {
+          "kind": "env",
+          "name": "PATH"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "classified_as": [],
+          "entropy": 61,
+          "length": 18,
+          "name": "PWD"
+        },
+        "location": {
+          "kind": "env",
+          "name": "PWD"
+        },
+        "source": "process-env",
+        "type": "env_var"
+      },
+      {
+        "attrs": {
+          "groups": [
+            "user"
+          ],
+          "in_container": true,
+          "is_root": false,
+          "uid": 1000
+        },
+        "location": {
+          "kind": "probe",
+          "name": "process"
+        },
+        "source": "process",
+        "type": "process"
+      },
+      {
+        "attrs": {
+          "foreign_processes": 0,
+          "names": [],
+          "readable_environ": 0
+        },
+        "location": {
+          "kind": "probe",
+          "name": "proc_environ"
+        },
+        "source": "proc-environ",
+        "type": "proc_environ"
+      },
+      {
+        "attrs": {
+          "checksum_valid": true,
+          "gitignored": false,
+          "group_readable": true,
+          "in_git_repo": false,
+          "kind": "classic",
+          "mode": 420,
+          "owner_is_self": true,
+          "prefix": "ghp_",
+          "world_readable": true
+        },
+        "location": {
+          "key_path": "L2",
+          "kind": "file",
+          "path": "~/project/app.py"
+        },
+        "source": "content",
+        "type": "github_token"
+      }
+    ],
+    "findings": [
+      {
+        "fact": {
+          "attrs": {
+            "checksum_valid": true,
+            "gitignored": false,
+            "group_readable": true,
+            "in_git_repo": false,
+            "kind": "classic",
+            "mode": 420,
+            "owner_is_self": true,
+            "prefix": "ghp_",
+            "world_readable": true
+          },
+          "location": {
+            "key_path": "L2",
+            "kind": "file",
+            "path": "~/project/app.py"
+          },
+          "source": "content",
+          "type": "github_token"
+        },
+        "message": "Classic GitHub personal access token visible in ~/project/app.py#L2",
+        "remediation": "Revoke it and use a fine-grained token with minimal permissions and an expiry",
+        "rule": "github-classic-token",
+        "severity": "high",
+        "tags": {
+          "category": "credential-exposure"
+        },
+        "waived": null
+      }
+    ],
+    "rule_errors": [],
+    "run": {
+      "config_layers": [
+        "<built-in>"
+      ],
+      "cwd": "/home/user/project",
+      "fail_on": "high",
+      "home": "/home/user",
+      "uid": 1000
+    },
+    "schema_version": 1,
+    "skipped": [
+      {
+        "detail": "not descended: deeper than scan.max-depth (16)",
+        "location": {
+          "kind": "file",
+          "path": "~/project/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d"
+        },
+        "reason": "depth_limit",
+        "source": "dotenv"
+      },
+      {
+        "detail": "not descended: deeper than scan.max-depth (16)",
+        "location": {
+          "kind": "file",
+          "path": "~/project/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d"
+        },
+        "reason": "depth_limit",
+        "source": "pem"
+      },
+      {
+        "detail": "not descended: deeper than scan.max-depth (16)",
+        "location": {
+          "kind": "file",
+          "path": "~/project/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d"
+        },
+        "reason": "depth_limit",
+        "source": "npmrc"
+      },
+      {
+        "detail": "not descended: deeper than scan.max-depth (16)",
+        "location": {
+          "kind": "file",
+          "path": "~/project/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d"
+        },
+        "reason": "depth_limit",
+        "source": "yarnrc"
+      },
+      {
+        "detail": "not descended: deeper than scan.max-depth (16)",
+        "location": {
+          "kind": "file",
+          "path": "~/project/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d"
+        },
+        "reason": "depth_limit",
+        "source": "content"
+      },
+      {
+        "detail": "yaml: YAML alias expansion too large",
+        "location": {
+          "kind": "file",
+          "path": "~/project/.yarnrc.yml"
+        },
+        "reason": "parse_error",
+        "source": "yarnrc"
+      },
+      {
+        "detail": "larger than max-file-size (2097152 bytes)",
+        "location": {
+          "kind": "file",
+          "path": "~/project/big.json"
+        },
+        "reason": "too_large",
+        "source": "content"
+      },
+      {
+        "detail": "is a symlink (not followed)",
+        "location": {
+          "kind": "file",
+          "path": "~/project/dev.json"
+        },
+        "reason": "symlink",
+        "source": "content"
+      },
+      {
+        "detail": "content: a NUL byte in the first 8 KiB: not scanned as text",
+        "location": {
+          "kind": "file",
+          "path": "~/project/garbage.json"
+        },
+        "reason": "binary",
+        "source": "content"
+      },
+      {
+        "detail": "is a symlink (not followed)",
+        "location": {
+          "kind": "file",
+          "path": "~/project/loop_a.json"
+        },
+        "reason": "symlink",
+        "source": "content"
+      },
+      {
+        "detail": "is a symlink (not followed)",
+        "location": {
+          "kind": "file",
+          "path": "~/project/loop_b.json"
+        },
+        "reason": "symlink",
+        "source": "content"
+      },
+      {
+        "detail": "not a regular file (fifo)",
+        "location": {
+          "kind": "file",
+          "path": "~/project/pipe.json"
+        },
+        "reason": "not_regular",
+        "source": "content"
+      },
+      {
+        "detail": "is a symlink (not followed)",
+        "location": {
+          "kind": "file",
+          "path": "~/project/shadow.yaml"
+        },
+        "reason": "symlink",
+        "source": "content"
+      }
+    ],
+    "summary": {
+      "by_rule": {
+        "github-classic-token": 1
+      },
+      "by_severity": {
+        "critical": 0,
+        "high": 1,
+        "info": 0,
+        "low": 0,
+        "medium": 0
+      },
+      "candidates": 22,
+      "expired_waivers": 0,
+      "facts": 6,
+      "failing": 1,
+      "failing_skipped": 0,
+      "findings": 1,
+      "rule_errors": 0,
+      "skipped": 13,
+      "waived": 0
+    },
+    "tool": {
+      "name": "lootr"
+    }
+  }
+}

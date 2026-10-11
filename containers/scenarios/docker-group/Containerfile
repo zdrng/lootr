@@ -1,0 +1,20 @@
+# docker-group: a user in the docker group, with a root-owned Docker socket
+# (root:docker 0660) and a containerd socket only root can use. The setup
+# hook creates the sockets at start (sockets cannot be stored in an image),
+# then lootr runs as `dev`. Expected: the group and the usable socket are
+# root-equivalent findings; the containerd socket is not accessible.
+FROM lootr-base
+RUN groupadd --system docker \
+    && useradd --create-home --uid 1000 --shell /bin/sh --groups docker dev
+RUN set -eu; hooks=/usr/local/lib/lootr-scenario; mkdir -p "$hooks"; \
+    printf '%s\n' '#!/bin/sh' 'set -eu' \
+      'sock() { perl -MIO::Socket::UNIX -e "IO::Socket::UNIX->new(Local => shift, Listen => 1) or die" "$1"; }' \
+      'sock /var/run/docker.sock' \
+      'chown root:docker /var/run/docker.sock; chmod 660 /var/run/docker.sock' \
+      'mkdir -p /run/containerd' \
+      'sock /run/containerd/containerd.sock' \
+      'chmod 660 /run/containerd/containerd.sock' \
+      > "$hooks/setup"; \
+    chmod 755 "$hooks/setup"
+ENV LOOTR_SCENARIO_USER=dev
+WORKDIR /home/dev

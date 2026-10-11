@@ -1,0 +1,17 @@
+name: Triage
+on:
+  pull_request_target:
+    types: [opened, synchronize]
+  issue_comment:
+    types: [created]
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - run: echo "labeling ${{ github.event.pull_request.number }}"
+  greet:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo hi

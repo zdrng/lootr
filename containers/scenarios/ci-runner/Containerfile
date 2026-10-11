@@ -1,0 +1,52 @@
+# ci-runner: a GitHub Actions-like runner user (in the sudo group) with the
+# usual tokens in the environment, generated at build time (DUMMY, carrying
+# the canary): GITHUB_TOKEN (App installation token), a classic PAT passed in
+# as a secret, the Actions runtime and OIDC request tokens (JWTs), an npm
+# token. The checkout has a harmless .env and a release workflow that runs on
+# pull_request_target with write permissions.
+#
+# Shared, writable runner directories (cache poisoning / binary planting):
+#   - /opt/runner-tools/bin: root-owned, world-writable (0777), first in
+#     $PATH -> writable-path-dir-world via the `path-dirs` source's
+#     `path-vars = ["PATH"]`;
+#   - ~/.cache/pip: owned by another user (`cachebot`), group `runner`,
+#     group-writable (2775) -> writable-cache-dir-group;
+#   - /opt/hostedtoolcache: owned by `cachebot`, world-writable (0777)
+#     -> writable-path-dir-world via `shared-caches`;
+#   - ~/.npm: the runner's own 0755 cache, and /bin, /sbin in $PATH (symlinks
+#     on Debian): no fact.
+FROM lootr-base
+RUN useradd --create-home --uid 1001 --shell /bin/sh --groups sudo runner
+RUN set -eu; useradd --system --uid 1002 --no-create-home cachebot; \
+    mkdir -p /opt/runner-tools/bin /opt/hostedtoolcache /home/runner/.cache/pip /home/runner/.npm; \
+    chmod 0777 /opt/runner-tools/bin; \
+    chown cachebot:cachebot /opt/hostedtoolcache; chmod 0777 /opt/hostedtoolcache; \
+    chown runner:runner /home/runner/.cache /home/runner/.npm; chmod 0755 /home/runner/.npm; \
+    chown cachebot:runner /home/runner/.cache/pip; chmod 2775 /home/runner/.cache/pip
+RUN set -eu; hooks=/usr/local/lib/lootr-scenario; mkdir -p "$hooks"; \
+    b64() { base64 -w0 | tr '+/' '-_' | tr -d '='; }; \
+    jwt() { printf '%s.%s.%s' "$(printf '%s' "$1" | b64)" "$(printf '%s' "$2" | b64)" "$3"; }; \
+    { \
+      echo "PATH=/opt/runner-tools/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"; \
+      echo "CI=true"; \
+      echo "GITHUB_ACTIONS=true"; \
+      echo "GITHUB_REPOSITORY=example/app"; \
+      echo "RUNNER_OS=Linux"; \
+      echo "GITHUB_TOKEN=$(gen-github-token ghs_ LOOTRCANARYrunnerApp0123456789)"; \
+      echo "GH_TOKEN=$(gen-github-token ghp_ LOOTRCANARYrunnerPat0123456789)"; \
+      echo "ACTIONS_RUNTIME_TOKEN=$(jwt '{"alg":"RS256","typ":"JWT"}' '{"iss":"https://runtime.actions.example","aud":"vso:runtime","sub":"LOOTRCANARY","iat":1700000000,"exp":1700021600}' LOOTRCANARY-Gk2Rq7Vx4Mn9Tz1Wb6Hc3Pd8)"; \
+      echo "ACTIONS_ID_TOKEN_REQUEST_TOKEN=$(jwt '{"alg":"RS256","typ":"JWT"}' '{"iss":"https://oidc.actions.example","aud":"api://ActionsTokenExchange","scp":["Actions.GenericRead","generate_id_token"],"sub":"LOOTRCANARY","iat":1700000000,"exp":4102444800}' LOOTRCANARY-Lc8Ws3Nf6Qy1Xk4Tv9Bm2Jr5)"; \
+      echo "NPM_TOKEN=LOOTRCANARY-Ux5Hd9Kq2Zm7Rw4Nc8Pv1Tb6"; \
+    } > "$hooks/env"; \
+    chmod 644 "$hooks/env"
+USER runner
+WORKDIR /home/runner/work/app/app
+RUN set -eu; mkdir .git; printf 'ref: refs/heads/main\n' > .git/HEAD; \
+    printf 'NODE_ENV=test\nLOG_LEVEL=debug\n' > .env; \
+    mkdir -p .github/workflows; \
+    printf '%s\n' 'name: CI' 'on: [push, pull_request]' 'permissions:' '  contents: read' \
+      'jobs:' '  test:' '    runs-on: ubuntu-latest' '    steps:' '      - run: make test' \
+      > .github/workflows/ci.yml; \
+    printf '%s\n' 'name: Preview' 'on:' '  pull_request_target:' 'jobs:' '  preview:' \
+      '    runs-on: ubuntu-latest' '    permissions:' '      contents: write' '      pull-requests: write' \
+      '    steps:' '      - run: ./preview.sh' > .github/workflows/preview.yml

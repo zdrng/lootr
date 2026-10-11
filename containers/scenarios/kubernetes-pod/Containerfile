@@ -1,0 +1,80 @@
+# kubernetes-pod: a CI job running in a Kubernetes pod (DUMMY, generated at
+# build time): the in-cluster environment variables, the projected service
+# account token and CA under /var/run/secrets/kubernetes.io/serviceaccount,
+# and a kubeconfig the job built from it (the bound token as a static
+# token), plus a legacy service account token that never expires and a
+# cluster without TLS verification. The token file itself is read by the
+# `kube_service_account` probe (through the projected-volume symlinks);
+# the kubeconfig carries the same token.
+FROM lootr-base
+RUN useradd --create-home --uid 1000 --shell /bin/sh app
+# /var/run is a tmpfs at build and run time (in a pod it is a volume), so
+# the token is generated into the image next to the hooks and the setup hook
+# (root, at start) puts it into place with the layout of a real projected
+# volume: the files live in a timestamped directory, `..data` links to it
+# and `token`, `namespace`, `ca.crt` are symlinks into `..data` (kubelet
+# swaps `..data` atomically on rotation). /var/run is a symlink to /run in
+# the Debian image, so both default paths reach the same token: reported
+# once.
+RUN set -eu; c=LOOTRCANARY; hooks=/usr/local/lib/lootr-scenario; sa=$hooks/serviceaccount; \
+    mkdir -p "$sa"; \
+    b64url() { base64 -w0 | tr '+/' '-_' | tr -d '='; }; \
+    jwt() { printf '%s.%s.%s' "$(printf '%s' "$1" | b64url)" "$(printf '%s' "$2" | b64url)" "$3"; }; \
+    jwt '{"alg":"RS256","kid":"dummy"}' \
+      '{"aud":["https://kubernetes.default.svc.cluster.local"],"iss":"https://kubernetes.default.svc.cluster.local","iat":1700000000,"nbf":1700000000,"exp":1700003607,"kubernetes.io":{"namespace":"ci","serviceaccount":{"name":"LOOTRCANARY"}},"sub":"system:serviceaccount:ci:LOOTRCANARY"}' \
+      "${c}-dummyBoundTokenSignature" > "$sa/token"; \
+    printf 'ci' > "$sa/namespace"; \
+    printf -- '-----BEGIN CERTIFICATE-----\nZHVtbXktY2E=\n-----END CERTIFICATE-----\n' > "$sa/ca.crt"; \
+    chmod 644 "$sa/token" "$sa/namespace" "$sa/ca.crt"; \
+    printf '%s\n' '#!/bin/sh' 'set -eu' \
+      'd=/var/run/secrets/kubernetes.io/serviceaccount' \
+      'ts=..2024_01_01_00_00_00.000000001' \
+      'mkdir -p "$d/$ts"' \
+      "cp $sa/token $sa/namespace $sa/ca.crt \"\$d/\$ts/\"" \
+      'ln -s "$ts" "$d/..data"' \
+      'for f in token namespace ca.crt; do ln -s "..data/$f" "$d/$f"; done' \
+      > "$hooks/setup"; \
+    chmod 755 "$hooks/setup"; \
+    { \
+      echo "KUBERNETES_SERVICE_HOST=10.96.0.1"; \
+      echo "KUBERNETES_SERVICE_PORT=443"; \
+      echo "KUBERNETES_SERVICE_PORT_HTTPS=443"; \
+      echo "KUBERNETES_PORT=tcp://10.96.0.1:443"; \
+      echo "CI=true"; \
+    } > "$hooks/env"; \
+    chmod 644 "$hooks/env"
+USER app
+WORKDIR /home/app
+RUN set -eu; umask 077; c=LOOTRCANARY; mkdir .kube; \
+    b64url() { base64 -w0 | tr '+/' '-_' | tr -d '='; }; \
+    jwt() { printf '%s.%s.%s' "$(printf '%s' "$1" | b64url)" "$(printf '%s' "$2" | b64url)" "$3"; }; \
+    legacy=$(jwt '{"alg":"RS256","kid":"dummy"}' '{"iss":"kubernetes/serviceaccount","kubernetes.io/serviceaccount/namespace":"ci","sub":"system:serviceaccount:ci:LOOTRCANARY"}' "${c}-dummyLegacyTokenSignature"); \
+    { \
+      echo "apiVersion: v1"; \
+      echo "kind: Config"; \
+      echo "current-context: in-cluster"; \
+      echo "clusters:"; \
+      echo "- name: in-cluster"; \
+      echo "  cluster:"; \
+      echo "    server: https://10.96.0.1:443"; \
+      echo "    certificate-authority: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt"; \
+      echo "- name: staging"; \
+      echo "  cluster:"; \
+      echo "    server: https://staging.k8s.example:6443"; \
+      echo "    insecure-skip-tls-verify: true"; \
+      echo "contexts:"; \
+      echo "- name: in-cluster"; \
+      echo "  context: {cluster: in-cluster, user: job, namespace: ci}"; \
+      echo "- name: staging"; \
+      echo "  context: {cluster: staging, user: deployer}"; \
+      echo "users:"; \
+      echo "- name: job"; \
+      echo "  user:"; \
+      echo "    token: $(cat /usr/local/lib/lootr-scenario/serviceaccount/token)"; \
+      echo "- name: deployer"; \
+      echo "  user:"; \
+      echo "    token: $legacy"; \
+    } > .kube/config
+# The entrypoint starts as root and drops to `app` (setpriv).
+USER root
+ENV LOOTR_SCENARIO_USER=app

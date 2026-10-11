@@ -1,0 +1,67 @@
+{
+  "exit_code": 0,
+  "report": {
+    "schema_version": 1,
+    "tool": {
+      "name": "lootr"
+    },
+    "run": {
+      "fail_on": "high",
+      "config_layers": [
+        "<built-in>",
+        "/Users/zdrng/Projects/lootr/test-envs/common.toml"
+      ],
+      "cwd": "<root>/home",
+      "home": "<root>/home"
+    },
+    "custom_types": [],
+    "summary": {
+      "candidates": 5,
+      "facts": 1,
+      "findings": 0,
+      "waived": 0,
+      "failing": 0,
+      "by_severity": {
+        "critical": 0,
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "info": 0
+      },
+      "rule_errors": 0,
+      "expired_waivers": 0,
+      "skipped": 1,
+      "failing_skipped": 0,
+      "by_rule": {}
+    },
+    "findings": [],
+    "rule_errors": [],
+    "expired_waivers": [],
+    "skipped": [
+      {
+        "source": "kubeconfig",
+        "location": {
+          "kind": "file",
+          "path": "~/.kube/config"
+        },
+        "reason": "parse_error",
+        "detail": "kubeconfig: YAML alias expansion too large"
+      }
+    ],
+    "facts": [
+      {
+        "type": "env_var",
+        "location": {
+          "kind": "env",
+          "name": "HOME"
+        },
+        "source": "process-env",
+        "attrs": {
+          "classified_as": [],
+          "name": "HOME",
+          "length": 45
+        }
+      }
+    ]
+  }
+}
