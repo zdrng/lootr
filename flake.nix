@@ -85,6 +85,19 @@
         };
       });
 
+      packages = forAllSystems (pkgs: {
+        default = pkgs.rustPlatform.buildRustPackage {
+          pname = "lootr";
+          version = (pkgs.lib.importTOML ./Cargo.toml).package.version;
+          src = self;
+          cargoLock.lockFile = ./Cargo.lock;
+          # The fixture snapshots contain the absolute path of the developer
+          # checkout, which differs inside the Nix sandbox.
+          checkFlags = [ "--skip=every_test_environment_matches_its_expected_report" ];
+          meta.mainProgram = "lootr";
+        };
+      });
+
       formatter = forAllSystems (pkgs: pkgs.nixfmt-rfc-style);
     };
 }
