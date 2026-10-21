@@ -1,3 +1,8 @@
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/banner-dark.gif">
+  <img alt="lootr" src="docs/banner.gif">
+</picture>
+
 # lootr
 
 lootr shows what a process can reach with the rights of the current user when it runs without a
