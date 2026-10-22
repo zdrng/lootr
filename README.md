@@ -84,7 +84,7 @@ reproducible: at the tag, `LOOTR_SOURCE_DATE_EPOCH=$(git log -1 --format=%ct) ni
 From source, the toolchain comes from the Nix flake:
 
 ```sh
-nix develop                  # shell with cargo, clippy, cargo-deny, cargo-audit, cargo-fuzz, cargo-vet
+nix develop                  # shell with cargo, clippy, cargo-deny, cargo-audit, cargo-geiger, cargo-fuzz, cargo-vet
 cargo build --release --locked  # ./target/release/lootr
 ```
 
@@ -444,6 +444,7 @@ nix develop -c cargo test --locked
 nix develop -c cargo deny check
 nix develop -c cargo audit
 nix develop -c cargo vet --locked  # dependency review state (docs/dependencies.md)
+nix develop -c scripts/geiger.sh   # unsafe code in lootr and its dependencies (report only)
 containers/run.sh                # container scenarios (podman or docker)
 nix develop -c cargo fuzz run -s none ssh_key -- -max_total_time=60   # see the target list below
 ```
@@ -485,7 +486,8 @@ Release builds: `nix develop .#release -c scripts/release.sh reproduce <target> 
 release archive twice (two source copies, two target directories) and fails unless both are
 identical; targets `x86_64-unknown-linux-musl` and `aarch64-unknown-linux-musl` build on any host
 (linked by `rust-lld`, no C toolchain), `universal-apple-darwin` needs macOS with Xcode. CI checks
-the Linux builds on every push (`ci.yml`), fuzzes every target for 20 minutes nightly
+the Linux builds on every push (`ci.yml`, which also puts the `cargo geiger` report in the job
+summary), fuzzes every target for 20 minutes nightly
 (`fuzz.yml`); tags run `release.yml`.
 
 The code is layered (see `src/lib.rs`): `domain` (model, types, no I/O) ← `repository` (all data

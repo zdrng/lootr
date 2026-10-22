@@ -42,6 +42,20 @@ jobs:
             nix develop -c cargo fuzz run -s none "$t" -- -max_total_time=30
           done
 
+  # Unsafe code in lootr and its dependencies, as a report in the job summary.
+  geiger:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
+      - name: cargo geiger
+        run: |
+          nix develop -c scripts/geiger.sh --output-format GitHubMarkdown >geiger.md
+          { echo '```'; cat geiger.md; echo '```'; } >>"$GITHUB_STEP_SUMMARY"
+
   # Release builds are reproducible: both static musl builds twice, from two
   # copies of the source in different directories, must be bit for bit equal
   # (the release workflow does the same for every target incl. macOS).

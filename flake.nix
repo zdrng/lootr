@@ -56,6 +56,7 @@
             pkgs.rust-analyzer
             pkgs.cargo-deny
             pkgs.cargo-audit
+            pkgs.cargo-geiger
             pkgs.cargo-fuzz
             pkgs.cargo-vet
             pkgs.git
