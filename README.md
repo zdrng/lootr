@@ -27,7 +27,7 @@ prints, stores or decrypts a secret value.
 > capabilities, the in-cluster Kubernetes service account token, and content scanning for embedded
 > secrets. The release workflow (static,
 > reproducible, attested binaries) is written but has not run yet, so the GitHub Action has
-> nothing to download until the first tag. See [PLAN.md](PLAN.md).
+> nothing to download until the first release. See [PLAN.md](PLAN.md).
 
 ## Documentation
 
@@ -66,20 +66,18 @@ prints, stores or decrypts a secret value.
 
 ## Install and run
 
-Releases (from the first tag on) are static Linux binaries (`x86_64`/`aarch64`, musl) and a
-macOS universal binary, each with a Sigstore bundle holding its SLSA build provenance, plus
-`SHA256SUMS` and a CycloneDX SBOM. Verify before unpacking:
+Releases are static Linux binaries (`x86_64`/`aarch64`, musl) and a macOS universal binary,
+plus `SHA256SUMS`, a CycloneDX SBOM and a Sigstore bundle with the SLSA build provenance of all
+of them. Verify before unpacking:
 
 ```sh
-gh attestation verify lootr-<v>-<target>.tar.gz --bundle lootr-<v>-<target>.tar.gz.sigstore.json \
-  --repo <owner>/lootr --signer-workflow <owner>/lootr/.github/workflows/release.yml \
-  --source-ref refs/tags/v<v> --deny-self-hosted-runners
+gh attestation verify lootr-<v>-<target>.tar.gz --repo <owner>/lootr
 ```
 
-(or `cosign verify-blob-attestation`, see "Release artifacts" in [PLAN.md](PLAN.md)). Releases are
-reproducible: at the tag, `LOOTR_SOURCE_DATE_EPOCH=$(git log -1 --format=%ct) nix develop
-.#release -c scripts/release.sh build <target> dist` rebuilds an archive that must match
-`SHA256SUMS` (the macOS one with the same Xcode version as the release runner).
+(offline with `--bundle lootr-<v>.sigstore.json`, or with `cosign verify-blob-attestation`, see
+"Release artifacts" in [PLAN.md](PLAN.md)). Releases are reproducible: at the tag,
+`nix develop .#release -c scripts/release.sh build <target> dist` rebuilds an archive that must
+match `SHA256SUMS` (the macOS one with the same Xcode version as the release runner).
 
 From source, the toolchain comes from the Nix flake:
 
@@ -438,6 +436,7 @@ See [SECURITY.md](SECURITY.md) for reporting vulnerabilities.
 ## Development
 
 ```sh
+nix develop -c scripts/check.sh   # fmt, clippy, tests, deny, audit, vet: before every commit
 nix develop -c cargo fmt --check
 nix develop -c cargo clippy --locked --all-targets -- -D warnings
 nix develop -c cargo test --locked
@@ -485,10 +484,13 @@ aws_access_key_id), `content` (the content scanner's line tokenizer).
 Release builds: `nix develop .#release -c scripts/release.sh reproduce <target> dist` builds a
 release archive twice (two source copies, two target directories) and fails unless both are
 identical; targets `x86_64-unknown-linux-musl` and `aarch64-unknown-linux-musl` build on any host
-(linked by `rust-lld`, no C toolchain), `universal-apple-darwin` needs macOS with Xcode. CI checks
-the Linux builds on every push (`ci.yml`, which also puts the `cargo geiger` report in the job
-summary), fuzzes every target for 20 minutes nightly
-(`fuzz.yml`); tags run `release.yml`.
+(compiled and linked by zig via `cargo-zigbuild`), `universal-apple-darwin` needs macOS with
+Xcode. CI checks the Linux builds on every push (`ci.yml`, which also puts the `cargo geiger`
+report in the job summary) and fuzzes every target for 20 minutes nightly (`fuzz.yml`).
+
+Releasing: raise `version` in `Cargo.toml` on `main`, then Actions → Release → Run workflow
+(`release.yml`). It runs `scripts/check.sh`, builds every target twice, attests the assets and
+creates the release and its tag `v<version>`; `dry-run` builds and checks without publishing.
 
 The code is layered (see `src/lib.rs`): `domain` (model, types, no I/O) ← `repository` (all data
 access, real and fake) ← `service` (the pipeline) ← `cli` / `report`; `os` holds the hardening and

@@ -72,7 +72,7 @@ jobs:
             -print_final_stats=1
       - name: Upload crash inputs
         if: failure()
-        uses: actions/upload-artifact@0000000000000000000000000000000000000000 # TODO(pin): actions/upload-artifact v4 or later
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: fuzz-artifacts-${{ matrix.target }}
           path: fuzz/artifacts/${{ matrix.target }}/

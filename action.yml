@@ -21,8 +21,8 @@
 #
 # Release artifacts it expects (see "Release artifacts" in PLAN.md):
 #   https://github.com/<repository>/releases/download/v<version>/
-#     lootr-<version>-<target>.tar.gz               (contains lootr-<version>-<target>/lootr)
-#     lootr-<version>-<target>.tar.gz.sigstore.json (SLSA provenance, Sigstore bundle)
+#     lootr-<version>-<target>.tar.gz   (contains lootr-<version>-<target>/lootr)
+#     lootr-<version>.sigstore.json     (SLSA provenance of all assets, Sigstore bundle)
 #   <target>: x86_64-unknown-linux-musl, aarch64-unknown-linux-musl,
 #             universal-apple-darwin
 
@@ -127,27 +127,30 @@ runs:
         rm -rf "$dir"
         mkdir -p "$dir"
         base="https://github.com/$LOOTR_REPOSITORY/releases/download/v$LOOTR_VERSION"
-        for file in "$archive" "$archive.sigstore.json"; do
+        bundle="lootr-$LOOTR_VERSION.sigstore.json"
+        for file in "$archive" "$bundle"; do
           curl --proto '=https' --tlsv1.2 -fsSL --retry 3 -o "$dir/$file" "$base/$file"
         done
-        # The bundle is the SLSA build provenance of the archive, signed
-        # keylessly (Sigstore) by the release workflow of the tag on a
-        # GitHub-hosted runner. Nothing is extracted before it verified.
+        # The bundle is the SLSA build provenance of the release's assets,
+        # signed keylessly (Sigstore) by the release workflow on main on a
+        # GitHub-hosted runner. Nothing is extracted before it verified; the
+        # version check below makes sure it is the requested release and not
+        # an older, also attested one.
         workflow="$LOOTR_REPOSITORY/.github/workflows/release.yml"
         if command -v gh >/dev/null 2>&1; then
           gh attestation verify "$dir/$archive" \
-            --bundle "$dir/$archive.sigstore.json" \
+            --bundle "$dir/$bundle" \
             --repo "$LOOTR_REPOSITORY" \
             --signer-workflow "$workflow" \
-            --source-ref "refs/tags/v$LOOTR_VERSION" \
+            --source-ref refs/heads/main \
             --deny-self-hosted-runners
         elif command -v cosign >/dev/null 2>&1; then
           cosign verify-blob-attestation \
-            --bundle "$dir/$archive.sigstore.json" \
+            --bundle "$dir/$bundle" \
             --new-bundle-format \
             --type slsaprovenance1 \
             --certificate-oidc-issuer https://token.actions.githubusercontent.com \
-            --certificate-identity "https://github.com/$workflow@refs/tags/v$LOOTR_VERSION" \
+            --certificate-identity "https://github.com/$workflow@refs/heads/main" \
             "$dir/$archive"
         else
           echo "::error::lootr: neither gh nor cosign is installed; cannot verify the release"
@@ -159,7 +162,12 @@ runs:
           echo "::error::lootr: $archive does not contain $name/lootr"
           exit 2
         fi
-        "$bin" --version
+        got=$("$bin" --version)
+        if [ "$got" != "lootr $LOOTR_VERSION" ]; then
+          echo "::error::lootr: $archive is '$got', not lootr $LOOTR_VERSION"
+          exit 2
+        fi
+        echo "$got"
         echo "bin=$bin" >>"$GITHUB_OUTPUT"
 
     - name: Run lootr

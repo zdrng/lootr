@@ -82,14 +82,10 @@ const ZERO_SHA: &str = "@0000000000000000000000000000000000000000";
 
 /// Third-party actions still waiting for a verified commit SHA. They make
 /// the workflows that use them fail on GitHub until they are filled in; this
-/// list must shrink to empty before the first release tag.
+/// list must stay empty for a release.
 #[test]
 fn pin_placeholders_are_listed() {
-    let expected = [
-        "actions/attest-build-provenance",
-        "actions/download-artifact",
-        "actions/upload-artifact",
-    ];
+    let expected: [&str; 0] = [];
     let mut found = std::collections::BTreeSet::new();
     for file in ci_files() {
         let text = std::fs::read_to_string(&file).unwrap();
@@ -100,10 +96,7 @@ fn pin_placeholders_are_listed() {
         }
     }
     let found: Vec<_> = found.into_iter().collect();
-    assert_eq!(
-        found, expected,
-        "update this list and the TODO(pin) note in PLAN.md (M7)"
-    );
+    assert_eq!(found, expected, "update this list");
 }
 
 #[test]
@@ -138,20 +131,25 @@ fn action_scripts_take_inputs_from_env_only() {
 }
 
 /// The release contract ("Release artifacts" in PLAN.md): the targets the
-/// release workflow builds are exactly the ones action.yml downloads, and the
-/// workflow file is the signer action.yml verifies.
+/// release script builds are exactly the ones action.yml downloads, and
+/// action.yml verifies the signer, ref and bundle the release workflow
+/// produces.
 #[test]
 fn release_workflow_matches_action() {
     let action = std::fs::read_to_string(root().join("action.yml")).unwrap();
     let release = std::fs::read_to_string(root().join(".github/workflows/release.yml")).unwrap();
+    let script = std::fs::read_to_string(root().join("scripts/release.sh")).unwrap();
     let mut from_action: Vec<&str> = action
         .lines()
         .filter_map(|l| l.split("target=").nth(1))
         .map(|t| t.split_whitespace().next().unwrap_or(""))
         .collect();
-    let mut from_release: Vec<&str> = release
+    let mut from_release: Vec<&str> = script
         .lines()
-        .filter_map(|l| l.trim().strip_prefix("- target: "))
+        .find_map(|l| l.strip_prefix("targets=\""))
+        .and_then(|l| l.strip_suffix('"'))
+        .unwrap()
+        .split_whitespace()
         .collect();
     from_action.sort();
     from_action.dedup();
@@ -164,14 +162,15 @@ fn release_workflow_matches_action() {
     assert_eq!(from_action, expected);
     assert_eq!(from_release, expected);
     assert!(action.contains(r#"workflow="$LOOTR_REPOSITORY/.github/workflows/release.yml""#));
-    for asset in [
-        "lootr-$VERSION-x86_64-unknown-linux-musl.tar.gz.sigstore.json",
-        "lootr-$VERSION.cdx.json.sigstore.json",
-        "SHA256SUMS",
-    ] {
-        assert!(
-            release.contains(asset),
-            "release.yml does not produce {asset}"
-        );
-    }
+    assert!(release.contains(r#"--signer-workflow "$REPO/.github/workflows/release.yml""#));
+    // Releases are built from main; the tag is created with the release.
+    assert!(action.contains("--source-ref refs/heads/main"));
+    assert!(release.contains("--source-ref refs/heads/main"));
+    assert!(action.contains(r#"workflow@refs/heads/main""#));
+    // Asset names: action.yml and the release script agree.
+    assert!(action.contains(r#"name="lootr-$LOOTR_VERSION-$target""#));
+    assert!(action.contains(r#"bundle="lootr-$LOOTR_VERSION.sigstore.json""#));
+    assert!(script.contains(r#"echo "$name-$version-$1.tar.gz""#));
+    assert!(release.contains(r#"bundle="$NAME-$VERSION.sigstore.json""#));
+    assert!(release.contains("SHA256SUMS"));
 }
