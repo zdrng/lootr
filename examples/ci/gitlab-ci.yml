@@ -36,16 +36,19 @@ lootr:
       chmod +x "$tools/cosign"
       name="lootr-$LOOTR_VERSION-x86_64-unknown-linux-musl"
       base="https://github.com/$LOOTR_REPOSITORY/releases/download/v$LOOTR_VERSION"
-      for f in "$name.tar.gz" "$name.tar.gz.sigstore.json"; do
+      bundle="lootr-$LOOTR_VERSION.sigstore.json"
+      for f in "$name.tar.gz" "$bundle"; do
         curl --proto '=https' --tlsv1.2 -fsSL -o "$tools/$f" "$base/$f"
       done
       "$tools/cosign" verify-blob-attestation \
-        --bundle "$tools/$name.tar.gz.sigstore.json" --new-bundle-format \
+        --bundle "$tools/$bundle" --new-bundle-format \
         --type slsaprovenance1 \
         --certificate-oidc-issuer https://token.actions.githubusercontent.com \
-        --certificate-identity "https://github.com/$LOOTR_REPOSITORY/.github/workflows/release.yml@refs/tags/v$LOOTR_VERSION" \
+        --certificate-identity "https://github.com/$LOOTR_REPOSITORY/.github/workflows/release.yml@refs/heads/main" \
         "$tools/$name.tar.gz"
       tar -xzf "$tools/$name.tar.gz" -C "$tools"
+      # The attestation covers every release; this makes sure it is the requested one.
+      test "$("$tools/$name/lootr" --version)" = "lootr $LOOTR_VERSION"
       install -m 0755 "$tools/$name/lootr" /usr/local/bin/lootr
       rm -rf "$tools"
   script:

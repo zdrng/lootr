@@ -67,22 +67,21 @@
         };
 
         # Release builds (scripts/release.sh, .github/workflows/release.yml).
-        # No C compiler from Nix: Linux musl binaries are linked by the
-        # toolchain's own rust-lld against its bundled musl (static, no
-        # host libraries); macOS binaries are linked by the system's
-        # /usr/bin/cc (Xcode), so they only reference /usr/lib.
+        # Linux musl binaries are compiled and linked by zig (cargo-zigbuild):
+        # static, for both architectures, from any host. macOS binaries are
+        # linked by the system's /usr/bin/cc (Xcode), so they only reference
+        # system libraries.
         release = pkgs.mkShellNoCC {
           packages = [
             (pkgs.rust-bin.stable.${releaseRust}.minimal.override { targets = releaseTargets; })
+            pkgs.cargo-zigbuild
+            pkgs.zig
             pkgs.cargo-cyclonedx
             pkgs.coreutils
             pkgs.gnutar
             pkgs.gzip
             pkgs.git
           ];
-
-          CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_LINKER = "rust-lld";
-          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_LINKER = "rust-lld";
         };
       });
 

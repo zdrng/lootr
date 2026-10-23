@@ -1,165 +1,170 @@
 name: Release
 
-# Builds, attests and publishes the release of a tag vX.Y.Z. The assets are
-# a contract with action.yml and examples/ci/ ("Release artifacts" in
-# PLAN.md): the action verifies that the provenance was signed by THIS file
-# (.github/workflows/release.yml) at refs/tags/vX.Y.Z on a GitHub-hosted
-# runner. Renaming or moving this file breaks every installed action.
+# Manual release: Actions → Release → Run workflow, on main. Releases the
+# version in Cargo.toml from the current commit of main as v<version>:
 #
-# Every build runs twice from two copies of the source and fails unless the
-# archives are bit for bit identical (scripts/release.sh reproduce). Anyone
-# can rebuild a release with the same command and compare with SHA256SUMS.
+#   prepare  checks (scripts/check.sh), SBOM, build matrix; fails if the tag
+#            already exists
+#   build    every target twice from two copies of the source; fails unless
+#            both results are bit for bit identical; then a smoke test
+#   publish  SHA256SUMS, one SLSA build provenance attestation (Sigstore) for
+#            all assets, then the release. The tag is created together with
+#            the release, so a failed run leaves no tag behind.
 #
-# Third-party actions are pinned by commit SHA. TODO(pin) marks actions whose
-# SHA could not be verified when this file was written: replace the zeros
-# with the commit SHA of a reviewed release before pushing the first tag.
+# "dry-run" builds and checks everything but publishes nothing; it also runs
+# from other branches. Anyone can rebuild an asset with scripts/release.sh
+# reproduce and compare it with SHA256SUMS, and verify where it came from:
+#
+#   gh attestation verify <asset> --repo <owner>/<repo>
+#
+# This file is the same in mendr, pinr and lootr. What differs (name,
+# targets, checks) lives in scripts/release.sh and scripts/check.sh.
 on:
-  push:
-    tags: ["v[0-9]+.[0-9]+.[0-9]+*"]
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: Build and check everything, publish nothing
+        type: boolean
+        default: false
 
 permissions: {}
 
 concurrency:
-  group: release-${{ github.ref }}
+  group: release
   cancel-in-progress: false
 
 jobs:
-  check:
+  prepare:
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     permissions:
       contents: read
     outputs:
-      version: ${{ steps.version.outputs.version }}
-      epoch: ${{ steps.version.outputs.epoch }}
+      name: ${{ steps.meta.outputs.name }}
+      version: ${{ steps.meta.outputs.version }}
+      sha: ${{ steps.meta.outputs.sha }}
+      matrix: ${{ steps.meta.outputs.matrix }}
     steps:
+      - name: Releases only from main
+        if: ${{ !inputs.dry-run && github.ref != 'refs/heads/main' }}
+        run: |
+          echo "::error::start the release from main (other branches: dry-run only)"
+          exit 1
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
-      - name: Tag matches Cargo.toml
-        id: version
+      - name: Version and targets
+        id: meta
         env:
-          TAG: ${{ github.ref_name }}
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
-          version=$(nix develop .#release -c scripts/release.sh version)
-          if [ "v$version" != "$TAG" ]; then
-            echo "::error::tag $TAG does not match the Cargo.toml version $version"
+          name=$(scripts/release.sh name)
+          version=$(scripts/release.sh version)
+          if ! [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$ ]]; then
+            echo "::error::Cargo.toml version $version is not a release version"
             exit 1
           fi
-          echo "version=$version" >>"$GITHUB_OUTPUT"
-          echo "epoch=$(git log -1 --format=%ct)" >>"$GITHUB_OUTPUT"
+          if gh api "repos/$REPO/git/ref/tags/v$version" >/dev/null 2>&1; then
+            echo "::error::v$version already exists: raise the version in Cargo.toml first"
+            exit 1
+          fi
+          {
+            echo "name=$name"
+            echo "version=$version"
+            echo "sha=$(git rev-parse HEAD)"
+            echo "matrix=$(scripts/release.sh matrix)"
+          } >>"$GITHUB_OUTPUT"
+          echo "Releasing $name $version from $(git rev-parse HEAD)"
+      - uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
       - name: Checks
-        run: |
-          nix develop -c cargo fmt --check
-          nix develop -c cargo clippy --locked --all-targets -- -D warnings
-          nix develop -c cargo test --locked
-          nix develop -c cargo deny check
-          nix develop -c cargo vet --locked
+        run: nix develop -c scripts/check.sh
+      - name: SBOM
+        run: nix develop .#release -c scripts/release.sh sbom dist
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: sbom
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 7
 
   build:
-    needs: check
+    needs: prepare
     strategy:
       fail-fast: true
       matrix:
-        include:
-          # Both Linux targets link with rust-lld against the toolchain's
-          # bundled musl: no cross C toolchain needed.
-          - target: x86_64-unknown-linux-musl
-            runner: ubuntu-24.04
-          - target: aarch64-unknown-linux-musl
-            runner: ubuntu-24.04
-          - target: universal-apple-darwin
-            runner: macos-15
+        include: ${{ fromJSON(needs.prepare.outputs.matrix) }}
+    name: build (${{ matrix.target }})
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 60
     permissions:
       contents: read
+    defaults:
+      run:
+        shell: bash
     steps:
+      # Keep LF line endings: the scripts run in Git Bash.
+      - name: Git line endings
+        if: runner.os == 'Windows'
+        run: git config --global core.autocrlf false
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ needs.prepare.outputs.sha }}
           persist-credentials: false
       - uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
+        if: runner.os != 'Windows'
+      # Nix does not run on Windows: the same Rust version from rustup.
+      - name: Rust (Windows)
+        if: runner.os == 'Windows'
+        env:
+          TARGET: ${{ matrix.target }}
+        run: |
+          set -euo pipefail
+          version=$(scripts/release.sh rust-version)
+          rustup toolchain install "$version" --profile minimal --target "$TARGET"
+          rustup default "$version"
+          rustc --version
       - name: Build twice and compare
         env:
           TARGET: ${{ matrix.target }}
-          LOOTR_SOURCE_DATE_EPOCH: ${{ needs.check.outputs.epoch }}
-        run: nix develop .#release -c scripts/release.sh reproduce "$TARGET" dist
+        run: |
+          set -euo pipefail
+          if [ "$RUNNER_OS" = Windows ]; then
+            scripts/release.sh reproduce "$TARGET" dist
+          else
+            nix develop .#release -c scripts/release.sh reproduce "$TARGET" dist
+          fi
       - name: Smoke test
         env:
           TARGET: ${{ matrix.target }}
-          VERSION: ${{ needs.check.outputs.version }}
-        run: |
-          set -euo pipefail
-          name="lootr-$VERSION-$TARGET"
-          tar -xzf "dist/$name.tar.gz" -C "$RUNNER_TEMP"
-          bin="$RUNNER_TEMP/$name/lootr"
-          case "$TARGET" in
-            x86_64-unknown-linux-musl)
-              file "$bin" | grep -q 'static'
-              ;;
-            aarch64-unknown-linux-musl)
-              file "$bin" | grep -q 'ARM aarch64.*statically linked'
-              exit 0 # not runnable on this runner
-              ;;
-            universal-apple-darwin)
-              lipo -info "$bin" | grep -q 'x86_64 arm64'
-              # Only system libraries (/usr/lib), nothing from Nix or Homebrew.
-              if otool -L "$bin" | grep -E '^[[:space:]]' | grep -vE '^[[:space:]]+/usr/lib/'; then
-                echo "::error::$TARGET links libraries outside /usr/lib"
-                exit 1
-              fi
-              ;;
-          esac
-          # Empty environment, empty home: no scan of the runner.
-          home=$(mktemp -d)
-          env -i HOME="$home" "$bin" --version | grep -qx "lootr $VERSION"
-          env -i HOME="$home" "$bin" policy check >/dev/null
-      - uses: actions/upload-artifact@0000000000000000000000000000000000000000 # TODO(pin): actions/upload-artifact v4 or later
+        run: scripts/release.sh smoke "$TARGET" dist
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: archive-${{ matrix.target }}
-          path: dist/*.tar.gz
-          if-no-files-found: error
-          retention-days: 7
-
-  sbom:
-    needs: check
-    runs-on: ubuntu-24.04
-    timeout-minutes: 15
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
-      - name: CycloneDX SBOM
-        env:
-          LOOTR_SOURCE_DATE_EPOCH: ${{ needs.check.outputs.epoch }}
-        run: nix develop .#release -c scripts/release.sh sbom dist
-      - uses: actions/upload-artifact@0000000000000000000000000000000000000000 # TODO(pin): actions/upload-artifact v4 or later
-        with:
-          name: sbom
-          path: dist/*.cdx.json
+          name: build-${{ matrix.target }}
+          path: dist/*
           if-no-files-found: error
           retention-days: 7
 
   # The only job with write access. It runs no build code: it attests the
-  # downloaded files, verifies the attestations exactly like action.yml and
-  # creates the release.
+  # downloaded assets, verifies the attestation and creates the release.
   publish:
-    needs: [check, build, sbom]
+    needs: [prepare, build]
+    if: ${{ !inputs.dry-run }}
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:
-      contents: write # create the release
+      contents: write # create the release and its tag
       id-token: write # Sigstore keyless signing (GitHub OIDC)
-      attestations: write # store the attestations in the repository
+      attestations: write # store the attestation in the repository
     env:
-      VERSION: ${{ needs.check.outputs.version }}
+      NAME: ${{ needs.prepare.outputs.name }}
+      VERSION: ${{ needs.prepare.outputs.version }}
+      SHA: ${{ needs.prepare.outputs.sha }}
+      REPO: ${{ github.repository }}
+      GH_TOKEN: ${{ github.token }}
     steps:
-      - uses: actions/download-artifact@0000000000000000000000000000000000000000 # TODO(pin): actions/download-artifact v4 or later
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           path: dist
           merge-multiple: true
@@ -167,102 +172,33 @@ jobs:
         working-directory: dist
         run: |
           set -euo pipefail
-          ls -l
-          archives=(lootr-*.tar.gz)
-          test "${#archives[@]}" -eq 3
-          sha256sum -- "${archives[@]}" >SHA256SUMS
+          sha256sum -- * >SHA256SUMS
           cat SHA256SUMS
-      - name: Attest x86_64-unknown-linux-musl
-        id: attest-x86_64-linux
-        uses: actions/attest-build-provenance@0000000000000000000000000000000000000000 # TODO(pin): actions/attest-build-provenance v2 or later (Sigstore bundle v0.3)
+      - name: Attest
+        id: attest
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
         with:
-          subject-path: dist/lootr-${{ needs.check.outputs.version }}-x86_64-unknown-linux-musl.tar.gz
-      - name: Attest aarch64-unknown-linux-musl
-        id: attest-aarch64-linux
-        uses: actions/attest-build-provenance@0000000000000000000000000000000000000000 # TODO(pin): actions/attest-build-provenance v2 or later (Sigstore bundle v0.3)
-        with:
-          subject-path: dist/lootr-${{ needs.check.outputs.version }}-aarch64-unknown-linux-musl.tar.gz
-      - name: Attest universal-apple-darwin
-        id: attest-darwin
-        uses: actions/attest-build-provenance@0000000000000000000000000000000000000000 # TODO(pin): actions/attest-build-provenance v2 or later (Sigstore bundle v0.3)
-        with:
-          subject-path: dist/lootr-${{ needs.check.outputs.version }}-universal-apple-darwin.tar.gz
-      - name: Attest SBOM
-        id: attest-sbom
-        uses: actions/attest-build-provenance@0000000000000000000000000000000000000000 # TODO(pin): actions/attest-build-provenance v2 or later (Sigstore bundle v0.3)
-        with:
-          subject-path: dist/lootr-${{ needs.check.outputs.version }}.cdx.json
-      - name: Bundles and verification
-        working-directory: dist
+          subject-path: dist/*
+      - name: Verify the attestation
         env:
-          GH_TOKEN: ${{ github.token }}
-          REPO: ${{ github.repository }}
-          B_X86_64_LINUX: ${{ steps.attest-x86_64-linux.outputs.bundle-path }}
-          B_AARCH64_LINUX: ${{ steps.attest-aarch64-linux.outputs.bundle-path }}
-          B_DARWIN: ${{ steps.attest-darwin.outputs.bundle-path }}
-          B_SBOM: ${{ steps.attest-sbom.outputs.bundle-path }}
+          BUNDLE: ${{ steps.attest.outputs.bundle-path }}
         run: |
           set -euo pipefail
-          cp "$B_X86_64_LINUX" "lootr-$VERSION-x86_64-unknown-linux-musl.tar.gz.sigstore.json"
-          cp "$B_AARCH64_LINUX" "lootr-$VERSION-aarch64-unknown-linux-musl.tar.gz.sigstore.json"
-          cp "$B_DARWIN" "lootr-$VERSION-universal-apple-darwin.tar.gz.sigstore.json"
-          cp "$B_SBOM" "lootr-$VERSION.cdx.json.sigstore.json"
-          # The same check action.yml runs before it unpacks anything.
-          for f in lootr-*.tar.gz "lootr-$VERSION.cdx.json"; do
-            gh attestation verify "$f" --bundle "$f.sigstore.json" \
+          bundle="$NAME-$VERSION.sigstore.json"
+          for f in dist/*; do
+            gh attestation verify "$f" --bundle "$BUNDLE" \
               --repo "$REPO" \
               --signer-workflow "$REPO/.github/workflows/release.yml" \
-              --source-ref "refs/tags/v$VERSION" \
+              --source-ref refs/heads/main \
+              --source-digest "$SHA" \
               --deny-self-hosted-runners
           done
+          # Kept with the release for offline checks and cosign.
+          cp "$BUNDLE" "dist/$bundle"
       - name: Create release
-        working-directory: dist
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
           prerelease=()
           case "$VERSION" in *-*) prerelease=(--prerelease) ;; esac
-          gh release create "v$VERSION" --repo "$REPO" --verify-tag "${prerelease[@]}" \
-            --title "lootr $VERSION" --generate-notes \
-            lootr-*.tar.gz lootr-*.tar.gz.sigstore.json SHA256SUMS \
-            "lootr-$VERSION.cdx.json" "lootr-$VERSION.cdx.json.sigstore.json"
-
-  # End-to-end test of the contract: the action from this tag downloads the
-  # published release over HTTPS, verifies it and runs it, on every runner
-  # kind it supports.
-  action:
-    needs: [check, publish]
-    strategy:
-      fail-fast: false
-      matrix:
-        # ubuntu-24.04-arm: GitHub-hosted arm64 runners (free for public
-        # repositories); drop it for a private repository without them.
-        runner: [ubuntu-24.04, ubuntu-24.04-arm, macos-15]
-    runs-on: ${{ matrix.runner }}
-    timeout-minutes: 15
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - name: lootr action
-        id: lootr
-        uses: ./
-        continue-on-error: true # findings on the runner are not the point here
-        with:
-          version: ${{ needs.check.outputs.version }}
-          repository: ${{ github.repository }}
-          sarif: "false"
-          fail-on: critical
-      - name: The action verified and ran the release
-        env:
-          CODE: ${{ steps.lootr.outputs.exit-code }}
-          MARKDOWN: ${{ steps.lootr.outputs.markdown-file }}
-        run: |
-          set -euo pipefail
-          echo "lootr exit code: ${CODE:-none}"
-          case "$CODE" in 0 | 1) ;; *) exit 1 ;; esac
-          test -s "$MARKDOWN"
+          gh release create "v$VERSION" dist/* --repo "$REPO" --target "$SHA" \
+            --title "$NAME $VERSION" --generate-notes "${prerelease[@]}"

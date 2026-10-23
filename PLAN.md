@@ -609,16 +609,17 @@ or a skipped entry with a `fail-on-skipped` reason, 2 = error (invalid config, r
 
 ### Release artifacts (contract between M5's action/examples and M7's release workflow)
 
-Defined in M5 (`action.yml`, `examples/ci/`), produced by M7. A release for tag `v<version>`
-(SemVer, `v` prefix) is built by `.github/workflows/release.yml` on GitHub-hosted runners and
-has these assets:
+Defined in M5 (`action.yml`, `examples/ci/`), produced by M7. A release `v<version>` (SemVer,
+`v` prefix, the version in `Cargo.toml`) is built by `.github/workflows/release.yml`, started by
+hand on `main` on GitHub-hosted runners; the tag is created together with the release. The
+workflow and `scripts/release.sh` are the same in mendr, pinr and lootr. Assets:
 
 | Asset | Content |
 |---|---|
 | `lootr-<version>-<target>.tar.gz` | directory `lootr-<version>-<target>/` with `lootr` (executable), `LICENSE`, `README.md`, `THIRD_PARTY.md` |
-| `lootr-<version>-<target>.tar.gz.sigstore.json` | Sigstore bundle (v0.3) with the SLSA provenance v1 attestation of the archive (`actions/attest-build-provenance`), keyless, GitHub OIDC; the signing certificate names `https://github.com/<owner>/<repo>/.github/workflows/release.yml@refs/tags/v<version>` |
-| `SHA256SUMS` | SHA-256 of every archive (for manual checks; the attestation binds the digest) |
-| `lootr-<version>.cdx.json` (+ `.sigstore.json`) | CycloneDX SBOM (and its attestation) |
+| `lootr-<version>.cdx.json` | CycloneDX SBOM |
+| `SHA256SUMS` | SHA-256 of every asset above |
+| `lootr-<version>.sigstore.json` | Sigstore bundle (v0.3) with one SLSA provenance v1 attestation for all assets above (`actions/attest-build-provenance`), keyless, GitHub OIDC; the signing certificate names `https://github.com/<owner>/<repo>/.github/workflows/release.yml@refs/heads/main` and the commit |
 
 `<target>`: `x86_64-unknown-linux-musl`, `aarch64-unknown-linux-musl`, `universal-apple-darwin`.
 Download URL: `https://github.com/<owner>/<repo>/releases/download/v<version>/<asset>`.
@@ -626,19 +627,22 @@ Download URL: `https://github.com/<owner>/<repo>/releases/download/v<version>/<a
 Verification (the action does this before unpacking; it uses `gh`, falling back to `cosign`):
 
 ```sh
-gh attestation verify lootr-<v>-<t>.tar.gz --bundle lootr-<v>-<t>.tar.gz.sigstore.json \
+gh attestation verify lootr-<v>-<t>.tar.gz --bundle lootr-<v>.sigstore.json \
   --repo <owner>/<repo> --signer-workflow <owner>/<repo>/.github/workflows/release.yml \
-  --source-ref refs/tags/v<v> --deny-self-hosted-runners
-cosign verify-blob-attestation --bundle lootr-<v>-<t>.tar.gz.sigstore.json --new-bundle-format \
+  --source-ref refs/heads/main --deny-self-hosted-runners
+cosign verify-blob-attestation --bundle lootr-<v>.sigstore.json --new-bundle-format \
   --type slsaprovenance1 --certificate-oidc-issuer https://token.actions.githubusercontent.com \
-  --certificate-identity https://github.com/<owner>/<repo>/.github/workflows/release.yml@refs/tags/v<v> \
+  --certificate-identity https://github.com/<owner>/<repo>/.github/workflows/release.yml@refs/heads/main \
   lootr-<v>-<t>.tar.gz
 ```
 
-One attestation is both the signature and the SLSA provenance (no separate `cosign sign-blob`
+The attestation proves that release.yml built the file from `main`, not which release it
+belongs to: after unpacking, the action also checks that `lootr --version` prints the requested
+version, so an older (also attested) archive cannot be passed off as a newer one. One
+attestation is both the signature and the SLSA provenance (no separate `cosign sign-blob`
 signature). Changing names, the archive layout or the signer workflow path breaks the action;
-change `action.yml`, `examples/ci/` and this table together. Neither command has been run against
-a real release yet (none exists): M7 must test the action end to end on a tag.
+change `action.yml`, `examples/ci/`, `scripts/release.sh` and this table together
+(`tests/ci_files.rs` checks that they agree).
 
 ## Types (initial set)
 
@@ -1097,6 +1101,15 @@ Notes from M7 (for later milestones):
   the end-to-end test of the contract (exit code 0 or 1 accepted, Markdown report must exist).
   The SBOM gets a build provenance attestation (not an `attest-sbom` binding to the archives);
   it covers all platforms (`--target all`, a superset of the release targets) incl. build deps.
+- **Release flow changed (2026-10-22):** releases are started by hand on `main`
+  (`workflow_dispatch`, with a `dry-run` input) instead of by pushing a tag; the workflow and
+  `scripts/release.sh` are shared with mendr and pinr (the targets line differs). The musl
+  builds use `cargo-zigbuild` instead of `rust-lld` (mendr and pinr compile C code, so the
+  shared script needs a C compiler for musl; zig is one for every target), one attestation
+  covers all assets (`lootr-<version>.sigstore.json`), the certificate names
+  `release.yml@refs/heads/main`, the action checks `--version` against the requested version,
+  and the end-to-end `action` job is gone (test the action against the first release). All
+  actions are pinned now (no `TODO(pin)` left). The notes above describe the first version.
 - **Pinning:** no SHA was looked up online. Reused: `actions/checkout`, `cachix/install-nix-action`.
   `TODO(pin)` (all-zero SHA, the workflow fails until filled in):
   `actions/attest-build-provenance`, `actions/upload-artifact`, `actions/download-artifact`
