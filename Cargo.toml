@@ -21,7 +21,7 @@ rustix = { version = "1.1.5", features = ["fs", "process"] }
 # event parser. Pure Rust without unsafe code, MIT/Apache-2.0, YAML 1.2; the
 # tree (with depth, size and alias-expansion limits) is built in
 # domain::format::yaml. Pulls only arraydeque and thiserror.
-saphyr-parser = "0.1.0"
+saphyr-parser = "0.2.2"
 serde = { version = "1.0.229", features = ["derive"] }
 serde_json = { version = "1.0.151", features = ["preserve_order"] }
 thiserror = "2.0.21"
