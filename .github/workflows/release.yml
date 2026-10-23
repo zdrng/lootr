@@ -77,7 +77,7 @@ jobs:
             echo "matrix=$(scripts/release.sh matrix)"
           } >>"$GITHUB_OUTPUT"
           echo "Releasing $name $version from $(git rev-parse HEAD)"
-      - uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
+      - uses: cachix/install-nix-action@448cde739abec1eaf0646249e3d25bb8d9bc7702 # v31.11.2
       - name: Checks
         run: nix develop -c scripts/check.sh
       - name: SBOM
@@ -112,7 +112,7 @@ jobs:
         with:
           ref: ${{ needs.prepare.outputs.sha }}
           persist-credentials: false
-      - uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
+      - uses: cachix/install-nix-action@448cde739abec1eaf0646249e3d25bb8d9bc7702 # v31.11.2
         if: runner.os != 'Windows'
       # Nix does not run on Windows: the same Rust version from rustup.
       - name: Rust (Windows)
